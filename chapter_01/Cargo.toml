@@ -1,0 +1,7 @@
+[package]
+name = "rustic_ray"
+version = "0.1.0"
+authors = ["Guy"]
+edition = "2018"
+
+[dependencies]
