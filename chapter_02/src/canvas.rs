@@ -99,6 +99,7 @@ mod tests {
     #[test]
     fn create_a_canvas() {
         let c = Canvas::new(10, 20);
+
         assert_eq!(10, c.width);
         assert_eq!(20, c.height);
         for x in 0..10 {
@@ -125,6 +126,7 @@ mod tests {
         let c = Canvas::new(5, 3);
         let actual = c.canvas_to_ppm();
         let split = actual.split("\n").collect::<Vec<_>>();
+        
         assert_eq!("P3", split[0]);
         assert_eq!("5 3", split[1]);
         assert_eq!("255", split[2]);
@@ -143,6 +145,7 @@ mod tests {
         c.pixels[4][2] = c3;
         let actual = c.canvas_to_ppm();
         let split = actual.split("\n").collect::<Vec<_>>();
+        
         assert_eq!("255 0 0 0 0 0 0 0 0 0 0 0 0 0 0", split[3]);
         assert_eq!("0 0 0 0 0 0 0 128 0 0 0 0 0 0 0", split[4]);
         assert_eq!("0 0 0 0 0 0 0 0 0 0 0 0 0 0 255", split[5]);
@@ -161,6 +164,7 @@ mod tests {
         let actual = c.canvas_to_ppm();
 
         let split = actual.split("\n").collect::<Vec<_>>();
+        
         assert_eq!(
             "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204",
             split[3]

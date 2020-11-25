@@ -21,7 +21,7 @@ fn main() {
         position: start,
         velocity,
     };
-    
+
     let e = &Environment {
         gravity: Vector::new(0.0, -0.1, 0.0),
         wind: Vector::new(-0.01, 0.0, 0.0),

@@ -41,14 +41,13 @@ impl Matrix {
     /// ```
     /// use rustic_ray::Matrix;
     ///
-    /// let data = [
+    /// let m = Matrix::new([
     ///     [ 1.0,  2.0,  3.0,  4.0],
     ///     [ 5.5,  6.5,  7.5,  8.5],
     ///     [ 9.0, 10.0, 11.0, 12.0],
     ///     [13.5, 14.5, 15.5, 16.5],
-    /// ];
+    /// ]);
     ///
-    /// let m = Matrix::new(data);
     /// assert_eq!(m[0][0], 1.0);
     /// assert_eq!(m[0][3], 4.0);
     /// assert_eq!(m[1][0], 5.5);
@@ -78,14 +77,15 @@ impl Matrix {
     ///     [1.0, 8.0, 5.0, 3.0],
     ///     [0.0, 0.0, 5.0, 8.0],
     /// ]);
-    /// let actual = m1.transpose();
+    /// 
     /// let expected = Matrix::new([
     ///     [0.0, 9.0, 1.0, 0.0],
     ///     [9.0, 8.0, 8.0, 0.0],
     ///     [3.0, 0.0, 5.0, 5.0],
     ///     [0.0, 8.0, 3.0, 8.0],
     /// ]);
-    /// assert_eq!(expected, actual);
+    ///
+    /// assert_eq!(m1.transpose(), expected);
     /// ```
     pub fn transpose(&self) -> Self {
         let d = [
@@ -160,7 +160,7 @@ impl Matrix {
         }
     }
 
-    /// Test if the matrix can be inverted
+    /// Test if matrix `self` can be inverted
     pub fn is_invertible(&self) -> bool {
         !(Matrix::determinant(self.data, 4) == 0.0)
     }
@@ -288,7 +288,7 @@ impl PartialEq for Matrix {
                 }
             }
         }
-        
+
         true
     }
 }
@@ -329,14 +329,13 @@ mod tests {
     #[test]
     #[rustfmt::skip]
     fn constructing_and_inspecting_a_4x4_matrix() {
-        let data = [
+        let m = Matrix::new([
             [ 1.0,  2.0,  3.0,  4.0],
             [ 5.5,  6.5,  7.5,  8.5],
             [ 9.0, 10.0, 11.0, 12.0],
             [13.5, 14.5, 15.5, 16.5],
-        ];
+        ]);
 
-        let m = Matrix::new(data);
         assert_eq!(m[0][0], 1.0);
         assert_eq!(m[0][3], 4.0);
         assert_eq!(m[1][0], 5.5);
@@ -351,14 +350,13 @@ mod tests {
     #[test]
     #[rustfmt::skip]
     fn a_2x2_matrix_ought_to_be_representable() {
-        let data = [
+        let m = Matrix::new([
             [-3.0,  5.0, 0.0, 0.0],
             [ 1.0, -2.0, 0.0, 0.0],
             [ 0.0,  0.0, 0.0, 0.0],
             [ 0.0,  0.0, 0.0, 0.0],
-        ];
+        ]);
 
-        let m = Matrix::new(data);
         assert_eq!(m[0][0], -3.0);
         assert_eq!(m[0][1], 5.0);
         assert_eq!(m[1][0], 1.0);
@@ -370,14 +368,13 @@ mod tests {
     #[test]
     #[rustfmt::skip]
     fn a_3x3_matrix_ought_to_be_representable() {
-        let data = [
+        let m = Matrix::new([
             [-3.0,  5.0,  0.0, 0.0],
             [ 1.0, -2.0, -7.0, 0.0],
             [ 0.0,  1.0,  1.0, 0.0],
             [ 0.0,  0.0,  0.0, 0.0],
-        ];
+        ]);
 
-        let m = Matrix::new(data);
         assert_eq!(m[0][0], -3.0);
         assert_eq!(m[1][1], -2.0);
         assert_eq!(m[2][2], 1.0);
@@ -399,6 +396,7 @@ mod tests {
             [9.0, 8.0, 7.0, 6.0],
             [5.0, 4.0, 3.0, 2.0],
         ]);
+
         assert_eq!(m1, m2);
     }
 
@@ -418,6 +416,7 @@ mod tests {
             [8.0, 7.0, 6.0, 5.0],
             [4.0, 3.0, 2.0, 1.0],
         ]);
+
         assert_ne!(m1, m2);
     }
 
@@ -438,14 +437,15 @@ mod tests {
             [ 4.0, 3.0, 6.0,  5.0],
             [ 1.0, 2.0, 7.0,  8.0],
         ]);
-        let actual = m1 * m2;
+
         let expected = Matrix::new([
             [20.0, 22.0,  50.0,  48.0],
             [44.0, 54.0, 114.0, 108.0],
             [40.0, 58.0, 110.0, 102.0],
             [16.0, 26.0,  46.0,  42.0],
         ]);
-        assert_eq!(expected, actual);
+
+        assert_eq!(m1 * m2, expected);
     }
 
     // Chapter 3 Matrices
@@ -460,6 +460,7 @@ mod tests {
         ]);
 
         let b = Point::new(1.0, 2.0, 3.0);
+
         assert_eq!(m * b, Point::new(18.0, 24.0, 33.0))
     }
 
@@ -488,14 +489,15 @@ mod tests {
             [1.0, 8.0, 5.0, 3.0],
             [0.0, 0.0, 5.0, 8.0],
         ]);
-        let actual = m1.transpose();
+
         let expected = Matrix::new([
             [0.0, 9.0, 1.0, 0.0],
             [9.0, 8.0, 8.0, 0.0],
             [3.0, 0.0, 5.0, 5.0],
             [0.0, 8.0, 3.0, 8.0],
         ]);
-        assert_eq!(expected, actual);
+
+        assert_eq!(m1.transpose(), expected);
     }
 
     // Chapter 3 Matrices
@@ -503,6 +505,7 @@ mod tests {
     #[test]
     fn transpose_the_identity_matrix() {
         let a = IDENTITY.transpose();
+
         assert_eq!(a, IDENTITY);
     }
 
@@ -517,8 +520,8 @@ mod tests {
             [ 0.0, 0.0, 0.0, 0.0],
             [ 0.0, 0.0, 0.0, 0.0],
         ];
-        let d = Matrix::determinant(m, 2);
-        assert_eq!(17.0, d);
+
+        assert_eq!(Matrix::determinant(m, 2), 17.0);
     }
 
     // Chapter 3 Matrices
@@ -533,13 +536,15 @@ mod tests {
             [ 0.0, 0.0,  0.0, 0.0],
         ];
         let actual = Matrix::new(Matrix::sub_matrix(m, 0, 2));
-        let e = Matrix::new([
+        
+        let expected = Matrix::new([
             [-3.0, 2.0, 0.0, 0.0],
             [ 0.0, 6.0, 0.0, 0.0],
             [ 0.0, 0.0, 0.0, 0.0],
             [ 0.0, 0.0, 0.0, 0.0],
         ]);
-        assert_eq!(e, actual);
+
+        assert_eq!(actual, expected);
     }
 
     // Chapter 3 Matrices
@@ -560,7 +565,8 @@ mod tests {
             [-7.0, -1.0, 1.0, 0.0],
             [ 0.0,  0.0, 0.0, 0.0],
         ]);
-        assert_eq!(expected, actual);
+
+        assert_eq!(actual, expected);
     }
     // Chapter 3 Matrices
     // Page 35
@@ -574,10 +580,9 @@ mod tests {
             [0.0,  0.0,  0.0, 0.0],
         ];
         let b = Matrix::sub_matrix(a, 1, 0);
-        let actual_det = Matrix::determinant(b, 2);
-        assert_eq!(25.0, actual_det);
-        let actual_minor = Matrix::minor(a, 1, 0, 2);
-        assert_eq!(25.0, actual_minor);
+        
+        assert_eq!(Matrix::determinant(b, 2), 25.0);
+        assert_eq!(Matrix::minor(a, 1, 0, 2), 25.0);
     }
 
     // Chapter 3 Matrices
@@ -591,14 +596,11 @@ mod tests {
             [6.0, -1.0,  5.0, 0.0],
             [0.0,  0.0,  0.0, 0.0],
         ];
-        let m1 = Matrix::minor(a, 0, 0, 2);
-        assert_eq!(-12.0, m1);
-        let c1 = Matrix::cofactor(a, 0, 0, 2);
-        assert_eq!(-12.0, c1);
-        let m2 = Matrix::minor(a, 1, 0, 2);
-        assert_eq!(25.0, m2);
-        let c2 = Matrix::cofactor(a, 1, 0, 2);
-        assert_eq!(-25.0, c2);
+
+        assert_eq!(Matrix::minor(a, 0, 0, 2), -12.0);
+        assert_eq!(Matrix::cofactor(a, 0, 0, 2), -12.0);
+        assert_eq!(Matrix::minor(a, 1, 0, 2), 25.0);
+        assert_eq!(Matrix::cofactor(a, 1, 0, 2), -25.0);
     }
 
     // Chapter 3 Matrices
@@ -612,10 +614,11 @@ mod tests {
             [ 2.0, 6.0,  4.0, 0.0],
             [ 0.0, 0.0,  0.0, 0.0],
         ];
-        assert_eq!(56.0, Matrix::cofactor(a, 0, 0, 2));
-        assert_eq!(12.0, Matrix::cofactor(a, 0, 1, 2));
-        assert_eq!(-46.0, Matrix::cofactor(a, 0, 2, 2));
-        assert_eq!(-196.0, Matrix::determinant(a, 3));
+
+        assert_eq!(Matrix::cofactor(a, 0, 0, 2), 56.0);
+        assert_eq!(Matrix::cofactor(a, 0, 1, 2), 12.0);
+        assert_eq!(Matrix::cofactor(a, 0, 2, 2), -46.0);
+        assert_eq!(Matrix::determinant(a, 3), -196.0);
     }
 
     // Chapter 3 Matrices
@@ -629,10 +632,11 @@ mod tests {
             [ 1.0,  2.0, -9.0,  6.0],
             [-6.0,  7.0,  7.0, -9.0],
         ];
-        assert_eq!(690.0, Matrix::cofactor(a, 0, 0, 3));
-        assert_eq!(447.0, Matrix::cofactor(a, 0, 1, 3));
-        assert_eq!(210.0, Matrix::cofactor(a, 0, 2, 3));
-        assert_eq!(51.0, Matrix::cofactor(a, 0, 3, 3));
+
+        assert_eq!(Matrix::cofactor(a, 0, 0, 3), 690.0);
+        assert_eq!(Matrix::cofactor(a, 0, 1, 3), 447.0);
+        assert_eq!(Matrix::cofactor(a, 0, 2, 3), 210.0);
+        assert_eq!(Matrix::cofactor(a, 0, 3, 3), 51.0);
         assert_eq!(-4071.0, Matrix::determinant(a, 4));
     }
 
@@ -647,7 +651,8 @@ mod tests {
             [4.0, -9.0, 3.0, -7.0],
             [9.0,  1.0, 7.0, -6.0],
         ]);
-        assert_eq!(-2120.0, Matrix::determinant(a.data, 4));
+
+        assert_eq!(Matrix::determinant(a.data, 4), -2120.0);
         assert!(a.is_invertible());
     }
 
@@ -662,7 +667,8 @@ mod tests {
             [ 0.0, -5.0,  1.0, -5.0],
             [ 0.0,  0.0,  0.0,  0.0],
         ]);
-        assert_eq!(0.0, Matrix::determinant(a.data, 4));
+
+        assert_eq!(Matrix::determinant(a.data, 4), 0.0);
         assert_eq!(false, a.is_invertible())
     }
 
@@ -679,6 +685,7 @@ mod tests {
         ];
         let mut a = Matrix::new(m);
         let b = a.inverse();
+
         assert_eq!(532.0, Matrix::determinant(m, 4));
         assert_eq!(-160.0 / 532.0, b[3][2]);
         let expected = Matrix::new([
@@ -700,21 +707,21 @@ mod tests {
     #[test]
     #[rustfmt::skip]
     fn calculating_the_inverse_of_another_matrix() {
-        let m = [
+        let mut m = Matrix::new([
             [ 8.0, -5.0,  9.0,  2.0],
             [ 7.0,  5.0,  6.0,  1.0],
             [-6.0,  0.0,  9.0,  6.0],
             [-3.0,  0.0, -9.0, -4.0],
-        ];
-        let mut a = Matrix::new(m);
-        let b = a.inverse();
+        ]);
+
         let expected = Matrix::new([
             [-0.15385, -0.15385, -0.28205, -0.53846],
             [-0.07692,  0.12308,  0.02564,  0.03077],
             [ 0.35897,  0.35897,  0.43590,  0.92308],
             [-0.69231, -0.69231, -0.76923, -1.92308],
         ]);
-        assert_eq!(expected, b);
+
+        assert_eq!(m.inverse(), expected);
     }
 
     // Chapter 3 Matrices
@@ -722,21 +729,21 @@ mod tests {
     #[test]
     #[rustfmt::skip]
     fn calculating_the_inverse_of_a_third_matrix() {
-        let m = [
+        let mut m = Matrix::new([
             [ 9.0,  3.0,  0.0,  9.0],
             [-5.0, -2.0, -6.0, -3.0],
             [-4.0,  9.0,  6.0,  4.0],
             [-7.0,  6.0,  6.0,  2.0],
-        ];
-        let mut a = Matrix::new(m);
-        let b = a.inverse();
+        ]);
+
         let expected = Matrix::new([
             [-0.04074, -0.07778,  0.14444, -0.22222],
             [-0.07778,  0.03333,  0.36667, -0.33333],
             [-0.02901, -0.14630, -0.10926,  0.12963],
             [ 0.17778,  0.06667, -0.26667,  0.33333],
         ]);
-        assert_eq!(expected, b);
+
+        assert_eq!(m.inverse(), expected);
     }
 
     // Chapter 3 Matrices

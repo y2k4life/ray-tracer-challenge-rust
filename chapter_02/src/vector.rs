@@ -213,6 +213,7 @@ mod tests {
     #[test]
     fn create_vector() {
         let v = Vector::new(1.0, 2.0, 3.0);
+        
         assert_eq!(1.0, v.x);
         assert_eq!(2.0, v.y);
         assert_eq!(3.0, v.z);
