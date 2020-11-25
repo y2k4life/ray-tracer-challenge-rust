@@ -44,7 +44,7 @@ impl Canvas {
     /// format.
     pub fn canvas_to_ppm(&self) -> String {
         let mut buffer = ["P3", &format!("{} {}", self.width, self.height), "255"].join("\n");
-        buffer.push_str("\n");
+        buffer.push('\n');
 
         let mut col_counter = 0;
         for y in 0..self.height {
@@ -62,27 +62,27 @@ impl Canvas {
                     buffer.push_str(&Canvas::write_color(blue, &mut col_counter));
                 }
             }
-            buffer.push_str("\n");
+            buffer.push('\n');
             col_counter = 0;
         }
-        buffer.push_str("\n");
+        buffer.push('\n');
         buffer
     }
 
     fn write_color(color: String, col_count: &mut usize) -> String {
         let mut color_buffer = String::new();
         if *col_count + color.len() > 70 {
-            color_buffer.push_str("\n");
+            color_buffer.push('\n');
             *col_count = 0;
         }
         color_buffer.push_str(&color);
         *col_count += color.len();
 
         if *col_count + 4 > 70 {
-            color_buffer.push_str("\n");
+            color_buffer.push('\n');
             *col_count = 0;
         } else {
-            color_buffer.push_str(" ");
+            color_buffer.push(' ');
             *col_count += 1;
         }
         color_buffer

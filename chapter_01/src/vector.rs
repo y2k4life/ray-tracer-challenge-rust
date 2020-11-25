@@ -1,5 +1,8 @@
 use crate::float_eq;
-use std::ops::{Add, Div, Mul, Neg, Sub};
+use std::{
+    fmt,
+    ops::{Add, Div, Mul, Neg, Sub},
+};
 
 /// An element that has magnitude and direction that is commonly
 /// represented by a directed line segment whose length represents the
@@ -186,6 +189,18 @@ impl Div<f64> for Vector {
 impl PartialEq for Vector {
     fn eq(&self, other: &Vector) -> bool {
         float_eq(self.x, other.x) && float_eq(self.y, other.y) && float_eq(self.z, other.z)
+    }
+}
+
+impl fmt::Display for Vector {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "x: {0:>10} y: {1:>10} z: {2:>10}",
+            format!("{0:.5}", self.x),
+            format!("{0:.5}", self.y),
+            format!("{0:.5}", self.z)
+        )
     }
 }
 
