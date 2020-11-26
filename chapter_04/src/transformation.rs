@@ -2,8 +2,12 @@ use crate::{Matrix, multiple_array};
 
 /// Transformations are used to move and deform objects. The transformations
 /// are scaling, translations, rotations, and shearing. Transformations are
-/// chained together. Transformations are performed on  `self` and return a 
-/// new `Transformation` with the transformation called added to `self`.
+/// chained together. Transformations are performed on `self` and return a 
+/// new `Transformation` with the transformation called added to `self`. 
+/// Call the `build` function at the end of the chain to build a transformation
+/// [`Matrix`]. Creating a [`Matrix`] calculates the inverse of the [`Matrix`]
+/// which is expensive. For this reason creating a transformation [`Matrix`] is
+/// only done when `build` is called.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Transformation {
     data: [[f64; 4]; 4],
@@ -11,13 +15,7 @@ pub struct Transformation {
 
 impl Transformation {
     /// Create a new `Transformation` as the start of a transformation chain
-    /// to be performed on an object. Transformations are performed on 
-    /// `self` and return a new `Transformation` with the transformation 
-    /// called added to `self`. Call the `build` function at the end of the
-    /// chain to build a transformation [`Matrix`]. Creating a [`Matrix`]
-    /// calculates the inverse of the  [`Matrix`] which is expensive. For
-    /// this reason creating a transformation [`Matrix`] is only done 
-    /// when `build` is called.
+    /// to be performed on an object. 
     ///
     /// # Example
     ///
@@ -247,8 +245,12 @@ impl Transformation {
             data: multiple_array(m, self.data),
         }
     }
+}
 
-
+impl Default for Transformation {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 #[cfg(test)]

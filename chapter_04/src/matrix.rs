@@ -71,7 +71,7 @@ impl Matrix {
                 inverse[col][row] = Matrix::cofactor(data, row, col, 3) / d;
             }
         }
-
+        
         Self {
             data,
             inverse,
