@@ -24,6 +24,21 @@ pub fn float_eq(a: f64, b: f64) -> bool {
     (a - b).abs() < EPSILON
 }
 
+/// Multiple two 4x4 arrays
+fn multiple_array(a: [[f64; 4]; 4], b: [[f64; 4]; 4]) -> [[f64; 4]; 4] {
+    let mut results = [[0.0; 4]; 4];
+
+    for row in 0..4 {
+        for col in 0..4 {
+            results[row][col] = a[row][0] * b[0][col]
+                + a[row][1] * b[1][col]
+                + a[row][2] * b[2][col]
+                + a[row][3] * b[3][col];
+        }
+    }
+    results
+}
+
 /// Compare two floating point numbers to determine if `a` is equal, less, or
 /// greater than `b`.
 pub fn float_cmp(a: f64, b: f64) -> Ordering {

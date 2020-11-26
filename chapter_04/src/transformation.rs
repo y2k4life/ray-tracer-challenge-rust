@@ -1,4 +1,4 @@
-use crate::{Matrix, IDENTITY};
+use crate::{Matrix, multiple_array};
 
 /// Transformations are used to move and deform objects. The transformations
 /// are scaling, translations, rotations, and shearing. Transformations are
@@ -6,14 +6,18 @@ use crate::{Matrix, IDENTITY};
 /// new `Transformation` with the transformation called added to `self`.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Transformation {
-    pub matrix: Matrix,
+    data: [[f64; 4]; 4],
 }
 
 impl Transformation {
     /// Create a new `Transformation` as the start of a transformation chain
     /// to be performed on an object. Transformations are performed on 
     /// `self` and return a new `Transformation` with the transformation 
-    /// called added to `self`.
+    /// called added to `self`. Call the `build` function at the end of the
+    /// chain to build a transformation [`Matrix`]. Creating a [`Matrix`]
+    /// calculates the inverse of the  [`Matrix`] which is expensive. For
+    /// this reason creating a transformation [`Matrix`] is only done 
+    /// when `build` is called.
     ///
     /// # Example
     ///
@@ -27,13 +31,24 @@ impl Transformation {
     /// let transform = Transformation::new()
     ///     .rotate_x(PI / 2.0)
     ///     .scale(5.0, 5.0, 5.0)
-    ///     .translate(10.0, 5.0, 7.0);
+    ///     .translate(10.0, 5.0, 7.0)
+    ///     .build();
     /// let p = Point::new(1.0, 0.0, 1.0);
     ///
-    /// assert_eq!(transform.matrix * p, Point::new(15.0, 0.0, 7.0));
+    /// assert_eq!(transform * p, Point::new(15.0, 0.0, 7.0));
     /// ```
     pub fn new() -> Transformation {
-        Transformation { matrix: IDENTITY }
+        Transformation { data: [
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0]
+        ]}
+    }
+
+    /// Creates a matrix from the transformations data
+    pub fn build(&self) -> Matrix {
+        Matrix::new(self.data)
     }
 
     /// A transformation that moves a point. An inverse of a translation
@@ -47,21 +62,23 @@ impl Transformation {
     /// ```
     /// use rustic_ray::{Point, Transformation};
     ///
-    /// let transform = Transformation::new().translate(5.0, -3.0, 2.0);
+    /// let transform = Transformation::new()
+    ///     .translate(5.0, -3.0, 2.0)
+    ///     .build();
     /// let p = Point::new(-3.0, 4.0, 5.0);
     ///
-    /// assert_eq!(transform.matrix * p, Point::new(2.0, 1.0, 7.0));
+    /// assert_eq!(transform * p, Point::new(2.0, 1.0, 7.0));
     /// ```
     pub fn translate(self, x: f64, y: f64, z: f64) -> Transformation {
-        let m = Matrix::new([
+        let m = [
             [1.0, 0.0, 0.0, x],
             [0.0, 1.0, 0.0, y],
             [0.0, 0.0, 1.0, z],
             [0.0, 0.0, 0.0, 1.0],
-        ]);
+        ];
 
         Transformation {
-            matrix: m * self.matrix,
+            data: multiple_array(m, self.data),
         }
     }
 
@@ -75,21 +92,23 @@ impl Transformation {
     /// ```
     /// use rustic_ray::{Point, Transformation};
     ///
-    /// let transform = Transformation::new().scale(2.0, 3.0, 4.0);
+    /// let transform = Transformation::new()
+    ///     .scale(2.0, 3.0, 4.0)
+    ///     .build();
     /// let p = Point::new(-4.0, 6.0, 8.0);
     /// 
-    /// assert_eq!(transform.matrix * p, Point::new(-8.0, 18.0, 32.0));
+    /// assert_eq!(transform * p, Point::new(-8.0, 18.0, 32.0));
     /// ```
     pub fn scale(self, x: f64, y: f64, z: f64) -> Transformation {
-        let m = Matrix::new([
+        let m = [
             [x, 0.0, 0.0, 0.0],
             [0.0, y, 0.0, 0.0],
             [0.0, 0.0, z, 0.0],
             [0.0, 0.0, 0.0, 1.0],
-        ]);
+        ];
 
         Transformation {
-            matrix: m * self.matrix,
+            data: multiple_array(m, self.data),
         }
     }
 
@@ -102,25 +121,29 @@ impl Transformation {
     /// use std::f64::consts::PI;
     ///
     /// let p = Point::new(0.0, 1.0, 0.0);
-    /// let half_quarter = Transformation::new().rotate_x(PI / 4.0);
-    /// let full_quarter = Transformation::new().rotate_x(PI / 2.0);
+    /// let half_quarter = Transformation::new()
+    ///     .rotate_x(PI / 4.0)
+    ///     .build();
+    /// let full_quarter = Transformation::new()
+    ///     .rotate_x(PI / 2.0)
+    ///     .build();
     /// 
     /// assert_eq!(
-    ///     half_quarter.matrix * p,
+    ///     half_quarter * p,
     ///     Point::new(0.0, 2_f64.sqrt() / 2.0, 2_f64.sqrt() / 2.0)
     /// );
-    /// assert_eq!(full_quarter.matrix * p, Point::new(0.0, 0.0, 1.0));
+    /// assert_eq!(full_quarter * p, Point::new(0.0, 0.0, 1.0));
     /// ```
     pub fn rotate_x(self, r: f64) -> Transformation {
-        let m = Matrix::new([
+        let m = [
             [1.0, 0.0, 0.0, 0.0],
             [0.0, r.cos(), -r.sin(), 0.0],
             [0.0, r.sin(), r.cos(), 0.0],
             [0.0, 0.0, 0.0, 1.0],
-        ]);
+        ];
 
         Transformation {
-            matrix: m * self.matrix,
+            data: multiple_array(m, self.data),
         }
     }
 
@@ -133,25 +156,29 @@ impl Transformation {
     /// use std::f64::consts::PI;
     /// 
     /// let p = Point::new(0.0, 0.0, 1.0);
-    /// let half_quarter = Transformation::new().rotate_y(PI / 4.0);
-    /// let full_quarter = Transformation::new().rotate_y(PI / 2.0);
+    /// let half_quarter = Transformation::new()
+    ///     .rotate_y(PI / 4.0)
+    ///     .build();
+    /// let full_quarter = Transformation::new()
+    ///     .rotate_y(PI / 2.0)
+    ///     .build();
     /// 
     /// assert_eq!(
-    ///     half_quarter.matrix * p,
+    ///     half_quarter * p,
     ///     Point::new(2_f64.sqrt() / 2.0, 0.0, 2_f64.sqrt() / 2.0)
     /// );
-    /// assert_eq!(full_quarter.matrix * p, Point::new(1.0, 0.0, 0.0));
+    /// assert_eq!(full_quarter * p, Point::new(1.0, 0.0, 0.0));
     /// ```
     pub fn rotate_y(self, r: f64) -> Transformation {
-        let m = Matrix::new([
+        let m = [
             [r.cos(), 0.0, r.sin(), 0.0],
             [0.0, 1.0, 0.0, 0.0],
             [-(r.sin()), 0.0, r.cos(), 0.0],
             [0.0, 0.0, 0.0, 1.0],
-        ]);
+        ];
 
         Transformation {
-            matrix: m * self.matrix,
+            data: multiple_array(m, self.data),
         }
     }
 
@@ -164,24 +191,28 @@ impl Transformation {
     /// use std::f64::consts::PI;
     ///
     /// let p = Point::new(0.0, 1.0, 0.0);
-    /// let half_quarter = Transformation::new().rotate_z(PI / 4.0);
-    /// let full_quarter = Transformation::new().rotate_z(PI / 2.0);
+    /// let half_quarter = Transformation::new()
+    ///     .rotate_z(PI / 4.0)
+    ///     .build();
+    /// let full_quarter = Transformation::new()
+    ///     .rotate_z(PI / 2.0)
+    ///     .build();
     ///
     /// assert_eq!(
-    ///     half_quarter.matrix * p,
+    ///     half_quarter * p,
     ///     Point::new(-2_f64.sqrt() / 2.0, 2_f64.sqrt() / 2.0, 0.0)
     /// );
-    /// assert_eq!(full_quarter.matrix * p, Point::new(-1.0, 0.0, 0.0));
+    /// assert_eq!(full_quarter * p, Point::new(-1.0, 0.0, 0.0));
     pub fn rotate_z(&self, r: f64) -> Transformation {
-        let m = Matrix::new([
+        let m = [
             [r.cos(), -(r.sin()), 0.0, 0.0],
             [r.sin(), r.cos(), 0.0, 0.0],
             [0.0, 0.0, 1.0, 0.0],
             [0.0, 0.0, 0.0, 1.0],
-        ]);
+        ];
 
         Transformation {
-            matrix: m * self.matrix,
+            data: multiple_array(m, self.data),
         }
     }
 
@@ -197,23 +228,27 @@ impl Transformation {
     /// ```
     /// use rustic_ray::{Point, Transformation};
     /// 
-    /// let transform = Transformation::new().shear(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    /// let transform = Transformation::new()
+    ///     .shear(1.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+    ///     .build();
     /// let p = Point::new(2.0, 3.0, 4.0);
     /// 
-    /// assert_eq!(transform.matrix * p, Point::new(5.0, 3.0, 4.0));
+    /// assert_eq!(transform * p, Point::new(5.0, 3.0, 4.0));
     /// ```
     pub fn shear(self, xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Transformation {
-        let m = Matrix::new([
+        let m = [
             [1.0, xy, xz, 0.0],
             [yx, 1.0, yz, 0.0],
             [zx, zy, 1.0, 0.0],
             [0.0, 0.0, 0.0, 1.0],
-        ]);
+        ];
 
         Transformation {
-            matrix: m * self.matrix,
+            data: multiple_array(m, self.data),
         }
     }
+
+
 }
 
 #[cfg(test)]
@@ -226,18 +261,20 @@ mod tests {
     // Chapter 4 Transformations
     // Page 45
     fn multiplying_by_a_translation_matrix() {
-        let transform = Transformation::new().translate(5.0, -3.0, 2.0);
+        let transform = Transformation::new()
+            .translate(5.0, -3.0, 2.0)
+            .build();
         let p = Point::new(-3.0, 4.0, 5.0);
 
-        assert_eq!(transform.matrix * p, Point::new(2.0, 1.0, 7.0));
+        assert_eq!(transform * p, Point::new(2.0, 1.0, 7.0));
     }
 
     // Chapter 4 Matrix Transformations
     // Page 45
     #[test]
     fn multiplying_by_the_inverse_of_a_translation_matrix() {
-        let mut transform = Transformation::new().translate(5.0, -3.0, 2.0);
-        let inv = transform.matrix.inverse();
+        let transform = Transformation::new().translate(5.0, -3.0, 2.0);
+        let inv = transform.build().inverse();
         let p = Point::new(-3.0, 4.0, 5.0);
 
         assert_eq!(inv * p, Point::new(-8.0, 7.0, 3.0));
@@ -247,38 +284,46 @@ mod tests {
     // Page 45
     #[test]
     fn translation_does_not_affect_vectors() {
-        let transform = Transformation::new().translate(5.0, -3.0, 2.0);
+        let transform = Transformation::new()
+            .translate(5.0, -3.0, 2.0)
+            .build();
         let v = Vector::new(-3.0, 4.0, 5.0);
 
-        assert_eq!(transform.matrix * v, v);
+        assert_eq!(transform * v, v);
     }
 
     // Chapter 4 Matrix Transformations
     // Page 46
     #[test]
     fn a_scaling_matrix_applied_to_a_point() {
-        let transform = Transformation::new().scale(2.0, 3.0, 4.0);
+        let transform = Transformation::new()
+            .scale(2.0, 3.0, 4.0)
+            .build();
         let p = Point::new(-4.0, 6.0, 8.0);
 
-        assert_eq!(transform.matrix * p, Point::new(-8.0, 18.0, 32.0));
+        assert_eq!(transform * p, Point::new(-8.0, 18.0, 32.0));
     }
 
     // Chapter 4 Matrix Transformations
     // Page 46
     #[test]
     fn a_scaling_matrix_applied_to_a_vector() {
-        let transform = Transformation::new().scale(2.0, 3.0, 4.0);
+        let transform = Transformation::new()
+            .scale(2.0, 3.0, 4.0)
+            .build();
         let v = Vector::new(-4.0, 6.0, 8.0);
 
-        assert_eq!(transform.matrix * v, Vector::new(-8.0, 18.0, 32.0));
+        assert_eq!(transform * v, Vector::new(-8.0, 18.0, 32.0));
     }
 
     // Chapter 4 Matrix Transformations
     // Page 46
     #[test]
     fn multiplying_by_the_inverse_of_a_scaling_matrix() {
-        let mut transform = Transformation::new().scale(2.0, 3.0, 4.0);
-        let inv = transform.matrix.inverse();
+        let transform = Transformation::new()
+            .scale(2.0, 3.0, 4.0)
+            .build();
+        let inv = transform.inverse();
         let v = Vector::new(-4.0, 6.0, 8.0);
 
         assert_eq!(inv * v, Vector::new(-2.0, 2.0, 2.0));
@@ -288,10 +333,12 @@ mod tests {
     // Page 47
     #[test]
     fn reflection_is_scaling_by_a_negative_value() {
-        let transform = Transformation::new().scale(-1.0, 1.0, 1.0);
+        let transform = Transformation::new()
+            .scale(-1.0, 1.0, 1.0)
+            .build();
         let p = Point::new(2.0, 3.0, 4.0);
 
-        assert_eq!(transform.matrix * p, Point::new(-2.0, 3.0, 4.0));
+        assert_eq!(transform * p, Point::new(-2.0, 3.0, 4.0));
     }
 
     // Chapter 4 Matrix Transformations
@@ -299,14 +346,18 @@ mod tests {
     #[test]
     fn rotating_a_point_around_the_x_axis() {
         let p = Point::new(0.0, 1.0, 0.0);
-        let half_quarter = Transformation::new().rotate_x(PI / 4.0);
-        let full_quarter = Transformation::new().rotate_x(PI / 2.0);
+        let half_quarter = Transformation::new()
+            .rotate_x(PI / 4.0)
+            .build();
+        let full_quarter = Transformation::new()
+            .rotate_x(PI / 2.0)
+            .build();
 
         assert_eq!(
-            half_quarter.matrix * p,
+            half_quarter * p,
             Point::new(0.0, 2_f64.sqrt() / 2.0, 2_f64.sqrt() / 2.0)
         );
-        assert_eq!(full_quarter.matrix * p, Point::new(0.0, 0.0, 1.0));
+        assert_eq!(full_quarter * p, Point::new(0.0, 0.0, 1.0));
     }
 
     // Chapter 4 Matrix Transformations
@@ -314,8 +365,10 @@ mod tests {
     #[test]
     fn the_inverse_of_an_x_rotation_rotates_in_the_opposite_direction() {
         let p = Point::new(0.0, 1.0, 0.0);
-        let mut half_quarter = Transformation::new().rotate_x(PI / 4.0);
-        let inv = half_quarter.matrix.inverse();
+        let half_quarter = Transformation::new()
+            .rotate_x(PI / 4.0)
+            .build();
+        let inv = half_quarter.inverse();
 
         assert_eq!(
             inv * p,
@@ -328,14 +381,18 @@ mod tests {
     #[test]
     fn rotating_a_point_around_the_y_axis() {
         let p = Point::new(0.0, 0.0, 1.0);
-        let half_quarter = Transformation::new().rotate_y(PI / 4.0);
-        let full_quarter = Transformation::new().rotate_y(PI / 2.0);
+        let half_quarter = Transformation::new()
+            .rotate_y(PI / 4.0)
+            .build();
+        let full_quarter = Transformation::new()
+            .rotate_y(PI / 2.0)
+            .build();
 
         assert_eq!(
-            half_quarter.matrix * p,
+            half_quarter * p,
             Point::new(2_f64.sqrt() / 2.0, 0.0, 2_f64.sqrt() / 2.0)
         );
-        assert_eq!(full_quarter.matrix * p, Point::new(1.0, 0.0, 0.0));
+        assert_eq!(full_quarter * p, Point::new(1.0, 0.0, 0.0));
     }
 
     // Chapter 4 Matrix Transformations
@@ -343,98 +400,89 @@ mod tests {
     #[test]
     fn rotating_a_point_around_the_z_axis() {
         let p = Point::new(0.0, 1.0, 0.0);
-        let half_quarter = Transformation::new().rotate_z(PI / 4.0);
-        let full_quarter = Transformation::new().rotate_z(PI / 2.0);
+        let half_quarter = Transformation::new()
+            .rotate_z(PI / 4.0)
+            .build();
+        let full_quarter = Transformation::new()
+            .rotate_z(PI / 2.0)
+            .build();
 
         assert_eq!(
-            half_quarter.matrix * p,
+            half_quarter * p,
             Point::new(-2_f64.sqrt() / 2.0, 2_f64.sqrt() / 2.0, 0.0)
         );
-        assert_eq!(full_quarter.matrix * p, Point::new(-1.0, 0.0, 0.0));
+        assert_eq!(full_quarter * p, Point::new(-1.0, 0.0, 0.0));
     }
 
     // Chapter 4 Matrix Transformations
     // Page 52
     #[test]
     fn a_shearing_transformation_moves_x_in_proportion_to_y() {
-        let transform = Transformation::new().shear(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        let transform = Transformation::new()
+            .shear(1.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+            .build();
         let p = Point::new(2.0, 3.0, 4.0);
 
-        assert_eq!(transform.matrix * p, Point::new(5.0, 3.0, 4.0));
+        assert_eq!(transform * p, Point::new(5.0, 3.0, 4.0));
     }
 
     // Chapter 4 Matrix Transformations
     // Page 52
     #[test]
     fn a_shearing_transformation_moves_x_in_proportion_to_z() {
-        let transform = Transformation::new().shear(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
+        let transform = Transformation::new()
+            .shear(0.0, 1.0, 0.0, 0.0, 0.0, 0.0)
+            .build();
         let p = Point::new(2.0, 3.0, 4.0);
 
-        assert_eq!(transform.matrix * p, Point::new(6.0, 3.0, 4.0));
+        assert_eq!(transform * p, Point::new(6.0, 3.0, 4.0));
     }
 
     // Chapter 4 Matrix Transformations
     // Page 52
     #[test]
     fn a_shearing_transformation_moves_y_in_proportion_to_x() {
-        let transform = Transformation::new().shear(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+        let transform = Transformation::new()
+            .shear(0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+            .build();
         let p = Point::new(2.0, 3.0, 4.0);
 
-        assert_eq!(transform.matrix * p, Point::new(2.0, 5.0, 4.0));
+        assert_eq!(transform * p, Point::new(2.0, 5.0, 4.0));
     }
 
     // Chapter 4 Matrix Transformations
     // Page 52
     #[test]
     fn a_shearing_transformation_moves_y_in_proportion_to_z() {
-        let transform = Transformation::new().shear(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+        let transform = Transformation::new()
+            .shear(0.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+            .build();
         let p = Point::new(2.0, 3.0, 4.0);
 
-        assert_eq!(transform.matrix * p, Point::new(2.0, 7.0, 4.0));
+        assert_eq!(transform * p, Point::new(2.0, 7.0, 4.0));
     }
 
     // Chapter 4 Matrix Transformations
     // Page 52
     #[test]
     fn a_shearing_transformation_moves_z_in_proportion_to_x() {
-        let transform = Transformation::new().shear(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        let transform = Transformation::new()
+            .shear(0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+            .build();
         let p = Point::new(2.0, 3.0, 4.0);
 
-        assert_eq!(transform.matrix * p, Point::new(2.0, 3.0, 6.0));
+        assert_eq!(transform * p, Point::new(2.0, 3.0, 6.0));
     }
 
     // Chapter 4 Matrix Transformations
     // Page 52
     #[test]
     fn a_shearing_transformation_moves_z_in_proportion_to_y() {
-        let transform = Transformation::new().shear(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-        let p = Point::new(2.0, 3.0, 4.0);
-        let actual = transform.matrix * p;
-        let expected = Point::new(2.0, 3.0, 7.0);
-
-        assert_eq!(expected, actual);
-    }
-
-    #[test]
-    fn chained_transformations_must_be_applied_in_reverse_order() {
-        let p = Point::new(1.0, 0.0, 1.0);
         let transform = Transformation::new()
-            .rotate_x(PI / 2.0)
-            .scale(5.0, 5.0, 5.0)
-            .translate(10.0, 5.0, 7.0);
-        let actual = transform.matrix * p;
-        let expected = Point::new(15.0, 0.0, 7.0);
+            .shear(0.0, 0.0, 0.0, 0.0, 0.0, 1.0)
+            .build();
+        let p = Point::new(2.0, 3.0, 4.0);
 
-        assert_eq!(expected, actual);
-    }
-
-    #[test]
-    fn clock() {
-        let twelve = Point::new(0.0, 0.0, 1.0);
-        let hour = PI / 6.0;
-        let r = Transformation::new().rotate_y(3.0 * hour);
-        let three = r.matrix * twelve;
-
-        assert_eq!(Point::new(1.0, 0.0, 0.0), three);
+        assert_eq!(transform * p, Point::new(2.0, 3.0, 7.0));
     }
 }

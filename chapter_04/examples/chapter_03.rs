@@ -2,7 +2,7 @@ use rustic_ray::{Matrix, Point, IDENTITY};
 
 #[rustfmt::skip]
 fn main() {
-    let mut i = IDENTITY;
+    let i = IDENTITY;
 
     println!("What happens when you invert the identity matrix?");
     println!();
@@ -15,7 +15,7 @@ fn main() {
     println!("--------------------------------------------------------------");
     println!("What do you get when you multiply a matrix by its inverse?");
     println!();
-    let mut a = Matrix::new([
+    let a = Matrix::new([
         [ 3.0, -9.0,  7.0,  3.0],
         [ 3.0, -8.0,  2.0, -9.0],
         [-4.0,  4.0,  4.0,  1.0],

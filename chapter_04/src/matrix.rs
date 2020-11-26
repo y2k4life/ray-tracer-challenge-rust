@@ -10,7 +10,7 @@ use std::{
 #[derive(Debug, Clone, Copy)]
 pub struct Matrix {
     data: [[f64; 4]; 4],
-    inverse: Option<[[f64; 4]; 4]>,
+    inverse: [[f64; 4]; 4],
 }
 
 /// A matrix in which all the elements of the principal diagonal are ones
@@ -23,18 +23,25 @@ pub const IDENTITY: Matrix = Matrix {
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0],
     ],
-    inverse: Some([
+    inverse: [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0],
-    ]),
+    ],
 };
 
 impl Matrix {
-    /// Creates a [`Matrix`] with the provide 4x4 array of `f64` numbers. Even
+    /// Creates a Matrix with the provide 4x4 array of [`f64`] numbers. Even
     /// though the storage of an array is 4x4 the matrix is used for 3x3 and
-    /// 2x2 matrices.
+    /// 2x2 matrices. 
+    /// 
+    /// Calculate the a matrix A-1 which is called the inverse of A such that:
+    /// A * A-1 = A-1 * A = I, where I is the identity matrix. Multiply matrix
+    /// A by matrix B, production C, then C can be multiplied by the inverse of
+    /// B to get A. Similar to scalar numbers multiply A * B = C, to get A by
+    /// inverting B and multiplying by C. For example 5 * 4 = 20 the inverse of
+    /// B is 1/4 and 1/4 * 20 is 5.
     ///
     /// # Example
     ///
@@ -57,9 +64,25 @@ impl Matrix {
     /// assert_eq!(m[3][2], 15.5);
     /// ```
     pub fn new(data: [[f64; 4]; 4]) -> Self {
+        let mut inverse = [[0.0; 4]; 4];
+        let d = Matrix::determinant(data, 4);
+        for row in 0..4 {
+            for col in 0..4 {
+                inverse[col][row] = Matrix::cofactor(data, row, col, 3) / d;
+            }
+        }
+
         Self {
             data,
-            inverse: None,
+            inverse,
+        }
+    }
+
+    // Create a new matrix from the inverse data from `self`.
+    pub fn inverse(&self) -> Matrix {
+        Matrix {
+            data: self.inverse,
+            inverse: self.data,
         }
     }
 
@@ -115,48 +138,16 @@ impl Matrix {
             ],
         ];
 
-        let mut ti = None;
-        if let Some(i) = self.inverse {
-            ti = Some([
-                [i[0][0], i[1][0], i[2][0], i[3][0]],
-                [i[0][1], i[1][1], i[2][1], i[3][1]],
-                [i[0][2], i[1][2], i[2][2], i[3][2]],
-                [i[0][3], i[1][3], i[2][3], i[3][3]],
-            ]);
-        }
+        let it = [
+                [self.inverse[0][0], self.inverse[1][0], self.inverse[2][0], self.inverse[3][0]],
+                [self.inverse[0][1], self.inverse[1][1], self.inverse[2][1], self.inverse[3][1]],
+                [self.inverse[0][2], self.inverse[1][2], self.inverse[2][2], self.inverse[3][2]],
+                [self.inverse[0][3], self.inverse[1][3], self.inverse[2][3], self.inverse[3][3]],
+            ];
 
         Matrix {
             data: d,
-            inverse: ti,
-        }
-    }
-
-    /// Calculate a 4×4 matrix A-1 which is called the inverse of A such that:
-    /// A * A-1 = A-1 * A = I, where I is the identity matrix. Multiply matrix
-    /// A by matrix B, production C, then C can be multiplied by the inverse of
-    /// B to get A. Similar to scalar numbers multiply A * B = C, to get A by
-    /// inverting B and multiplying by C. For example 5 * 4 = 20 the inverse of
-    /// B is 1/4 and 1/4 * 20 is 5.
-    ///
-    /// Calculating the inverse of a matrix is expensive. The inverse of a matrix
-    /// is calculated and store in the give matrix. Subsequent calls to `inverse`
-    /// will return the precalculated matrix.
-    pub fn inverse(&mut self) -> Matrix {
-        if self.inverse.is_none() {
-            let mut i = [[0.0; 4]; 4];
-            let d = Matrix::determinant(self.data, 4);
-            for row in 0..4 {
-                for col in 0..4 {
-                    i[col][row] = Matrix::cofactor(self.data, row, col, 3) / d;
-                }
-            }
-
-            self.inverse = Some(i);
-        }
-
-        Matrix {
-            data: self.inverse.unwrap(),
-            inverse: Some(self.data),
+            inverse: it,
         }
     }
 
@@ -683,7 +674,7 @@ mod tests {
             [ 7.0,  7.0, -6.0, -7.0],
             [ 1.0, -3.0,  7.0,  4.0],
         ];
-        let mut a = Matrix::new(m);
+        let a = Matrix::new(m);
         let b = a.inverse();
 
         assert_eq!(532.0, Matrix::determinant(m, 4));
@@ -707,7 +698,7 @@ mod tests {
     #[test]
     #[rustfmt::skip]
     fn calculating_the_inverse_of_another_matrix() {
-        let mut m = Matrix::new([
+        let m = Matrix::new([
             [ 8.0, -5.0,  9.0,  2.0],
             [ 7.0,  5.0,  6.0,  1.0],
             [-6.0,  0.0,  9.0,  6.0],
@@ -729,7 +720,7 @@ mod tests {
     #[test]
     #[rustfmt::skip]
     fn calculating_the_inverse_of_a_third_matrix() {
-        let mut m = Matrix::new([
+        let m = Matrix::new([
             [ 9.0,  3.0,  0.0,  9.0],
             [-5.0, -2.0, -6.0, -3.0],
             [-4.0,  9.0,  6.0,  4.0],
@@ -757,7 +748,7 @@ mod tests {
             [-4.0,  4.0,  4.0,  1.0],
             [-6.0,  5.0, -1.0,  1.0],
         ]);
-        let mut b = Matrix::new([
+        let b = Matrix::new([
             [8.0,  2.0, 2.0, 2.0],
             [3.0, -1.0, 7.0, 0.0],
             [7.0,  0.0, 5.0, 4.0],
