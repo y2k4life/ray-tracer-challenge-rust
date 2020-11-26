@@ -1,3 +1,5 @@
+//! Rustic Ray is as ray tracer library based on the book The Ray Tracer
+//! Challenge by Jamis Buck
 mod canvas;
 mod color;
 mod matrix;

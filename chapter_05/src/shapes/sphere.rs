@@ -2,6 +2,9 @@ use uuid::Uuid;
 
 use crate::{IDENTITY, Intersection, Matrix, Point, Ray};
 
+/// A sphere is a three-dimensional solid figure which is perfectly round in 
+/// shape and every point on its surface is equidistant from the point  
+/// of the origin.
 #[derive(Debug, PartialEq)]
 pub struct Sphere {
     pub id: Uuid,
@@ -9,6 +12,7 @@ pub struct Sphere {
 }
 
 impl Sphere {
+    /// Create a new `Sphere`.
     pub fn new() -> Self {
         Self {
             id: Uuid::new_v4(),
@@ -16,6 +20,26 @@ impl Sphere {
         }
     }
 
+    /// Test if the given [`Ray`] intersects with `self`. Returns 
+    /// [`Some`]`(`[`Vec`]`<`[`Intersection`]`>)` which is a list of 
+    /// intersection(s) between the [`Ray`] and `self`. Each intersection
+    /// has the position of the [`Ray`] the intersection occurs at and the
+    /// `Sphere` as the object intersected. If there are no intersections
+    /// then [`None`] is returned.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use rustic_ray::{Point, Ray, shapes::Sphere, Vector};
+    /// 
+    /// let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
+    /// let s = Sphere::new();
+    /// let xs = s.intersect(r).expect("Expected hit, found none!");
+    /// 
+    /// assert_eq!(2, xs.len());
+    /// assert_eq!(xs[0].t, 4.0);
+    /// assert_eq!(xs[1].t, 6.0,);
+    /// ```
     pub fn intersect(&self, r: Ray) -> Option<Vec<Intersection>> {
         let mut xs: Vec<Intersection> = Vec::new();
         
