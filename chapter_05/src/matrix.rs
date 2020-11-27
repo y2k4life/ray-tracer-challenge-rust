@@ -34,8 +34,8 @@ pub const IDENTITY: Matrix = Matrix {
 impl Matrix {
     /// Creates a Matrix with the provide 4x4 array of [`f64`] numbers. Even
     /// though the storage of an array is 4x4 the matrix is used for 3x3 and
-    /// 2x2 matrices. 
-    /// 
+    /// 2x2 matrices.
+    ///
     /// Calculate the a matrix A-1 which is called the inverse of A such that:
     /// A * A-1 = A-1 * A = I, where I is the identity matrix. Multiply matrix
     /// A by matrix B, production C, then C can be multiplied by the inverse of
@@ -71,11 +71,8 @@ impl Matrix {
                 inverse[col][row] = Matrix::cofactor(data, row, col, 3) / d;
             }
         }
-        
-        Self {
-            data,
-            inverse,
-        }
+
+        Self { data, inverse }
     }
 
     // Create a new matrix from the inverse data from `self`.
@@ -100,7 +97,7 @@ impl Matrix {
     ///     [1.0, 8.0, 5.0, 3.0],
     ///     [0.0, 0.0, 5.0, 8.0],
     /// ]);
-    /// 
+    ///
     /// let expected = Matrix::new([
     ///     [0.0, 9.0, 1.0, 0.0],
     ///     [9.0, 8.0, 8.0, 0.0],
@@ -139,11 +136,31 @@ impl Matrix {
         ];
 
         let it = [
-                [self.inverse[0][0], self.inverse[1][0], self.inverse[2][0], self.inverse[3][0]],
-                [self.inverse[0][1], self.inverse[1][1], self.inverse[2][1], self.inverse[3][1]],
-                [self.inverse[0][2], self.inverse[1][2], self.inverse[2][2], self.inverse[3][2]],
-                [self.inverse[0][3], self.inverse[1][3], self.inverse[2][3], self.inverse[3][3]],
-            ];
+            [
+                self.inverse[0][0],
+                self.inverse[1][0],
+                self.inverse[2][0],
+                self.inverse[3][0],
+            ],
+            [
+                self.inverse[0][1],
+                self.inverse[1][1],
+                self.inverse[2][1],
+                self.inverse[3][1],
+            ],
+            [
+                self.inverse[0][2],
+                self.inverse[1][2],
+                self.inverse[2][2],
+                self.inverse[3][2],
+            ],
+            [
+                self.inverse[0][3],
+                self.inverse[1][3],
+                self.inverse[2][3],
+                self.inverse[3][3],
+            ],
+        ];
 
         Matrix {
             data: d,

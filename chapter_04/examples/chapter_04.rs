@@ -34,9 +34,7 @@ fn main() {
 }
 
 fn clock_hour(hour: f64) -> (usize, usize) {
-    let r = Transformation::new()
-        .rotate_y(hour * PI / 6.0)
-        .build();
+    let r = Transformation::new().rotate_y(hour * PI / 6.0).build();
     let hour_point = r * Point::new(0.0, 0.0, 1.0);
 
     let radius = (3.0 / 8.0) * 200.0;

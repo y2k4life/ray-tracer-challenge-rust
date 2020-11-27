@@ -2,7 +2,7 @@ use uuid::Uuid;
 
 use crate::{IDENTITY, Intersection, Matrix, Point, Ray};
 
-/// A sphere is a three-dimensional solid figure which is perfectly round in 
+/// A sphere is a three-dimensional solid figure which is perfectly round in
 /// shape and every point on its surface is equidistant from the point  
 /// of the origin.
 #[derive(Debug, PartialEq)]
@@ -31,18 +31,18 @@ impl Sphere {
     ///
     /// ```
     /// use rustic_ray::{Point, Ray, shapes::Sphere, Vector};
-    /// 
+    ///
     /// let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
     /// let s = Sphere::new();
     /// let xs = s.intersect(r).expect("Expected hit, found none!");
-    /// 
+    ///
     /// assert_eq!(2, xs.len());
     /// assert_eq!(xs[0].t, 4.0);
     /// assert_eq!(xs[1].t, 6.0,);
     /// ```
     pub fn intersect(&self, r: Ray) -> Option<Vec<Intersection>> {
         let mut xs: Vec<Intersection> = Vec::new();
-        
+
         let r = r.transform(self.transform.inverse());
 
         let sphere_to_ray = r.origin - Point::new(0.0, 0.0, 0.0);
@@ -59,7 +59,7 @@ impl Sphere {
 
         let t1 = (-b - discriminant.sqrt()) / (2.0 * a);
         xs.push(Intersection::new(t1, self));
-        
+
         let t2 = (-b + discriminant.sqrt()) / (2.0 * a);
         xs.push(Intersection::new(t2, self));
 
@@ -156,10 +156,7 @@ mod tests {
     #[test]
     pub fn changing_a_sphere_transformation() {
         let mut s = Sphere::new();
-        let t = 
-            Transformation::new()
-            .translate(2.0, 3.0, 4.0)
-            .build();
+        let t = Transformation::new().translate(2.0, 3.0, 4.0).build();
         s.transform = t;
 
         assert!(s.transform == t);
@@ -171,9 +168,7 @@ mod tests {
     fn intersecting_a_scaled_sphere_with_a_ray() {
         let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
         let mut s = Sphere::new();
-        s.transform = Transformation::new()
-            .scale(2.0, 2.0, 2.0)
-            .build();
+        s.transform = Transformation::new().scale(2.0, 2.0, 2.0).build();
         let xs = s.intersect(r).expect("Expected hit, found none!");
 
         assert_eq!(xs.len(), 2);
@@ -187,9 +182,7 @@ mod tests {
     fn intersecting_a_translated_sphere_with_a_ray() {
         let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
         let mut s = Sphere::new();
-        s.transform = Transformation::new()
-            .translate(5.0, 0.0, 0.0)
-            .build();
+        s.transform = Transformation::new().translate(5.0, 0.0, 0.0).build();
         let xs = s.intersect(r);
 
         assert!(xs.is_none());

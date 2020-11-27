@@ -1,10 +1,11 @@
 use crate::float_eq;
 use std::ops::{Add, Mul, Neg, Sub};
 
-/// An element representing pixel on the drawing canvas. A `Color` element is
-/// comprised of three floating point numbers ([`f64`]) ranging from 0.0 to 1.0.
-/// The three numbers represents the amount of red, green, or blue the `Color`
-/// will have.
+/// An element representing pixel on the drawing canvas.
+///
+/// A `Color` element is comprised of three floating point numbers ([`f64`])
+/// ranging from 0.0 to 1.0. The three numbers represents the amount of red,
+/// green, or blue the `Color` will have.
 #[derive(Debug, Copy, Clone)]
 pub struct Color {
     pub red: f64,

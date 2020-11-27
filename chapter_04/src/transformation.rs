@@ -1,9 +1,10 @@
 use crate::{Matrix, multiple_array};
 
 /// Transformations are used to move and deform objects. The transformations
-/// are scaling, translations, rotations, and shearing. Transformations are
-/// chained together. Transformations are performed on `self` and return a 
-/// new `Transformation` with the transformation called added to `self`. 
+/// included are scale, translate, rotate, and shear.
+///
+/// Transformations are chained together. Transformations are performed on `self` and return a
+/// new `Transformation` with the transformation called added to `self`.
 /// Call the `build` function at the end of the chain to build a transformation
 /// [`Matrix`]. Creating a [`Matrix`] calculates the inverse of the [`Matrix`]
 /// which is expensive. For this reason creating a transformation [`Matrix`] is
@@ -15,7 +16,7 @@ pub struct Transformation {
 
 impl Transformation {
     /// Create a new `Transformation` as the start of a transformation chain
-    /// to be performed on an object. 
+    /// to be performed on an object.
     ///
     /// # Example
     ///
@@ -36,12 +37,14 @@ impl Transformation {
     /// assert_eq!(transform * p, Point::new(15.0, 0.0, 7.0));
     /// ```
     pub fn new() -> Transformation {
-        Transformation { data: [
-            [1.0, 0.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0, 0.0],
-            [0.0, 0.0, 1.0, 0.0],
-            [0.0, 0.0, 0.0, 1.0]
-        ]}
+        Transformation {
+            data: [
+                [1.0, 0.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0, 0.0],
+                [0.0, 0.0, 0.0, 1.0],
+            ],
+        }
     }
 
     /// Creates a matrix from the transformations data
@@ -50,7 +53,7 @@ impl Transformation {
     }
 
     /// A transformation that moves a point. An inverse of a translation
-    /// is a transformation that moves a point in reverse. Applying a 
+    /// is a transformation that moves a point in reverse. Applying a
     /// translation to a vector will not change the vector. A vector is an
     /// arrow moving it around in space does not change the direction it
     /// points.
@@ -80,7 +83,7 @@ impl Transformation {
         }
     }
 
-    /// A transformation that scales all points of an object for the give 
+    /// A transformation that scales all points of an object for the give
     /// axes that don't have a `0` value. A positive number will move the points
     /// outward and negative number will move them inward. Scaling can be applied
     /// to vectors as well changing their length.
@@ -94,7 +97,7 @@ impl Transformation {
     ///     .scale(2.0, 3.0, 4.0)
     ///     .build();
     /// let p = Point::new(-4.0, 6.0, 8.0);
-    /// 
+    ///
     /// assert_eq!(transform * p, Point::new(-8.0, 18.0, 32.0));
     /// ```
     pub fn scale(self, x: f64, y: f64, z: f64) -> Transformation {
@@ -113,7 +116,7 @@ impl Transformation {
     /// Rotates an object around the `x` axis for the give number of radians
     ///
     /// # Example
-    /// 
+    ///
     /// ```
     /// use rustic_ray::{Point, Transformation};
     /// use std::f64::consts::PI;
@@ -125,7 +128,7 @@ impl Transformation {
     /// let full_quarter = Transformation::new()
     ///     .rotate_x(PI / 2.0)
     ///     .build();
-    /// 
+    ///
     /// assert_eq!(
     ///     half_quarter * p,
     ///     Point::new(0.0, 2_f64.sqrt() / 2.0, 2_f64.sqrt() / 2.0)
@@ -152,7 +155,7 @@ impl Transformation {
     /// ```
     /// use rustic_ray::{Point, Transformation};
     /// use std::f64::consts::PI;
-    /// 
+    ///
     /// let p = Point::new(0.0, 0.0, 1.0);
     /// let half_quarter = Transformation::new()
     ///     .rotate_y(PI / 4.0)
@@ -160,7 +163,7 @@ impl Transformation {
     /// let full_quarter = Transformation::new()
     ///     .rotate_y(PI / 2.0)
     ///     .build();
-    /// 
+    ///
     /// assert_eq!(
     ///     half_quarter * p,
     ///     Point::new(2_f64.sqrt() / 2.0, 0.0, 2_f64.sqrt() / 2.0)
@@ -180,7 +183,7 @@ impl Transformation {
         }
     }
 
-     /// Rotates an object around the `z` axis for the give number of radians
+    /// Rotates an object around the `z` axis for the give number of radians.
     ///
     /// # Example
     ///
@@ -218,19 +221,19 @@ impl Transformation {
     /// of an object in proportion to the other two components. The x component
     /// changes in proportion to y and z. The y component changes in proportion
     /// to x and z. The z component changes in proportion to x and y. What this
-    /// mean for example is that the farther the y coordinate is from zero, 
-    /// the more the x value changes
+    /// mean for example is that the farther the y coordinate is from zero,
+    /// the more the x value changes.
     ///
     /// # Example
     ///
     /// ```
     /// use rustic_ray::{Point, Transformation};
-    /// 
+    ///
     /// let transform = Transformation::new()
     ///     .shear(1.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     ///     .build();
     /// let p = Point::new(2.0, 3.0, 4.0);
-    /// 
+    ///
     /// assert_eq!(transform * p, Point::new(5.0, 3.0, 4.0));
     /// ```
     pub fn shear(self, xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Transformation {
@@ -263,9 +266,7 @@ mod tests {
     // Chapter 4 Transformations
     // Page 45
     fn multiplying_by_a_translation_matrix() {
-        let transform = Transformation::new()
-            .translate(5.0, -3.0, 2.0)
-            .build();
+        let transform = Transformation::new().translate(5.0, -3.0, 2.0).build();
         let p = Point::new(-3.0, 4.0, 5.0);
 
         assert_eq!(transform * p, Point::new(2.0, 1.0, 7.0));
@@ -286,9 +287,7 @@ mod tests {
     // Page 45
     #[test]
     fn translation_does_not_affect_vectors() {
-        let transform = Transformation::new()
-            .translate(5.0, -3.0, 2.0)
-            .build();
+        let transform = Transformation::new().translate(5.0, -3.0, 2.0).build();
         let v = Vector::new(-3.0, 4.0, 5.0);
 
         assert_eq!(transform * v, v);
@@ -298,9 +297,7 @@ mod tests {
     // Page 46
     #[test]
     fn a_scaling_matrix_applied_to_a_point() {
-        let transform = Transformation::new()
-            .scale(2.0, 3.0, 4.0)
-            .build();
+        let transform = Transformation::new().scale(2.0, 3.0, 4.0).build();
         let p = Point::new(-4.0, 6.0, 8.0);
 
         assert_eq!(transform * p, Point::new(-8.0, 18.0, 32.0));
@@ -310,9 +307,7 @@ mod tests {
     // Page 46
     #[test]
     fn a_scaling_matrix_applied_to_a_vector() {
-        let transform = Transformation::new()
-            .scale(2.0, 3.0, 4.0)
-            .build();
+        let transform = Transformation::new().scale(2.0, 3.0, 4.0).build();
         let v = Vector::new(-4.0, 6.0, 8.0);
 
         assert_eq!(transform * v, Vector::new(-8.0, 18.0, 32.0));
@@ -322,9 +317,7 @@ mod tests {
     // Page 46
     #[test]
     fn multiplying_by_the_inverse_of_a_scaling_matrix() {
-        let transform = Transformation::new()
-            .scale(2.0, 3.0, 4.0)
-            .build();
+        let transform = Transformation::new().scale(2.0, 3.0, 4.0).build();
         let inv = transform.inverse();
         let v = Vector::new(-4.0, 6.0, 8.0);
 
@@ -335,9 +328,7 @@ mod tests {
     // Page 47
     #[test]
     fn reflection_is_scaling_by_a_negative_value() {
-        let transform = Transformation::new()
-            .scale(-1.0, 1.0, 1.0)
-            .build();
+        let transform = Transformation::new().scale(-1.0, 1.0, 1.0).build();
         let p = Point::new(2.0, 3.0, 4.0);
 
         assert_eq!(transform * p, Point::new(-2.0, 3.0, 4.0));
@@ -348,12 +339,8 @@ mod tests {
     #[test]
     fn rotating_a_point_around_the_x_axis() {
         let p = Point::new(0.0, 1.0, 0.0);
-        let half_quarter = Transformation::new()
-            .rotate_x(PI / 4.0)
-            .build();
-        let full_quarter = Transformation::new()
-            .rotate_x(PI / 2.0)
-            .build();
+        let half_quarter = Transformation::new().rotate_x(PI / 4.0).build();
+        let full_quarter = Transformation::new().rotate_x(PI / 2.0).build();
 
         assert_eq!(
             half_quarter * p,
@@ -367,9 +354,7 @@ mod tests {
     #[test]
     fn the_inverse_of_an_x_rotation_rotates_in_the_opposite_direction() {
         let p = Point::new(0.0, 1.0, 0.0);
-        let half_quarter = Transformation::new()
-            .rotate_x(PI / 4.0)
-            .build();
+        let half_quarter = Transformation::new().rotate_x(PI / 4.0).build();
         let inv = half_quarter.inverse();
 
         assert_eq!(
@@ -383,12 +368,8 @@ mod tests {
     #[test]
     fn rotating_a_point_around_the_y_axis() {
         let p = Point::new(0.0, 0.0, 1.0);
-        let half_quarter = Transformation::new()
-            .rotate_y(PI / 4.0)
-            .build();
-        let full_quarter = Transformation::new()
-            .rotate_y(PI / 2.0)
-            .build();
+        let half_quarter = Transformation::new().rotate_y(PI / 4.0).build();
+        let full_quarter = Transformation::new().rotate_y(PI / 2.0).build();
 
         assert_eq!(
             half_quarter * p,
@@ -402,12 +383,8 @@ mod tests {
     #[test]
     fn rotating_a_point_around_the_z_axis() {
         let p = Point::new(0.0, 1.0, 0.0);
-        let half_quarter = Transformation::new()
-            .rotate_z(PI / 4.0)
-            .build();
-        let full_quarter = Transformation::new()
-            .rotate_z(PI / 2.0)
-            .build();
+        let half_quarter = Transformation::new().rotate_z(PI / 4.0).build();
+        let full_quarter = Transformation::new().rotate_z(PI / 2.0).build();
 
         assert_eq!(
             half_quarter * p,

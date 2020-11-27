@@ -1,21 +1,17 @@
-use std::{fs::File, f64::consts::PI, io::Write, path::Path};
+use std::{f64::consts::PI, fs::File, io::Write, path::Path};
 
-use rustic_ray::{Canvas, Color, Point, Ray, shapes::Sphere, Transformation};
+use rustic_ray::{shapes::Sphere, Canvas, Color, Point, Ray, Transformation};
 
 fn main() {
     let mut shape = Sphere::new();
     draw_shape(&shape, "circle.ppm");
 
     // shrink it along the y axis
-    shape.transform = Transformation::new()
-        .scale(1.0, 0.5, 1.0)
-        .build();
+    shape.transform = Transformation::new().scale(1.0, 0.5, 1.0).build();
     draw_shape(&shape, "shrink_y.ppm");
 
     // shrink it along the x axis
-    shape.transform = Transformation::new()
-        .scale(0.5, 1.0, 1.0)
-        .build();
+    shape.transform = Transformation::new().scale(0.5, 1.0, 1.0).build();
     draw_shape(&shape, "shrink_x.ppm");
 
     // shrink it and rotate it!
@@ -36,7 +32,7 @@ fn main() {
 fn draw_shape(shape: &Sphere, file_name: &str) {
     let ray_origin = Point::new(0.0, 0.0, -5.0);
     let wall_z = 10.0;
-    
+
     let wall_size = 7.0;
     let canvas_pixels = 400;
 
@@ -46,7 +42,6 @@ fn draw_shape(shape: &Sphere, file_name: &str) {
 
     let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);
     let color = Color::new(1.0, 0.0, 0.0);
-    
 
     for y in 0..canvas_pixels {
         let world_y = half - pixel_size * y as f64;

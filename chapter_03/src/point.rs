@@ -171,7 +171,7 @@ mod tests {
     fn subtracting_two_points() {
         let p1 = Point::new(3.0, 2.0, 1.0);
         let p2 = Point::new(5.0, 6.0, 7.0);
-        
+
         assert_eq!(p1 - p2, Vector::new(-2.0, -4.0, -6.0));
     }
 
