@@ -4,7 +4,7 @@ Implementing the book [The Ray Tracer Challenge by Jamis Buck](https://www.barne
 
 ## Folder Structure
 
-There are individual projects for each chapter in the respective folder. The goal is to keep each chapter separate from one another simplifying the structure by not having a single with each chapter.
+There are individual projects for each chapter in the respective folder. The goal is to keep each chapter separate from one another simplifying the structure by not having a single workspace with all chapter included. There would also be package naming conflicts.
 
 Each chapter builds on the previous chapter. Each chapter is separated because the code done in one chapter will change in a future chapter. By having a complete project for a given chapter will represent what the code looks like at the end of a chapter including all previous chapters. If you are looking for the final code that will be in Chapter 16.
 
