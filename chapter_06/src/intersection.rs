@@ -2,16 +2,20 @@ use crate::float_cmp;
 use crate::shapes::Sphere;
 use std::cmp::Ordering;
 
-/// Aggregate the position of an intersection and the object that was
-/// intersected.
+/// Aggregate of the distance from a [`Ray`]'s origin and the object that was
+/// intersected by a [`Ray`] at that distance.
 #[derive(Debug)]
 pub struct Intersection<'a> {
+    /// Distance from the origin of a [`Ray`] to the intersection.
     pub t: f64,
+    /// The object intersected by a ray.
     pub object: &'a Sphere,
 }
 
 impl<'a> Intersection<'a> {
-    /// Create a new `intersection` for the give position and object.
+    /// Constructs a new `Intersection` with the give distance from the origin
+    /// of a [`Ray`] to the intersection, the `t` value and the object 
+    /// intersected.
     ///
     /// # Example
     ///
@@ -28,10 +32,15 @@ impl<'a> Intersection<'a> {
         Intersection { t, object }
     }
 
-    /// Identify which intersection of all teh intersections are visible from
-    /// the ray's origin. The `hit` is the intersection with the lowest
-    /// nonnegative `t` value.
-    ///
+    /// Identify which intersection from a list of intersections is visible
+    /// from the ray's origin looking out in the direction of the ray. The `hit`
+    /// is the intersection with the shortest distance from the origin going in
+    /// a positive direction, the `t` value. A negative distance is behind the 
+    /// origin of the the ray and can't be seen. The shortest or lowest `t` value 
+    /// in a positive direction is the closest to the origin, the intersection(s)
+    /// that are greater are behind the `hit` and can't be seen because the `hit`
+    /// is blocking them.
+    ///    
     /// # Example
     ///
     /// ```
