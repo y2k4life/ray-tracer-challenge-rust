@@ -3,7 +3,7 @@
 # by changing to a chapter folder and running various
 # cargo commands to build, test, and the examples.
 
-chapter=7
+chapter=8
 
 folder_counter=1
 while [ $folder_counter -le $chapter ]
