@@ -35,8 +35,8 @@ impl<'a> Intersection<'a> {
     /// Identify which intersection from a list of intersections is visible
     /// from the ray's origin looking out in the direction of the ray. The `hit`
     /// is the intersection with the shortest distance from the origin going in
-    /// a positive direction, the `t` value. A negative distance is behind the 
-    /// origin of the the ray and can't be seen. The shortest or lowest `t` value 
+    /// a positive direction, the `t` value. A negative distance is behind the
+    /// origin of the the ray and can't be seen. The shortest or lowest `t` value
     /// in a positive direction is the closest to the origin, the intersection(s)
     /// that are greater are behind the `hit` and can't be seen because the `hit`
     /// is blocking them.

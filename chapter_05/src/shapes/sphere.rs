@@ -20,8 +20,8 @@ impl Sphere {
         }
     }
 
-    /// Test if the given [`Ray`] intersects with `self`. Returns 
-    /// [`Some`]`(`[`Vec`]`<`[`Intersection`]`>)` which is a list of 
+    /// Test if the given [`Ray`] intersects with `self`. Returns
+    /// [`Some`]`(`[`Vec`]`<`[`Intersection`]`>)` which is a list of
     /// intersection(s) between the [`Ray`] and `self`. Each intersection
     /// has the position of the [`Ray`] the intersection occurs at and the
     /// `Sphere` as the object intersected. If there are no intersections
