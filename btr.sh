@@ -1,15 +1,15 @@
 #!/bin/bash
 # BTS script will Build, Test, and Run all examples
-# by changing to a chapter folder and running various 
+# by changing to a chapter folder and running various
 # cargo commands to build, test, and the examples.
 
-chapter=6
+chapter=7
 
 folder_counter=1
 while [ $folder_counter -le $chapter ]
 do
 folder=chapter_`printf %02d $folder_counter`
-	
+
 cd $folder
 cargo build --all
 [ $? -eq 0 ]  || exit 1
@@ -29,4 +29,4 @@ cd ..
 ((folder_counter++))
 done
 
-
+find . -type f -name '*.ppm' -delete
