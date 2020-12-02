@@ -1,4 +1,7 @@
-use rustic_ray::{Camera, Color, shapes::Plane, Point, PointLight, Transformation, Vector, World, shapes::Shape, shapes::Sphere};
+use rustic_ray::{
+    shapes::Plane, shapes::Shape, shapes::Sphere, Camera, Color, Point, PointLight, Transformation,
+    Vector, World,
+};
 use std::{f64::consts::PI, fs::File, io::Write, path::Path};
 
 fn main() {

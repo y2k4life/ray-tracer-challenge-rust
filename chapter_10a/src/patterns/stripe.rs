@@ -1,4 +1,4 @@
-use crate::{Color, IDENTITY, Matrix, Point, shapes::Shape};
+use crate::{shapes::Shape, Color, Matrix, Point, IDENTITY};
 use uuid::Uuid;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -37,7 +37,7 @@ impl Stripe {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{Colors, Point, shapes::Sphere, Transformation};
+    use crate::{shapes::Sphere, Colors, Point, Transformation};
 
     // Chapter 10 Patterns
     // Page 128
@@ -54,7 +54,7 @@ mod tests {
     #[test]
     fn a_stripe_pattern_is_constant_in_y() {
         let pattern = Stripe::new(Colors::WHITE, Colors::BLACK);
-        
+
         assert_eq!(pattern.stripe_at(Point::new(0.0, 0.0, 0.0)), Colors::WHITE);
         assert_eq!(pattern.stripe_at(Point::new(0.0, 1.0, 0.0)), Colors::WHITE);
         assert_eq!(pattern.stripe_at(Point::new(0.0, 2.0, 0.0)), Colors::WHITE);
@@ -65,7 +65,7 @@ mod tests {
     #[test]
     fn a_stripe_pattern_is_constant_in_z() {
         let pattern = Stripe::new(Colors::WHITE, Colors::BLACK);
-        
+
         assert_eq!(pattern.stripe_at(Point::new(0.0, 0.0, 0.0)), Colors::WHITE);
         assert_eq!(pattern.stripe_at(Point::new(0.0, 0.0, 1.0)), Colors::WHITE);
         assert_eq!(pattern.stripe_at(Point::new(0.0, 0.0, 2.0)), Colors::WHITE);
@@ -76,22 +76,13 @@ mod tests {
     #[test]
     fn a_stripe_pattern_alternates_in_x() {
         let pattern = Stripe::new(Colors::WHITE, Colors::BLACK);
-        
+
         assert_eq!(pattern.stripe_at(Point::new(0.0, 0.0, 0.0)), Colors::WHITE);
         assert_eq!(pattern.stripe_at(Point::new(0.9, 0.0, 0.0)), Colors::WHITE);
         assert_eq!(pattern.stripe_at(Point::new(1.0, 0.0, 0.0)), Colors::BLACK);
-        assert_eq!(
-            pattern.stripe_at(Point::new(-0.1, 0.0, 0.0)),
-            Colors::BLACK
-        );
-        assert_eq!(
-            pattern.stripe_at(Point::new(-1.0, 0.0, 0.0)),
-            Colors::BLACK
-        );
-        assert_eq!(
-            pattern.stripe_at(Point::new(-1.1, 0.0, 0.0)),
-            Colors::WHITE
-        );
+        assert_eq!(pattern.stripe_at(Point::new(-0.1, 0.0, 0.0)), Colors::BLACK);
+        assert_eq!(pattern.stripe_at(Point::new(-1.0, 0.0, 0.0)), Colors::BLACK);
+        assert_eq!(pattern.stripe_at(Point::new(-1.1, 0.0, 0.0)), Colors::WHITE);
     }
 
     // Chapter 10 Patterns
@@ -103,7 +94,7 @@ mod tests {
         let pattern = Stripe::new(Colors::WHITE, Colors::BLACK);
 
         let c = pattern.stripe_at_object(&object, Point::new(1.5, 0.0, 0.0));
-        
+
         assert_eq!(c, Colors::WHITE);
     }
 
@@ -115,7 +106,7 @@ mod tests {
         let mut pattern = Stripe::new(Colors::WHITE, Colors::BLACK);
         pattern.transform = Transformation::new().scale(2.0, 2.0, 2.0).build();
         let c = pattern.stripe_at_object(&object, Point::new(1.5, 0.0, 0.0));
-        
+
         assert_eq!(c, Colors::WHITE);
     }
 
@@ -128,7 +119,7 @@ mod tests {
         let mut pattern = Stripe::new(Colors::WHITE, Colors::BLACK);
         pattern.transform = Transformation::new().translate(0.5, 0.0, 0.0).build();
         let c = pattern.stripe_at_object(&object, Point::new(2.5, 0.0, 0.0));
-        
+
         assert_eq!(c, Colors::WHITE);
     }
 }

@@ -1,6 +1,6 @@
-use crate::{EPSILON, IDENTITY, Intersection, Material, Matrix, Point, Ray, Vector};
-use uuid::Uuid;
 use super::Shape;
+use crate::{Intersection, Material, Matrix, Point, Ray, Vector, EPSILON, IDENTITY};
+use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct Plane {
@@ -48,7 +48,7 @@ impl Shape for Plane {
 
     fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
         if ray.direction.y.abs() < EPSILON {
-            return None
+            return None;
         }
 
         let t = -ray.origin.y / ray.direction.y;
@@ -78,7 +78,6 @@ mod tests {
         assert_eq!(n3, Vector::new(0.0, 1.0, 0.0));
     }
 
-
     // Chapter 9 Planes
     // Page 123
     #[test]
@@ -86,7 +85,7 @@ mod tests {
         let p = Plane::new();
         let r = Ray::new(Point::new(0.0, 10.0, 0.0), Vector::new(0.0, 0.0, 1.0));
         let xs = p.local_intersect(r);
-        
+
         assert_eq!(xs, None);
     }
 
@@ -97,7 +96,7 @@ mod tests {
         let p = Plane::new();
         let r = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 1.0));
         let xs = p.local_intersect(r);
-        
+
         assert_eq!(xs, None);
     }
 

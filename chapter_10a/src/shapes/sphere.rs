@@ -1,8 +1,8 @@
 use super::Shape;
+#[allow(unused_imports)]
+use crate::Transformation;
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector, IDENTITY};
 use uuid::Uuid;
-#[allow(unused_imports)]
-use crate::{Transformation};
 
 /// A sphere is a three-dimensional solid figure which is perfectly round in
 /// shape and every point on its surface is equidistant from the point
@@ -161,7 +161,7 @@ mod tests {
     // Page 69
     // removed in Chapter 9
     // a_sphere_default_transformation
-    
+
     // Chapter 5 Ray-Sphere Intersections
     // Page 69
     // removed in Chapter 9

@@ -13,7 +13,8 @@ fn main() {
     let mut pattern = Stripe::new(Colors::WHITE, Colors::BLACK);
     pattern.transform = Transformation::new()
         .scale(0.5, 0.5, 0.5)
-        .rotate_y(PI / 6.0).build();
+        .rotate_y(PI / 6.0)
+        .build();
     floor.material.pattern = Some(pattern);
     world.add_object(Box::new(floor));
 

@@ -1,6 +1,6 @@
 use crate::{
-    shapes::Shape, shapes::Sphere, Color, Colors, Computations, Intersection, Point,
-    PointLight, Ray, Transformation,
+    shapes::Shape, shapes::Sphere, Color, Colors, Computations, Intersection, Point, PointLight,
+    Ray, Transformation,
 };
 
 /// A collection of all objects in a scene.
@@ -55,7 +55,7 @@ impl World {
         let shadowed = self.is_shadow(comps.over_point);
 
         comps.object.material().lighting(
-            &Sphere::new(), 
+            &Sphere::new(),
             self.light.expect("World has no light source"),
             comps.over_point,
             comps.eyev,
