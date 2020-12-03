@@ -1,17 +1,22 @@
-use crate::{EPSILON, IDENTITY, Intersection, Material, Matrix, Point, Ray, Vector};
-use uuid::Uuid;
 use super::Shape;
+use crate::{Intersection, Material, Matrix, Point, Ray, Vector, EPSILON, IDENTITY};
+use uuid::Uuid;
 
+/// A perfectly flat surface that extends infinitely in two dimensions.
+///
+/// The place extends infinitely far in both teh `x` and `z` dimensions passing
+/// through the origin.
 #[derive(Debug)]
 pub struct Plane {
     id: Uuid,
-    /// [`crate::Transformation`] matrix used to manipulate the `Sphere`
+    /// [`crate::Transformation`] matrix used to manipulate the `Plane`
     pub transform: Matrix,
-    /// [`Material`] describing the look of the `Sphere`
+    /// [`Material`] describing the look of the `Plane`
     pub material: Material,
 }
 
 impl Plane {
+    /// Create a new plane.
     pub fn new() -> Self {
         Plane {
             id: Uuid::new_v4(),
@@ -48,7 +53,7 @@ impl Shape for Plane {
 
     fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
         if ray.direction.y.abs() < EPSILON {
-            return None
+            return None;
         }
 
         let t = -ray.origin.y / ray.direction.y;
@@ -78,7 +83,6 @@ mod tests {
         assert_eq!(n3, Vector::new(0.0, 1.0, 0.0));
     }
 
-
     // Chapter 9 Planes
     // Page 123
     #[test]
@@ -86,7 +90,7 @@ mod tests {
         let p = Plane::new();
         let r = Ray::new(Point::new(0.0, 10.0, 0.0), Vector::new(0.0, 0.0, 1.0));
         let xs = p.local_intersect(r);
-        
+
         assert_eq!(xs, None);
     }
 
@@ -97,7 +101,7 @@ mod tests {
         let p = Plane::new();
         let r = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 1.0));
         let xs = p.local_intersect(r);
-        
+
         assert_eq!(xs, None);
     }
 

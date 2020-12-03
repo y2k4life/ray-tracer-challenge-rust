@@ -81,7 +81,7 @@ fn main() {
         Color::new(1.0, 1.0, 1.0),
     ));
 
-    let mut camera = Camera::new(640, 480, PI / 2.5);
+    let mut camera = Camera::new(400, 400, PI / 2.5);
 
     camera.transform = Transformation::view_transform(
         Point::new(1.25, 1.0, -6.0),
@@ -91,7 +91,7 @@ fn main() {
 
     let canvas = camera.render(&world);
 
-    let path = Path::new("balls.ppm");
+    let path = Path::new("chapter_08.ppm");
     let display = path.display();
 
     let mut file = match File::create(&path) {

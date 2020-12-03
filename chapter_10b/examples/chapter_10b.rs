@@ -1,4 +1,8 @@
-use rustic_ray::{Camera, Color, Colors, Point, PointLight, patterns::Ring, Transformation, Vector, World, patterns::Checkers, patterns::Stripe, shapes::Plane, shapes::Shape, shapes::Sphere};
+use rustic_ray::{
+    patterns::Checkers, patterns::Gradient, patterns::Ring, patterns::Stripe, shapes::Plane,
+    shapes::Shape, shapes::Sphere, Camera, Color, Colors, Point, PointLight, Transformation,
+    Vector, World,
+};
 use std::{f64::consts::PI, fs::File, io::Write, path::Path};
 
 fn main() {
@@ -34,9 +38,13 @@ fn main() {
             .translate(1.5, 0.5, -0.5)
             .build(),
     );
-    right.material.color = Colors::RED;
     right.material.diffuse = 0.7;
     right.material.specular = 0.3;
+    let mut pattern = Gradient::new(Colors::RED, Colors::BLACK);
+    pattern.transform = Transformation::new()
+        .rotate_z(-PI / 2.0)
+        .build();
+    right.material.pattern = Some(Box::new(pattern));
     world.add_object(Box::new(right));
 
     let mut left = Sphere::new();

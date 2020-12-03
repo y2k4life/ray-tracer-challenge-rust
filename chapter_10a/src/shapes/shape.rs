@@ -85,32 +85,6 @@ pub trait Shape: fmt::Debug {
         let world_normal = self.transform().inverse().transpose() * local_normal;
         world_normal.normalize()
     }
-
-    /*
-        fn world_to_object(&self, point: Point, sc: &ShapeContainer) -> Point {
-            let object_point = match self.parent_id() {
-                Some(id) => {
-                    let parent = sc.get_shape(id).expect("Shape not found!");
-                    parent.world_to_object(point, sc)
-                }
-                None => point,
-            };
-
-            self.transform().inverse() * object_point
-        }
-
-        fn normal_to_world(&self, normal: Vector, w: &ShapeContainer) -> Vector {
-            let world_normal = (self.transform().inverse().transpose() * normal).normalize();
-
-            match self.parent_id() {
-                Some(id) => {
-                    let parent = w.get_shape(id).expect("Shape not found!");
-                    parent.normal_to_world(world_normal, w)
-                }
-                None => world_normal,
-            }
-        }
-    */
 }
 
 impl PartialEq for dyn Shape {

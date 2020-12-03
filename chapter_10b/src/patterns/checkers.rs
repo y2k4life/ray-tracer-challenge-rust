@@ -53,7 +53,7 @@ mod tests {
     #[test]
     fn checkers_should_repeat_in_x() {
         let pattern = Checkers::new(Colors::WHITE, Colors::BLACK);
-        
+
         assert_eq!(pattern.pattern_at(Point::new(0.0, 0.0, 0.0)), Colors::WHITE);
         assert_eq!(
             pattern.pattern_at(Point::new(0.99, 0.0, 0.0)),
@@ -87,7 +87,7 @@ mod tests {
     #[test]
     fn checkers_should_repeat_in_z() {
         let pattern = Checkers::new(Colors::WHITE, Colors::BLACK);
-        
+
         assert_eq!(pattern.pattern_at(Point::new(0.0, 0.0, 0.0)), Colors::WHITE);
         assert_eq!(
             pattern.pattern_at(Point::new(0.0, 0.0, 0.99)),

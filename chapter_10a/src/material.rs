@@ -32,7 +32,7 @@ pub struct Material {
     /// Controlled *specular highlight*. The higher the shininess, the smaller
     /// and tighter the specular highlight.
     pub shininess: f64,
-
+    /// An optional [`Stripe`] pattern for the material instead of a color.
     pub pattern: Option<Stripe>,
 }
 
@@ -70,7 +70,9 @@ impl Material {
     }
 
     /// Add together the material's ambient, diffuse, and specular components,
-    /// weighted by the angels between the different vectors.
+    /// weighted by the angels between the different vectors. Either using the
+    /// color of the material or the color for where the point is on the
+    /// [`Stripe`] pattern.
     pub fn lighting(
         &self,
         object: &dyn Shape,

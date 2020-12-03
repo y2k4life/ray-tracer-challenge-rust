@@ -3,6 +3,7 @@
 mod camera;
 mod canvas;
 mod color;
+mod colors;
 mod computations;
 mod intersection;
 mod light;
@@ -19,7 +20,7 @@ mod world;
 pub use crate::camera::Camera;
 pub use crate::canvas::Canvas;
 pub use crate::color::Color;
-pub use crate::color::Colors;
+pub use crate::colors::Colors;
 pub use crate::computations::Computations;
 pub use crate::intersection::Intersection;
 pub use crate::light::PointLight;

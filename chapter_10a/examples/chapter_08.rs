@@ -81,7 +81,7 @@ fn main() {
         Color::new(1.0, 1.0, 1.0),
     ));
 
-    let mut camera = Camera::new(640, 480, PI / 2.5);
+    let mut camera = Camera::new(400, 400, PI / 2.5);
 
     camera.transform = Transformation::view_transform(
         Point::new(1.25, 1.0, -6.0),

@@ -41,15 +41,15 @@ impl Pattern for Gradient {
 
 #[cfg(test)]
 mod tests {
-    use crate::Colors;
     use super::*;
+    use crate::Colors;
 
     // Chapter 10 Patterns
     // Page 135
     #[test]
     fn a_gradient_linearly_interpolates_between_colors() {
         let pattern = Gradient::new(Colors::WHITE, Colors::BLACK);
-        
+
         assert_eq!(pattern.pattern_at(Point::new(0.0, 0.0, 0.0)), Colors::WHITE);
         assert_eq!(
             pattern.pattern_at(Point::new(0.25, 0.0, 0.0)),

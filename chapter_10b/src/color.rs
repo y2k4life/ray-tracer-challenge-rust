@@ -13,26 +13,6 @@ pub struct Color {
     pub blue: f64,
 }
 
-pub struct Colors;
-
-impl Colors {
-    pub const BLACK: Color = Color {
-        red: 0.0,
-        green: 0.0,
-        blue: 0.0,
-    };
-    pub const WHITE: Color = Color {
-        red: 1.0,
-        green: 1.0,
-        blue: 1.0,
-    };
-    pub const RED: Color = Color {
-        red: 1.0,
-        green: 0.0,
-        blue: 0.0,
-    };
-}
-
 impl Color {
     /// Create a new [`Color'] using the `f64` values for red, green, and blue.
     ///

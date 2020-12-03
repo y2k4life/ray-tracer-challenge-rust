@@ -1,4 +1,7 @@
-use rustic_ray::{Camera, Color, shapes::Plane, Point, PointLight, Transformation, Vector, World, shapes::Shape, shapes::Sphere};
+use rustic_ray::{
+    shapes::Plane, shapes::Shape, shapes::Sphere, Camera, Color, Point, PointLight, Transformation,
+    Vector, World,
+};
 use std::{f64::consts::PI, fs::File, io::Write, path::Path};
 
 fn main() {
@@ -45,7 +48,7 @@ fn main() {
         Color::new(1.0, 1.0, 1.0),
     ));
 
-    let mut camera = Camera::new(1920, 1080, PI / 3.0);
+    let mut camera = Camera::new(400, 400, PI / 3.0);
 
     camera.transform = Transformation::view_transform(
         Point::new(0.0, 1.5, -5.0),
@@ -55,7 +58,7 @@ fn main() {
 
     let canvas = camera.render(&world);
 
-    let path = Path::new("balls.ppm");
+    let path = Path::new("chapter_09.ppm");
     let display = path.display();
 
     let mut file = match File::create(&path) {

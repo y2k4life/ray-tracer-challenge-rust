@@ -8,29 +8,29 @@ use rustic_ray::{
 fn main() {
     let mut shape = Sphere::new();
     shape.material.color = Color::new(1.0, 0.2, 1.0);
-    draw_shape(&shape, "circle.ppm");
+    draw_shape(&shape, "ch06_circle.ppm");
 
     // shrink it along the y axis
     shape.transform = Transformation::new().scale(1.0, 0.5, 1.0).build();
-    draw_shape(&shape, "shrink_y.ppm");
+    draw_shape(&shape, "ch06_shrink_y.ppm");
 
     // shrink it along the x axis
     shape.transform = Transformation::new().scale(0.5, 1.0, 1.0).build();
-    draw_shape(&shape, "shrink_x.ppm");
+    draw_shape(&shape, "ch06_shrink_x.ppm");
 
     // shrink it and rotate it!
     shape.transform = Transformation::new()
         .scale(0.5, 1.0, 1.0)
         .rotate_z(PI / 4.0)
         .build();
-    draw_shape(&shape, "shrink_rotate.ppm");
+    draw_shape(&shape, "ch06_shrink_rotate.ppm");
 
     // shrink it and skew it!
     shape.transform = Transformation::new()
         .scale(0.5, 1.0, 1.0)
         .shear(1.0, 0.0, 0.0, 0.0, 0.0, 0.0)
         .build();
-    draw_shape(&shape, "shrink_skew.ppm");
+    draw_shape(&shape, "ch06_shrink_skew.ppm");
 }
 
 fn draw_shape(shape: &Sphere, file_name: &str) {

@@ -1,5 +1,5 @@
 use crate::{
-    color, shapes::Sphere, Color, Computations, Intersection, Point, PointLight, Ray,
+    shapes::Sphere, Color, Colors, Computations, Intersection, Point, PointLight, Ray,
     Transformation,
 };
 
@@ -75,9 +75,9 @@ impl World {
                     let comps = i.prepare_computations(r);
                     self.shade_hit(&comps)
                 }
-                None => color::BLACK,
+                None => Colors::BLACK,
             },
-            None => color::BLACK,
+            None => Colors::BLACK,
         }
     }
 

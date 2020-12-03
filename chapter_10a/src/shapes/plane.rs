@@ -2,16 +2,21 @@ use super::Shape;
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector, EPSILON, IDENTITY};
 use uuid::Uuid;
 
+/// A perfectly flat surface that extends infinitely in two dimensions.
+///
+/// The place extends infinitely far in both teh `x` and `z` dimensions passing
+/// through the origin.
 #[derive(Debug)]
 pub struct Plane {
     id: Uuid,
-    /// [`crate::Transformation`] matrix used to manipulate the `Sphere`
+    /// [`crate::Transformation`] matrix used to manipulate the `Plane`
     pub transform: Matrix,
-    /// [`Material`] describing the look of the `Sphere`
+    /// [`Material`] describing the look of the `Plane`
     pub material: Material,
 }
 
 impl Plane {
+    /// Create a new plane.
     pub fn new() -> Self {
         Plane {
             id: Uuid::new_v4(),
