@@ -31,7 +31,7 @@ pub struct Material {
     /// Controlled *specular highlight*. The higher the shininess, the smaller
     /// and tighter the specular highlight.
     pub shininess: f64,
-
+    /// Apply an optional `pattern` for shape instead of a color.
     pub pattern: Option<Box<dyn Pattern>>,
 }
 

@@ -1,9 +1,11 @@
 use crate::{shapes::Shape, Color, Matrix, Point};
 use std::fmt;
 use uuid::Uuid;
+#[allow(unused_imports)]
+use crate::Transformation;
 
 pub trait Pattern: Send + fmt::Debug {
-    /// Get the unique identifier for an object.
+    /// Get the unique identifier for a pattern.
     fn id(&self) -> Uuid;
 
     /// Test if `other` is equal to `self` by comparing their `id`'s.
@@ -11,12 +13,45 @@ pub trait Pattern: Send + fmt::Debug {
         self.id() == other.id()
     }
 
+    /// Returns a pattern's [`Transformation`] [`'Matrix`].
     fn transform(&self) -> Matrix;
 
+    /// Sets a pattern's [`Transformation`] [`'Matrix`].
     fn set_transform(&mut self, transform: Matrix);
 
+    /// Determine a color from a pattern a particular point on the pattern.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use rustic_ray::{Colors, Point, patterns::Stripe};
+    ///
+    /// let mut object = Sphere::new();
+    /// object.transform = Transformation::new().scale(2.0, 2.0, 2.0).build();
+    /// let pattern = TestPattern::new();
+    /// let c = pattern.pattern_at_shape(&object, Point::new(2.0, 3.0, 4.0));
+    /// 
+    /// assert_eq!(c, Color::new(1.0, 1.5, 2.0));
+    ///```
     fn pattern_at(&self, point: Point) -> Color;
 
+    /// Determines color the point of the object using the following steps.
+    ///
+    /// 1. Convert the point from world space to object space
+    /// 2. Convert the object space point to *pattern space*
+    /// 3. Get the color of the pattern by calling `stripe_at` with the
+    /// point on the pattern.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// let mut object = Sphere::new();
+    /// object.transform = Transformation::new().scale(2.0, 2.0, 2.0).build();
+    /// let pattern = TestPattern::new();
+    /// let c = pattern.pattern_at_shape(&object, Point::new(2.0, 3.0, 4.0));
+    /// 
+    /// assert_eq!(c, Color::new(1.0, 1.5, 2.0));
+    /// ```
     fn pattern_at_shape(&self, object: &dyn Shape, word_point: Point) -> Color {
         let object_point = object.transform().inverse() * word_point;
         let pattern_point = self.transform().inverse() * object_point;

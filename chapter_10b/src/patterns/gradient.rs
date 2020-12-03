@@ -2,15 +2,19 @@ use super::Pattern;
 use crate::{Color, Matrix, Point, IDENTITY};
 use uuid::Uuid;
 
+/// A blend of two colors, linearly interpolating from one to the other as the
+/// `x` coordinate changes
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Gradient {
     id: Uuid,
     a: Color,
     b: Color,
+    /// The transformation of the pattern.
     pub transform: Matrix,
 }
 
 impl Gradient {
+    /// Create a new gradient pattern using the [`Color`] `a` and `b`.
     pub fn new(a: Color, b: Color) -> Gradient {
         Gradient {
             id: Uuid::new_v4(),

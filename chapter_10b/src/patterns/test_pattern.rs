@@ -1,13 +1,18 @@
+#[cfg(test)]
 use super::Pattern;
+#[cfg(test)]
 use crate::{Color, Matrix, Point, IDENTITY};
+#[cfg(test)]
 use uuid::Uuid;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
+#[cfg(test)]
 pub struct TestPattern {
     id: Uuid,
     pub transform: Matrix,
 }
 
+#[cfg(test)]
 impl TestPattern {
     pub fn new() -> TestPattern {
         TestPattern {
@@ -17,6 +22,7 @@ impl TestPattern {
     }
 }
 
+#[cfg(test)]
 impl Pattern for TestPattern {
     fn id(&self) -> Uuid {
         self.id
@@ -35,6 +41,7 @@ impl Pattern for TestPattern {
     }
 }
 
+#[cfg(test)]
 impl Default for TestPattern {
     fn default() -> Self {
         Self::new()
