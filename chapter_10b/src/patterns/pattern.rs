@@ -1,8 +1,8 @@
+#[allow(unused_imports)]
+use crate::Transformation;
 use crate::{shapes::Shape, Color, Matrix, Point};
 use std::fmt;
 use uuid::Uuid;
-#[allow(unused_imports)]
-use crate::Transformation;
 
 pub trait Pattern: Send + fmt::Debug {
     /// Get the unique identifier for a pattern.
@@ -24,14 +24,17 @@ pub trait Pattern: Send + fmt::Debug {
     /// # Example
     ///
     /// ```
-    /// use rustic_ray::{Colors, Point, patterns::Stripe};
+    /// use rustic_ray::{
+    ///     shapes::Sphere, patterns::Pattern, patterns::Checkers, Color, Colors,
+    ///     Point, Transformation
+    /// };
     ///
     /// let mut object = Sphere::new();
     /// object.transform = Transformation::new().scale(2.0, 2.0, 2.0).build();
-    /// let pattern = TestPattern::new();
+    /// let pattern = Checkers::new(Colors::WHITE, Colors::BLACK);
     /// let c = pattern.pattern_at_shape(&object, Point::new(2.0, 3.0, 4.0));
-    /// 
-    /// assert_eq!(c, Color::new(1.0, 1.5, 2.0));
+    ///
+    /// assert_eq!(c, Colors::WHITE);
     ///```
     fn pattern_at(&self, point: Point) -> Color;
 
@@ -45,12 +48,17 @@ pub trait Pattern: Send + fmt::Debug {
     /// # Example
     ///
     /// ```
+    /// use rustic_ray::{
+    ///     shapes::Sphere, patterns::Pattern, patterns::Checkers, Color, Colors,
+    ///     Point, Transformation
+    /// };
+    ///
     /// let mut object = Sphere::new();
     /// object.transform = Transformation::new().scale(2.0, 2.0, 2.0).build();
-    /// let pattern = TestPattern::new();
+    /// let pattern = Checkers::new(Colors::WHITE, Colors::BLACK);
     /// let c = pattern.pattern_at_shape(&object, Point::new(2.0, 3.0, 4.0));
-    /// 
-    /// assert_eq!(c, Color::new(1.0, 1.5, 2.0));
+    ///
+    /// assert_eq!(c, Colors::WHITE);
     /// ```
     fn pattern_at_shape(&self, object: &dyn Shape, word_point: Point) -> Color {
         let object_point = object.transform().inverse() * word_point;

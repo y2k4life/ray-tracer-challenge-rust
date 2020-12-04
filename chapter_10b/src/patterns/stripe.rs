@@ -6,8 +6,8 @@ use uuid::Uuid;
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Stripe {
     id: Uuid,
-    a: Color,
-    b: Color,
+    pub a: Color,
+    pub b: Color,
     /// The transformation of the pattern.
     pub transform: Matrix,
 }
@@ -53,16 +53,16 @@ impl Pattern for Stripe {
     /// # Example
     ///
     /// ```
-    /// use rustic_ray::{Colors, Point, patterns::Stripe};
+    /// use rustic_ray::{Colors, Point, patterns::Pattern, patterns::Stripe};
     ///
     /// let pattern = Stripe::new(Colors::WHITE, Colors::BLACK);
     ///
-    /// assert_eq!(pattern.stripe_at(Point::new(0.0, 0.0, 0.0)), Colors::WHITE);
-    /// assert_eq!(pattern.stripe_at(Point::new(0.9, 0.0, 0.0)), Colors::WHITE);
-    /// assert_eq!(pattern.stripe_at(Point::new(1.0, 0.0, 0.0)), Colors::BLACK);
-    /// assert_eq!(pattern.stripe_at(Point::new(-0.1, 0.0, 0.0)), Colors::BLACK);
-    /// assert_eq!(pattern.stripe_at(Point::new(-1.0, 0.0, 0.0)), Colors::BLACK);
-    /// assert_eq!(pattern.stripe_at(Point::new(-1.1, 0.0, 0.0)), Colors::WHITE);
+    /// assert_eq!(pattern.pattern_at(Point::new(0.0, 0.0, 0.0)), Colors::WHITE);
+    /// assert_eq!(pattern.pattern_at(Point::new(0.9, 0.0, 0.0)), Colors::WHITE);
+    /// assert_eq!(pattern.pattern_at(Point::new(1.0, 0.0, 0.0)), Colors::BLACK);
+    /// assert_eq!(pattern.pattern_at(Point::new(-0.1, 0.0, 0.0)), Colors::BLACK);
+    /// assert_eq!(pattern.pattern_at(Point::new(-1.0, 0.0, 0.0)), Colors::BLACK);
+    /// assert_eq!(pattern.pattern_at(Point::new(-1.1, 0.0, 0.0)), Colors::WHITE);
     ///```
     fn pattern_at(&self, point: Point) -> Color {
         if point.x.floor() % 2.0 == 0.0 {

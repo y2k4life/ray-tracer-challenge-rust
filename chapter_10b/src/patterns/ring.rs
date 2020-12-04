@@ -2,7 +2,7 @@ use super::Pattern;
 use crate::{Color, Matrix, Point, IDENTITY};
 use uuid::Uuid;
 
-/// A ring pattern depending on the `x` and `z` dimensions to decide which 
+/// A ring pattern depending on the `x` and `z` dimensions to decide which
 /// [`Color`] to return.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Ring {
