@@ -1,20 +1,25 @@
-use uuid::Uuid;
 use super::Shape;
-use crate::{IDENTITY, Intersection, Material, Matrix, Point, Ray, Vector, float_cmp};
+#[allow(unused_imports)]
+use crate::Transformation;
+use crate::{float_cmp, Intersection, Material, Matrix, Point, Ray, Vector, IDENTITY};
+use uuid::Uuid;
 
+/// A three-dimensional solid object bounded by six square sides, with three 
+/// meeting at each vertex. A default cube is 1 unit size in all directions.
 #[derive(Debug)]
 pub struct Cube {
     id: Uuid,
-    pub parent_id: Option<Uuid>,
+    /// [`Transformation`] matrix used to manipulate the `Cube`
     pub transform: Matrix,
+    /// [`Material`] describing the look of the `Cube`
     pub material: Material,
 }
 
 impl Cube {
+    /// Create a new cube.
     pub fn new() -> Cube {
         Cube {
             id: Uuid::new_v4(),
-            parent_id: None,
             transform: IDENTITY,
             material: Material::new(),
         }
