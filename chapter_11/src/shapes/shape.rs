@@ -1,11 +1,11 @@
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector};
-use std::{any::Any, fmt};
+use std::fmt;
 use uuid::Uuid;
 
 /// Trait with common functionality for types that describe an object or
 /// a graphical primitive. Abstraction of the implementation for a particular
 /// shape.
-pub trait Shape: Any + fmt::Debug {
+pub trait Shape: 'static + fmt::Debug {
     /// Get the unique identifier for an object.
     fn id(&self) -> Uuid;
 
