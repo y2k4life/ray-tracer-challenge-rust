@@ -17,7 +17,7 @@ fn main() -> std::io::Result<()> {
     floor.material.reflective = 0.4;
     w.add_object(Box::new(floor));
 
-    let mut file = File::open("tea_pot_high_res.obj")?;
+    let mut file = File::open("tea_pot.obj")?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
 
