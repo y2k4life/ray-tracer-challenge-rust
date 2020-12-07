@@ -1,9 +1,3 @@
 # Chapter 15
 
-Added to this chapter is the ability for an object in inherit it's material from
-it's parent. Added `inherit_material` function to the *Shape* trait. Added
-`get_object_material` to *World* which will either return th material for an
-object if it does not inherit it's material from it's parent. Otherwise work
-backward from the give object to the object that does not inherit it's material
-from it's parent. This is useful for the *Triangle* object. Instead of giving a
-material to each triangle have the triangles inherit their material from the group. The `get_object_material` is used in the *Intersections* and *World*.
+Added to this chapter is the ability for an object to inherit it's material from it's parent. Added `inherit_material` function to the *Shape* trait. Added `get_object_material` to *World* which will either return th material for an object if it does not inherit it's material from it's parent. Otherwise work backward from the give object to the object that does not inherit it's material from it's parent. This is useful for the *Triangle* object. Instead of giving a material to each triangle have the triangles inherit their material from the group. The `get_object_material` is used in the *Intersections* and *World*.
