@@ -208,19 +208,20 @@ impl World {
     }
 
     pub fn get_object_material<'a>(&'a self, object: &'a dyn Shape) -> &'a Material {
-        let mut material = object.material();
-
-        if let Some(id) = object.parent_id() {
-            if let Some(parent) = self.get_object_by_id(id) {
-                if parent.id() == id && parent.inherit_material() {
-                    material = self.get_object_material(parent);
+        let mut root = object;
+        loop {
+            if root.inherit_material() {
+                if let Some(id) = root.parent_id() {
+                    root = self.get_object_by_id(id).unwrap();
                 } else {
-                    return parent.material();
+                    break;
                 }
+            } else {
+                break;
             }
         }
 
-        material
+        root.material()
     }
 }
 
@@ -699,7 +700,7 @@ mod tests {
     }
 
     #[test]
-    fn get_material_from_group() {
+    fn get_material_from_top_group() {
         let mut w = World::new();
 
         let mut ball = Sphere::new();
@@ -713,7 +714,7 @@ mod tests {
         let mut g2 = Group::new();
         g2.material.color = Color::new(0.0, 0.0, 1.0);
         g2.inherit_material = true;
-        
+
         g2.add_object(Box::new(ball));
         g1.add_object(Box::new(g2));
         w.add_object(Box::new(g1));
@@ -721,6 +722,55 @@ mod tests {
         let test_object = w.get_object_by_id(ball_id).unwrap();
         let m = w.get_object_material(test_object);
 
-        assert_eq!(m.color, Color::new(0.0, 1.0, 0.0)); 
+        assert_eq!(m.color, Color::new(0.0, 1.0, 0.0));
+    }
+
+    #[test]
+    fn get_material_from_2nd_group() {
+        let mut w = World::new();
+
+        let mut ball = Sphere::new();
+        ball.material.color = Color::new(1.0, 0.0, 0.0);
+        ball.inherit_material = true;
+        let ball_id = ball.id();
+
+        let mut g1 = Group::new();
+        g1.material.color = Color::new(0.0, 1.0, 0.0);
+
+        let mut g2 = Group::new();
+        g2.material.color = Color::new(0.0, 0.0, 1.0);
+
+        g2.add_object(Box::new(ball));
+        g1.add_object(Box::new(g2));
+        w.add_object(Box::new(g1));
+
+        let test_object = w.get_object_by_id(ball_id).unwrap();
+        let m = w.get_object_material(test_object);
+
+        assert_eq!(m.color, Color::new(0.0, 0.0, 1.0));
+    }
+
+    #[test]
+    fn get_material_from_self() {
+        let mut w = World::new();
+
+        let mut ball = Sphere::new();
+        ball.material.color = Color::new(1.0, 0.0, 0.0);
+        let ball_id = ball.id();
+
+        let mut g1 = Group::new();
+        g1.material.color = Color::new(0.0, 1.0, 0.0);
+
+        let mut g2 = Group::new();
+        g2.material.color = Color::new(0.0, 0.0, 1.0);
+
+        g2.add_object(Box::new(ball));
+        g1.add_object(Box::new(g2));
+        w.add_object(Box::new(g1));
+
+        let test_object = w.get_object_by_id(ball_id).unwrap();
+        let m = w.get_object_material(test_object);
+
+        assert_eq!(m.color, Color::new(1.0, 0.0, 0.0));
     }
 }
