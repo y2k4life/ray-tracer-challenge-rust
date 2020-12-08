@@ -3,11 +3,17 @@
 # by changing to a chapter folder and running various
 # cargo commands to build, test, and the examples.
 
-chapter=("01" "02" "03" "04" "05" "06" "07" "08" "09" "10a" "10b" "11" "12" "13" "14" "15")
+chapter=("01" "02" "03" "04" "05" "06" "07" "08" "09" "10a" "10b" "11" "12" "13" "14" "15" "16")
 
 folder_counter=0
 for i in "${chapter[@]}"
 do
+    printf '***************\n'
+    printf 'Chapter %s\n' $i
+    printf '***************\n'
+    printf '\n'
+    printf '\n'
+
     cd chapter_$i
   
     cargo build --all
