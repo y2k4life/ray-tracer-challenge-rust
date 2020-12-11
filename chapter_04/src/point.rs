@@ -18,7 +18,7 @@ pub struct Point {
 }
 
 impl Point {
-    /// Creates a [`Point`] in space measured from the origin using three [`f64`]
+    /// Creates a `Point` in space measured from the origin using three [`f64`]
     /// numbers.
     ///
     /// # Examples
@@ -33,7 +33,7 @@ impl Point {
     /// assert_eq!(p.z, 3.0);
     /// ```
     pub fn new(x: f64, y: f64, z: f64) -> Self {
-        Point { x, y, z }
+        Self { x, y, z }
     }
 }
 
@@ -52,7 +52,7 @@ impl Add<Vector> for Point {
 impl Sub for Point {
     type Output = Vector;
 
-    fn sub(self, other: Point) -> Vector {
+    fn sub(self, other: Self) -> Vector {
         Vector {
             x: self.x - other.x,
             y: self.y - other.y,
@@ -98,10 +98,10 @@ impl Mul<Point> for f64 {
 }
 
 impl Div<f64> for Point {
-    type Output = Point;
+    type Output = Self;
 
-    fn div(self, other: f64) -> Point {
-        Point {
+    fn div(self, other: f64) -> Self {
+        Self {
             x: self.x / other,
             y: self.y / other,
             z: self.z / other,
@@ -122,7 +122,7 @@ impl Neg for Point {
 }
 
 impl PartialEq for Point {
-    fn eq(&self, other: &Point) -> bool {
+    fn eq(&self, other: &Self) -> bool {
         float_eq(self.x, other.x) && float_eq(self.y, other.y) && float_eq(self.z, other.z)
     }
 }

@@ -50,7 +50,7 @@ fn main() -> std::io::Result<()> {
 
     let canvas = camera.render(&w);
 
-    let path = Path::new("chapter_14.ppm");
+    let path = Path::new("chapter_15.ppm");
     let display = path.display();
 
     let mut file = match File::create(&path) {

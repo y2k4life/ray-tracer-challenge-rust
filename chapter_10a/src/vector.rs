@@ -24,7 +24,7 @@ pub struct Vector {
 }
 
 impl Vector {
-    /// Creates a new [`Vector`] with a terminal point created from three
+    /// Creates a new `Vector` with a terminal point created from three
     /// [`f64`] numbers
     ///
     /// # Example
@@ -37,7 +37,7 @@ impl Vector {
     /// assert_eq!(3.0, v.z);
     /// ```
     pub fn new(x: f64, y: f64, z: f64) -> Self {
-        Vector { x, y, z }
+        Self { x, y, z }
     }
 
     /// Computes the length or the magnitude of `self`.
@@ -75,9 +75,9 @@ impl Vector {
         }
     }
 
-    /// Computes a single number of `self` and a [`Vector`]. The formula is
+    /// Computes a single number of `self` and `other`. The formula is
     /// the sum of the products of corresponding coordinates between `self`
-    /// and a [`Vector`].
+    /// and `other`.
     ///
     /// # Example
     ///
@@ -89,11 +89,11 @@ impl Vector {
     ///
     /// assert_eq!(a.dot(b), 20.0);
     /// ```
-    pub fn dot(self, other: Vector) -> f64 {
+    pub fn dot(self, other: Self) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
-    /// Computes a [`Vector`] that is perpendicular to both `self` and a [`Vector`].
+    /// Computes a [`Vector`] that is perpendicular to both `self` and `other`.
     ///
     /// # Example
     /// ```
@@ -105,11 +105,11 @@ impl Vector {
     /// assert_eq!(v1.cross(v2), Vector::new(-1.0, 2.0, -1.0));
     /// assert_eq!(v2.cross(v1), Vector::new(1.0, -2.0, 1.0));
     /// ```
-    pub fn cross(self, b: Vector) -> Vector {
-        Vector {
-            x: self.y * b.z - self.z * b.y,
-            y: self.z * b.x - self.x * b.z,
-            z: self.x * b.y - self.y * b.x,
+    pub fn cross(self, other: Self) -> Self {
+        Self {
+            x: self.y * other.z - self.z * other.y,
+            y: self.z * other.x - self.x * other.z,
+            z: self.x * other.y - self.y * other.x,
         }
     }
 

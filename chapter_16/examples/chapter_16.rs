@@ -99,7 +99,7 @@ fn main() {
         Color::new(1.0, 1.0, 1.0),
     ));
 
-    let mut camera = Camera::new(1920, 1080, PI / 3.0);
+    let mut camera = Camera::new(400, 400, PI / 3.0);
 
     camera.transform = Transformation::view_transform(
         Point::new(0.0, 1.5, -8.0),
