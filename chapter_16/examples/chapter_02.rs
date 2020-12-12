@@ -27,7 +27,9 @@ fn main() {
         wind: Vector::new(-0.01, 0.0, 0.0),
     };
 
-    let c = &mut Canvas::new(900, 500);
+    let width = 900;
+    let height = 500;
+    let c = &mut Canvas::new(width, height);
 
     loop {
         tick(e, p);
@@ -36,14 +38,14 @@ fn main() {
         }
 
         let x = p.position.x as usize;
-        let y = c.height - (p.position.y as usize);
+        let y = height - (p.position.y as usize);
 
-        if x <= c.width - 1 && y <= c.height - 1 {
-            c.set_color(x, y, Color::new(1.0, 0.0, 0.0));
+        if x <= width - 1 && y <= height - 1 {
+            c.write_pixel(x, y, Color::new(1.0, 0.0, 0.0));
         }
     }
 
-    let path = Path::new("cannon.ppm");
+    let path = Path::new("chapter_02.ppm");
     let display = path.display();
 
     let mut file = match File::create(&path) {

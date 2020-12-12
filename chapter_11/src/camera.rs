@@ -82,7 +82,7 @@ impl Camera {
                 let ray = self.ray_for_pixel(x as f64, y as f64);
                 let color = world.color_at(ray, 5);
 
-                canvas.pixels[x][y] = color;
+                canvas.write_pixel(x, y, color);
             }
         }
 
@@ -182,6 +182,6 @@ mod tests {
         c.transform = Transformation::view_transform(from, to, up);
         let image = c.render(&w);
 
-        assert_eq!(image.pixels[5][5], Color::new(0.38066, 0.47583, 0.2855));
+        assert_eq!(image.pixel_at(5, 5), Color::new(0.38066, 0.47583, 0.2855));
     }
 }

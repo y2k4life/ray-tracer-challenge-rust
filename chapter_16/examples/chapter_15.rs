@@ -27,7 +27,7 @@ fn main() -> std::io::Result<()> {
         .translate(-0.5, 0.0, 0.0)
         .build();
 
-    tea_pot.material.color = Color::new_rgb(192, 192, 192);
+    tea_pot.material.color = Color::from_u8(192, 192, 192);
     tea_pot.material.reflective = 0.7;
     w.add_object(Box::new(tea_pot));
 

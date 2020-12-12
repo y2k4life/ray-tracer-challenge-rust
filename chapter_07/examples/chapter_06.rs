@@ -68,7 +68,7 @@ fn draw_shape(shape: &Sphere, file_name: &str) {
 
                     let color = hit.object.material.lighting(light, point, eye, normal);
 
-                    canvas.pixels[x][y] = color;
+                    canvas.write_pixel(x, y, color);
                 }
             }
         }

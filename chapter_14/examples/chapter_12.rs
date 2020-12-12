@@ -10,13 +10,13 @@ fn main() {
     let mut checkers = Checkers::new(Colors::WHITE, Colors::BLACK);
     checkers.transform = Transformation::new().scale(0.15, 0.15, 0.15).build();
 
-    let mut stripes1 = Stripe::new(Color::new_rgb(161, 64, 5), Color::new_rgb(145, 41, 3));
+    let mut stripes1 = Stripe::new(Color::from_u8(161, 64, 5), Color::from_u8(145, 41, 3));
     stripes1.transform = Transformation::new()
         .scale(0.05, 0.05, 0.05)
         .rotate_y(PI / 2.0)
         .build();
 
-    let mut stripes2 = Stripe::new(Color::new_rgb(161, 64, 5), Color::new_rgb(145, 41, 3));
+    let mut stripes2 = Stripe::new(Color::from_u8(161, 64, 5), Color::from_u8(145, 41, 3));
     stripes2.transform = Transformation::new().scale(0.05, 0.05, 0.05).build();
 
     let mut floor = Cube::new();
@@ -99,7 +99,7 @@ fn main() {
         .scale(0.1, 0.65, 0.1)
         .translate(-1.9, 0.65, -2.9)
         .build();
-    leg1.material.color = Color::new_rgb(161, 64, 5);
+    leg1.material.color = Color::from_u8(161, 64, 5);
     world.add_object(Box::new(leg1));
 
     let mut leg2 = Cube::new();
@@ -107,7 +107,7 @@ fn main() {
         .scale(0.1, 0.65, 0.1)
         .translate(2.9, 0.65, -2.9)
         .build();
-    leg2.material.color = Color::new_rgb(161, 64, 5);
+    leg2.material.color = Color::from_u8(161, 64, 5);
     world.add_object(Box::new(leg2));
 
     let mut leg3 = Cube::new();
@@ -115,7 +115,7 @@ fn main() {
         .scale(0.1, 0.65, 0.1)
         .translate(2.9, 0.65, 2.9)
         .build();
-    leg3.material.color = Color::new_rgb(161, 64, 5);
+    leg3.material.color = Color::from_u8(161, 64, 5);
     world.add_object(Box::new(leg3));
 
     let mut leg4 = Cube::new();
@@ -123,7 +123,7 @@ fn main() {
         .scale(0.1, 0.65, 0.1)
         .translate(-1.9, 0.65, 2.9)
         .build();
-    leg4.material.color = Color::new_rgb(161, 64, 5);
+    leg4.material.color = Color::from_u8(161, 64, 5);
     world.add_object(Box::new(leg4));
 
     let mut glass_block = Cube::new();
@@ -131,7 +131,7 @@ fn main() {
         .scale(0.1, 1.0, 1.0)
         .translate(-0.75, 2.35, -1.0)
         .build();
-    glass_block.material.color = Color::new_rgb(211, 102, 151);
+    glass_block.material.color = Color::from_u8(211, 102, 151);
     glass_block.material.transparency = 1.0;
     world.add_object(Box::new(glass_block));
 
@@ -140,7 +140,7 @@ fn main() {
         .scale(0.1, 0.1, 0.1)
         .translate(0.5, 1.45, -2.0)
         .build();
-    block1.material.color = Color::new_rgb(213, 14, 151);
+    block1.material.color = Color::from_u8(213, 14, 151);
     world.add_object(Box::new(block1));
 
     let mut block3 = Cube::new();
@@ -148,7 +148,7 @@ fn main() {
         .scale(0.2, 0.2, 0.2)
         .translate(1.75, 1.55, -1.0)
         .build();
-    block3.material.color = Color::new_rgb(10, 234, 36);
+    block3.material.color = Color::from_u8(10, 234, 36);
     world.add_object(Box::new(block3));
 
     let mut block3 = Cube::new();
@@ -160,7 +160,7 @@ fn main() {
     block3.material.refractive_index = 1.31;
     block3.material.ambient = 0.025;
     block3.material.diffuse = 0.25;
-    block3.material.color = Color::new_rgb(237, 234, 36);
+    block3.material.color = Color::from_u8(237, 234, 36);
     world.add_object(Box::new(block3));
 
     world.light = Some(PointLight::new(

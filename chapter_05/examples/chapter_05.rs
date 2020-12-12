@@ -55,7 +55,7 @@ fn draw_shape(shape: &Sphere, file_name: &str) {
             let xs = shape.intersect(r);
 
             if xs.is_some() {
-                canvas.pixels[x][y] = color;
+                canvas.write_pixel(x, y, color);
             }
         }
     }

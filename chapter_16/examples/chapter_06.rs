@@ -72,7 +72,7 @@ fn draw_shape(shape: &Sphere, file_name: &str) {
                         .material()
                         .lighting(shape, light, point, eye, normal, false);
 
-                    canvas.set_color(x, y, color);
+                    canvas.write_pixel(x, y, color);
                 }
             }
         }

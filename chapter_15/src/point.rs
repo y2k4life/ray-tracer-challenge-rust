@@ -76,11 +76,11 @@ impl Sub<Vector> for Point {
 impl Mul<f64> for Point {
     type Output = Self;
 
-    fn mul(self, other: f64) -> Self {
+    fn mul(self, rhs: f64) -> Self {
         Self {
-            x: self.x * other,
-            y: self.y * other,
-            z: self.z * other,
+            x: self.x * rhs,
+            y: self.y * rhs,
+            z: self.z * rhs,
         }
     }
 }
@@ -88,11 +88,11 @@ impl Mul<f64> for Point {
 impl Mul<Point> for f64 {
     type Output = Point;
 
-    fn mul(self, other: Point) -> Point {
+    fn mul(self, rhs: Point) -> Point {
         Point {
-            x: other.x * self,
-            y: other.y * self,
-            z: other.z * self,
+            x: self * rhs.x,
+            y: self * rhs.y,
+            z: self * rhs.z,
         }
     }
 }
@@ -100,11 +100,11 @@ impl Mul<Point> for f64 {
 impl Div<f64> for Point {
     type Output = Self;
 
-    fn div(self, other: f64) -> Self {
+    fn div(self, rhs: f64) -> Self {
         Self {
-            x: self.x / other,
-            y: self.y / other,
-            z: self.z / other,
+            x: self.x / rhs,
+            y: self.y / rhs,
+            z: self.z / rhs,
         }
     }
 }

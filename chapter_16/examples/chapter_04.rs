@@ -4,13 +4,13 @@ use rustic_ray::{Canvas, Color, Point, Transformation};
 
 fn main() {
     let canvas = &mut Canvas::new(200, 200);
-    canvas.set_color(100, 100, Color::new(1.0, 0.0, 0.0));
+    canvas.write_pixel(100, 100, Color::new(1.0, 0.0, 0.0));
 
     let mut hour = 1.0;
     loop {
         let xy = clock_hour(hour);
 
-        canvas.set_color(xy.0, xy.1, Color::new(1.0, 0.0, 0.0));
+        canvas.write_pixel(xy.0, xy.1, Color::new(1.0, 0.0, 0.0));
         hour += 1.0;
 
         if hour > 12.0 {

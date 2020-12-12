@@ -24,13 +24,13 @@ fn main() {
     world.add_object(Box::new(floor));
 
     let mut middle = Sphere::new();
-    middle.material.color = Color::new_rgb(255, 242, 0);
+    middle.material.color = Color::from_u8(255, 242, 0);
     middle.material.diffuse = 0.7;
     middle.material.specular = 0.3;
     // world.add_object(Box::new(middle));
 
     let mut cube = Cube::new();
-    cube.material.color = Color::new_rgb(255, 242, 0);
+    cube.material.color = Color::from_u8(255, 242, 0);
     cube.transform = Transformation::new()
         .scale(0.55, 0.55, 1.5)
         .rotate_z(PI / 4.0)
