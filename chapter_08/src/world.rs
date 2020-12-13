@@ -16,6 +16,16 @@ pub struct World {
 
 impl World {
     /// Create a world with no objects and no lights.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::World;
+    ///
+    /// let w = World::new();
+    ///
+    /// assert!(w.light.is_none());
+    /// ```
     pub fn new() -> Self {
         World {
             light: None,
@@ -24,6 +34,20 @@ impl World {
     }
 
     /// Add an `object` to the world `self`.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{shapes::Sphere, World};
+    ///
+    /// let mut w = World::new();
+    /// let s = Sphere::new();
+    /// let s_id = s.id;
+    /// w.add_object(s);
+    /// let s = w.get_object(0).unwrap();
+    ///
+    /// assert_eq!(s.id, s_id);
+    /// ```
     pub fn add_object(&mut self, object: Sphere) {
         self.objects.push(object);
     }
@@ -31,6 +55,21 @@ impl World {
     /// Iterate over all of the objects added to the world. Intersecting each
     /// object with a ray and aggregating the intersections into a single
     /// collection. The collection is sorted.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{Intersection, Point, Ray, Vector, World};
+    ///
+    /// let w = World::default();
+    /// let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
+    /// let xs = w.intersect_world(r).expect("No intersections found!");
+    ///
+    /// assert_eq!(xs.len(), 4);
+    /// assert_eq!(xs[0].t, 4.0);
+    /// assert_eq!(xs[1].t, 4.5);
+    /// assert_eq!(xs[2].t, 5.5);
+    /// assert_eq!(xs[3].t, 6.0);
     pub fn intersect_world(&self, r: Ray) -> Option<Vec<Intersection>> {
         let mut xs: Vec<Intersection> = Vec::new();
         for o in &self.objects {
@@ -51,6 +90,21 @@ impl World {
 
     /// Call the `lighting` function for the [`crate::Material`] of a `shape` intersected
     /// by a [`Ray`] to get the [`Color`] at that intersection.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{Color, Intersection, Point, Ray, Vector, World};
+    ///
+    /// let w = World::default();
+    /// let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
+    /// let shape = w.get_object(0).expect("Object not found!");
+    /// let i = Intersection::new(4.0, &shape);
+    /// let comps = i.prepare_computations(r);
+    /// let c = w.shade_hit(&comps);
+    ///
+    /// assert_eq!(c, Color::new(0.38066, 0.47583, 0.2855));
+    /// ```
     pub fn shade_hit(&self, comps: &Computations) -> Color {
         let shadowed = self.is_shadow(comps.over_point);
 
@@ -71,6 +125,18 @@ impl World {
     /// 4. `prepare_computations` on the `hit` to get the [`Computations`] for
     /// the [`Intersection`].
     /// 5. Call `shade_hit` to get the color at the `hit`.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{Color, Point, Ray, Vector, World};
+    ///
+    /// let w = World::default();
+    /// let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 1.0, 1.0));
+    /// let c = w.color_at(r);
+    ///
+    /// assert_eq!(c, Color::new(0.0, 0.0, 0.0));
+    /// ```
     pub fn color_at(&self, r: Ray) -> Color {
         match self.intersect_world(r) {
             Some(xs) => match Intersection::hit(&xs) {
@@ -108,12 +174,41 @@ impl World {
 
     /// Returns a reference to an `object` at the given index or `None`
     /// if index is out of range.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{shapes::Sphere, World};
+    ///
+    /// let mut w = World::new();
+    /// let s = Sphere::new();
+    /// let s_id = s.id;
+    /// w.add_object(s);
+    /// let s = w.get_object(0).unwrap();
+    ///
+    /// assert_eq!(s.id, s_id);
+    /// ```
     pub fn get_object(&self, index: usize) -> Option<&Sphere> {
         self.objects.get(index)
     }
 
     /// Returns a mutable reference to an `object` at the given index or `None`
     /// if index is out of range.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{shapes::Sphere, World};
+    ///
+    /// let mut w = World::new();
+    /// let s = Sphere::new();
+    /// let s_id = s.id;
+    /// w.add_object(s);
+    /// let s = w.get_object_mut(0).unwrap();
+    /// s.material.diffuse = 2.0;
+    ///
+    /// assert_eq!(2.0, s.material.diffuse);
+    /// ```
     pub fn get_object_mut(&mut self, index: usize) -> Option<&mut Sphere> {
         self.objects.get_mut(index)
     }

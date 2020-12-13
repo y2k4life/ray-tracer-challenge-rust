@@ -1,4 +1,4 @@
-//! Contains various shapes used in environments. The shapes are [`Sphere`].
+//! Contains various shapes used in a scene. The shapes are [`Sphere`].
 mod sphere;
 
 pub use sphere::Sphere;

@@ -1,14 +1,15 @@
+use crate::{Intersection, Material, Matrix, Point, Ray, Vector, IDENTITY};
 use uuid::Uuid;
 
-use crate::{Intersection, Material, Matrix, Point, Ray, Vector, IDENTITY};
-
 /// A sphere is a three-dimensional solid figure which is perfectly round in
-/// shape and every point on its surface is equidistant from the point  
-/// of the origin.
+/// shape and every point on its surface is equidistant from the point of the origin.
 #[derive(Debug, PartialEq)]
 pub struct Sphere {
+    /// Unique identifier.
     pub id: Uuid,
+    /// Transformation matrix.
     pub transform: Matrix,
+    /// Material of the Sphere.
     pub material: Material,
 }
 
@@ -25,8 +26,8 @@ impl Sphere {
     /// Test if the given [`Ray`] intersects with `self`. Returns
     /// [`Some`]`(`[`Vec`]`<`[`Intersection`]`>)` which is a list of
     /// intersection(s) between the [`Ray`] and `self`. Each intersection
-    /// has the position of the [`Ray`] the intersection occurs at and the
-    /// `Sphere` as the object intersected. If there are no intersections
+    /// has the position of the [`Ray`] the intersection occurs at, `t` and
+    /// `self` as the object intersected. If there are no intersections
     /// then [`None`] is returned.
     ///
     /// # Example
@@ -36,7 +37,7 @@ impl Sphere {
     ///
     /// let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
     /// let s = Sphere::new();
-    /// let xs = s.intersect(r).expect("Expected hit, found none!");
+    /// let xs = s.intersect(r).unwrap();
     ///
     /// assert_eq!(2, xs.len());
     /// assert_eq!(xs[0].t, 4.0);
@@ -108,7 +109,7 @@ mod tests {
     fn a_ray_intersects_a_sphere_at_two_points() {
         let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
         let s = Sphere::new();
-        let xs = s.intersect(r).expect("Expected hit, found none!");
+        let xs = s.intersect(r).unwrap();
 
         assert_eq!(2, xs.len());
         assert_eq!(xs[0].t, 4.0);
@@ -121,7 +122,7 @@ mod tests {
     fn a_ray_intersects_a_sphere_at_a_tangent() {
         let r = Ray::new(Point::new(0.0, 1.0, -5.0), Vector::new(0.0, 0.0, 1.0));
         let s = Sphere::new();
-        let xs = s.intersect(r).expect("Expected hit, found none!");
+        let xs = s.intersect(r).unwrap();
 
         assert_eq!(xs.len(), 2);
         assert_eq!(xs[0].t, 5.0);
@@ -145,7 +146,7 @@ mod tests {
     fn a_ray_originates_inside_a_sphere() {
         let r = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 1.0));
         let s = Sphere::new();
-        let xs = s.intersect(r).expect("Expected hit, found none!");
+        let xs = s.intersect(r).unwrap();
 
         assert_eq!(xs.len(), 2);
         assert_eq!(xs[0].t, -1.0);
@@ -158,7 +159,7 @@ mod tests {
     fn a_sphere_behind_a_ray() {
         let r = Ray::new(Point::new(0.0, 0.0, 5.0), Vector::new(0.0, 0.0, 1.0));
         let s = Sphere::new();
-        let xs = s.intersect(r).expect("Expected hit, found none!");
+        let xs = s.intersect(r).unwrap();
 
         assert_eq!(xs.len(), 2);
         assert_eq!(xs[0].t, -6.0);
@@ -192,7 +193,7 @@ mod tests {
         let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
         let mut s = Sphere::new();
         s.transform = Transformation::new().scale(2.0, 2.0, 2.0).build();
-        let xs = s.intersect(r).expect("Expected hit, found none!");
+        let xs = s.intersect(r).unwrap();
 
         assert_eq!(xs.len(), 2);
         assert_eq!(xs[0].t, 3.0);

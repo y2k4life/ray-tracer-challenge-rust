@@ -1,4 +1,6 @@
-use crate::{Canvas, Matrix, Point, Ray, World, IDENTITY};
+#[allow(unused_imports)]
+use crate::Color;
+use crate::{Canvas, Matrix, Point, Ray, World, IDENTITY}; // Used for documentation
 
 /// Encapsulates the view and provides an interface for rendering the world
 /// onto a [`Canvas`]. The [`Canvas`] is exactly one unit in front of the
@@ -16,11 +18,27 @@ pub struct Camera {
 }
 
 impl Camera {
-    /// Construct a `Camera` with the give horizontal size (`hsize`), the given
-    /// vertical size (`vsize`), the give field of view (`field_of_view`). The
+    /// Construct a `Camera` with the give horizontal size `hsize`, the given
+    /// vertical size, `vsize`, and the give field of view, `field_of_view`. The
     /// field of view is an angle that describes how much the camera can see.
     /// When the field of view is small, the view will be "zoomed in". Magnifying
     /// a smaller area of the scene.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{Camera, IDENTITY};
+    /// use std::f64::consts::PI;
+    ///
+    /// let hsize = 160;
+    /// let vsize = 120;
+    /// let field_of_view = PI / 2.0;
+    /// let c = Camera::new(hsize, vsize, field_of_view);
+    ///
+    /// assert_eq!(c.hsize, 160);
+    /// assert_eq!(c.vsize, 120);
+    /// assert_eq!(c.transform, IDENTITY);
+    /// ```
     pub fn new(hsize: usize, vsize: usize, field_of_view: f64) -> Camera {
         let half_view = (field_of_view / 2.0).tan();
         let aspect = hsize as f64 / vsize as f64;
@@ -47,6 +65,18 @@ impl Camera {
 
     /// Returns a ray that starts at the camera and passes through the given
     /// `x` and `y` pixel on the canvas.
+    ///
+    /// Example
+    /// ```
+    /// use rustic_ray::{Camera, Point, Vector};
+    /// use std::f64::consts::PI;
+    ///
+    /// let mut c = Camera::new(201, 101, PI / 2.0);
+    /// let r = c.ray_for_pixel(100.0, 50.0);
+    ///
+    /// assert_eq!(r.origin, Point::new(0.0, 0.0, 0.0));
+    /// assert_eq!(r.direction, Vector::new(0.0, 0.0, -1.0));
+    /// ```
     pub fn ray_for_pixel(&mut self, px: f64, py: f64) -> Ray {
         // the offset from the edge of the canvas to the pixel's center
         let x_offset = (px + 0.5) * self.pixel_size;
@@ -71,7 +101,23 @@ impl Camera {
     /// function creates a ray for each pixel of the canvas using the
     /// `ray_for_pixel` function. The computed [`Ray`] is then projected
     /// into the [`World`] using the `color_at` function of the [`World`] to get
-    /// a [`crate::Color`] for an object intersected by the [`Ray`] if there is one.
+    /// a [`Color`] for an object intersected by the [`Ray`] if there is one.
+    ///
+    /// Example
+    /// ```
+    /// use rustic_ray::{Camera, Color, Point, Transformation, Vector, World};
+    /// use std::f64::consts::PI;
+    ///
+    /// let w = World::default();
+    /// let mut c = Camera::new(11, 11, PI / 2.0);
+    /// let from = Point::new(0.0, 0.0, -5.0);
+    /// let to = Point::new(0.0, 0.0, 0.0);
+    /// let up = Vector::new(0.0, 1.0, 0.0);
+    /// c.transform = Transformation::view_transform(from, to, up);
+    /// let image = c.render(&w);
+    ///
+    /// assert_eq!(image.pixel_at(5, 5), Color::new(0.38066, 0.47583, 0.2855));
+    /// ```
     pub fn render(&mut self, world: &World) -> Canvas {
         let mut canvas = Canvas::new(self.hsize, self.vsize);
 
@@ -90,11 +136,9 @@ impl Camera {
 
 #[cfg(test)]
 mod tests {
-    use std::f64::consts::PI;
-
-    use crate::{float_eq, Color, Point, Transformation, Vector, World};
-
     use super::*;
+    use crate::{float_eq, Color, Point, Transformation, Vector, World};
+    use std::f64::consts::PI;
 
     // Chapter 7 Making a Scene
     // Page 101

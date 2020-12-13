@@ -6,7 +6,7 @@ use std::{
 };
 
 /// An element with three floating point numbers ([`f64`]) which measure the
-/// distance in space the point is form the origin.
+/// distance in space the point is from the origin.
 #[derive(Debug, Copy, Clone)]
 pub struct Point {
     /// The distance the point is from the origin measured along the X axis.
