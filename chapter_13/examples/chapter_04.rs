@@ -4,7 +4,7 @@ use rustic_ray::{Canvas, Color, Point, Transformation};
 
 fn main() {
     let canvas = &mut Canvas::new(200, 200);
-    canvas.write_pixel(100, 10, Color::new(1.0, 0.0, 0.0));
+    canvas.write_pixel(100, 100, Color::new(1.0, 0.0, 0.0));
 
     let mut hour = 1.0;
     loop {
@@ -18,7 +18,7 @@ fn main() {
         }
     }
 
-    let path = Path::new("clock.ppm");
+    let path = Path::new("chapter_04.ppm");
     let display = path.display();
 
     let mut file = match File::create(&path) {

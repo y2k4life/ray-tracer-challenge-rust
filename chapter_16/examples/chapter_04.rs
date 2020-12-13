@@ -18,7 +18,7 @@ fn main() {
         }
     }
 
-    let path = Path::new("clock.ppm");
+    let path = Path::new("chapter_04.ppm");
     let display = path.display();
 
     let mut file = match File::create(&path) {

@@ -3,12 +3,21 @@ use crate::{multiple_array, Matrix};
 /// Transformations are used to move and deform objects. The transformations
 /// included are scale, translate, rotate, and shear.
 ///
-/// Transformations are chained together. Transformations are performed on `self` and return a
-/// new `Transformation` with the transformation called added to `self`.
-/// Call the `build` function at the end of the chain to build a transformation
-/// [`Matrix`]. Creating a [`Matrix`] calculates the inverse of the [`Matrix`]
-/// which is expensive. For this reason creating a transformation [`Matrix`] is
-/// only done when `build` is called.
+/// Transformations work by creating a `Transformation` with `new` to start a
+/// chain of transformations. After creating a `Transformation` call various
+/// transformation functions (`scale`, `rotate_z`, etc.) on the returned
+/// `Transformation`. To build a transformation [`Matrix`] from the chain of
+/// transformations call the `build` function. Creating a [`Matrix`] calculates
+/// the inverse of the [`Matrix`] which is expensive. Instead of creating a
+/// matrix for each transformation the matrix is built for the complete transformation.
+/// A `Transformation`s data is an array which starts as an identity array. Each
+/// call to a transformation function updates the array of `self` by multiplying
+/// the array with an array that performs the transformation. Each function builds on
+/// pervious transformation functions.
+///
+/// For example, to build a transformation that `scales` and `rotates` along the
+/// `y` axis build the transformation with these chain of commands
+/// `Transformation::new().Scale(2.0, 2.0, 2.0).rotate_y(PI).build()`.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Transformation {
     data: [[f64; 4]; 4],
