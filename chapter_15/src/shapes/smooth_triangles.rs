@@ -1,16 +1,40 @@
 #[cfg(test)]
 mod tests {
-    use crate::{Intersection, Point, Ray, Vector, float_eq, shapes::Shape, shapes::Triangle};
+    use crate::{float_eq, shapes::Shape, shapes::Triangle, Intersection, Point, Ray, Vector};
 
     pub struct Background {}
 
     impl Background {
-        pub const P1: Point = Point {x: 0.0, y: 1.0, z: 0.0};
-        pub const P2: Point = Point {x: -1.0, y: 0.0, z: 0.0};
-        pub const P3: Point = Point {x: 1.0, y: 0.0, z: 0.0};
-        pub const N1: Vector = Vector {x: 0.0, y: 1.0, z: 0.0};
-        pub const N2: Vector = Vector {x: -1.0, y: 0.0, z: 0.0};
-        pub const N3: Vector = Vector {x: 1.0, y: 0.0, z: 0.0};
+        pub const P1: Point = Point {
+            x: 0.0,
+            y: 1.0,
+            z: 0.0,
+        };
+        pub const P2: Point = Point {
+            x: -1.0,
+            y: 0.0,
+            z: 0.0,
+        };
+        pub const P3: Point = Point {
+            x: 1.0,
+            y: 0.0,
+            z: 0.0,
+        };
+        pub const N1: Vector = Vector {
+            x: 0.0,
+            y: 1.0,
+            z: 0.0,
+        };
+        pub const N2: Vector = Vector {
+            x: -1.0,
+            y: 0.0,
+            z: 0.0,
+        };
+        pub const N3: Vector = Vector {
+            x: 1.0,
+            y: 0.0,
+            z: 0.0,
+        };
     }
 
     // Chapter 15 Triangles
@@ -23,8 +47,9 @@ mod tests {
             Background::P3,
             Background::N1,
             Background::N2,
-            Background::N3);
-        
+            Background::N3,
+        );
+
         assert_eq!(tri.p1, Background::P1);
         assert_eq!(tri.p2, Background::P2);
         assert_eq!(tri.p3, Background::P3);
@@ -43,7 +68,8 @@ mod tests {
             Background::P3,
             Background::N1,
             Background::N2,
-            Background::N3);
+            Background::N3,
+        );
         let r = Ray::new(Point::new(-0.2, 0.3, -2.0), Vector::new(0.0, 0.0, 1.0));
         let xs = tri.local_intersect(r).unwrap();
 
@@ -61,7 +87,8 @@ mod tests {
             Background::P3,
             Background::N1,
             Background::N2,
-            Background::N3);
+            Background::N3,
+        );
         let i = Intersection::intersection_with_uv(1.0, &tri, 0.45, 0.25);
         let n = tri.normal_at(Point::new(0.0, 0.0, 0.0), Some(&i), None);
 
@@ -78,7 +105,8 @@ mod tests {
             Background::P3,
             Background::N1,
             Background::N2,
-            Background::N3);
+            Background::N3,
+        );
         let i = Intersection::intersection_with_uv(1.0, &tri, 0.45, 0.25);
         let r = Ray::new(Point::new(-0.2, 0.3, -2.0), Vector::new(0.0, 0.0, 1.0));
         let xs = vec![Intersection::intersection_with_uv(1.0, &tri, 0.45, 0.25)];

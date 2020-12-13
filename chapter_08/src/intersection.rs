@@ -1,4 +1,4 @@
-use crate::{EPSILON, Ray, float_cmp};
+use crate::{float_cmp, Ray, EPSILON};
 use crate::{shapes::Sphere, Computations};
 use std::cmp::Ordering;
 
@@ -106,7 +106,7 @@ impl Ord for Intersection<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{EPSILON, Point, Ray, Transformation, Vector};
+    use crate::{Point, Ray, Transformation, Vector, EPSILON};
 
     // Chapter 5 Ray-Sphere Intersections
     // Page 63

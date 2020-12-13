@@ -1,6 +1,9 @@
 use uuid::Uuid;
 
-use crate::{Color, Colors, Computations, Intersection, Material, Point, PointLight, Ray, Transformation, shapes::Shape, shapes::Sphere};
+use crate::{
+    shapes::Shape, shapes::Sphere, Color, Colors, Computations, Intersection, Material, Point,
+    PointLight, Ray, Transformation,
+};
 
 /// A collection of all objects in a scene.
 ///
@@ -52,7 +55,7 @@ impl World {
     /// by a [`Ray`] to get the [`Color`] at that intersection.
     pub fn shade_hit(&self, comps: &Computations, remaining: usize) -> Color {
         let shadowed = self.is_shadow(comps.over_point);
-        
+
         let material = self.get_object_material(comps.object);
 
         let surface = material.lighting(
@@ -66,7 +69,7 @@ impl World {
 
         let reflected = self.reflected_color(comps, remaining);
         let refracted = self.refracted_color(comps, remaining);
-        
+
         if material.reflective > 0.0 && material.transparency > 0.0 {
             let reflectance = comps.schlick();
             surface + reflected * reflectance + refracted * (1.0 - reflectance)
@@ -250,7 +253,7 @@ impl Default for World {
 
 #[cfg(test)]
 mod tests {
-    use crate::{shapes::Group, Material, Ray, Vector, patterns::TestPattern, shapes::Plane};
+    use crate::{patterns::TestPattern, shapes::Group, shapes::Plane, Material, Ray, Vector};
 
     use super::*;
 

@@ -1,4 +1,4 @@
-use crate::{Matrix, multiple_array};
+use crate::{multiple_array, Matrix};
 
 /// Transformations are used to move and deform objects. The transformations
 /// included are scale, translate, rotate, and shear.

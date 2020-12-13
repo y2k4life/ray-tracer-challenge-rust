@@ -43,7 +43,14 @@ impl Triangle {
         }
     }
 
-    pub fn smooth_triangle(p1: Point, p2: Point, p3: Point, n1: Vector, n2: Vector, n3: Vector) -> Self {
+    pub fn smooth_triangle(
+        p1: Point,
+        p2: Point,
+        p3: Point,
+        n1: Vector,
+        n2: Vector,
+        n3: Vector,
+    ) -> Self {
         Triangle {
             id: Uuid::new_v4(),
             parent_id: None,
@@ -124,9 +131,9 @@ impl Shape for Triangle {
         if self.smooth_triangle {
             let hit = hit.unwrap();
 
-            self.n2.unwrap() * hit.u.unwrap() +
-                self.n3.unwrap() * hit.v.unwrap() +
-                self.n1.unwrap() * (1.0 - hit.u.unwrap() - hit.v.unwrap())
+            self.n2.unwrap() * hit.u.unwrap()
+                + self.n3.unwrap() * hit.v.unwrap()
+                + self.n1.unwrap() * (1.0 - hit.u.unwrap() - hit.v.unwrap())
         } else {
             self.normal
         }

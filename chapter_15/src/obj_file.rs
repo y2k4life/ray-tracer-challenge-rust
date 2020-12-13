@@ -1,5 +1,7 @@
-use crate::{ shapes::{Group, Triangle}, Point, Vector};
-
+use crate::{
+    shapes::{Group, Triangle},
+    Point, Vector,
+};
 
 struct ObjParser {
     ignored_lines: usize,
@@ -8,8 +10,7 @@ struct ObjParser {
     default_group: Group,
 }
 
-
-/// Build objects by parsing a Wavefront OBJ file 
+/// Build objects by parsing a Wavefront OBJ file
 pub struct ObjFile {}
 
 enum GroupType {
@@ -18,7 +19,7 @@ enum GroupType {
 }
 
 impl ObjFile {
-    /// Parse a Wavefront OBJ string returning a [`Group`] object with all of the 
+    /// Parse a Wavefront OBJ string returning a [`Group`] object with all of the
     /// triangles and polygons in the `buffer`.
     pub fn parse(buffer: &str) -> Group {
         let parser = ObjFile::parse_obj_file(buffer);
@@ -54,21 +55,19 @@ impl ObjFile {
                     "f" => {
                         ObjFile::parse_faces(&mut parser, &mut line_iter, &mut group);
                     }
-                    "g" => {
-                        match group {
-                            GroupType::Parent => {
-                                let mut child_group = Group::new();
-                                child_group.inherit_material = true;
-                                group = GroupType::Child(child_group);
-                            },
-                            GroupType::Child(g) => {
-                                parser.default_group.add_object(Box::new(g));
-                                let mut child_group = Group::new();
-                                child_group.inherit_material = true;
-                                group = GroupType::Child(child_group);
-                            }
+                    "g" => match group {
+                        GroupType::Parent => {
+                            let mut child_group = Group::new();
+                            child_group.inherit_material = true;
+                            group = GroupType::Child(child_group);
                         }
-                    }
+                        GroupType::Child(g) => {
+                            parser.default_group.add_object(Box::new(g));
+                            let mut child_group = Group::new();
+                            child_group.inherit_material = true;
+                            group = GroupType::Child(child_group);
+                        }
+                    },
                     _ => {
                         parser.ignored_lines += 1;
                     }
@@ -83,7 +82,11 @@ impl ObjFile {
         parser
     }
 
-    fn parse_faces(parser: &mut ObjParser, line_iter: &mut std::str::SplitWhitespace, group: &mut GroupType) {
+    fn parse_faces(
+        parser: &mut ObjParser,
+        line_iter: &mut std::str::SplitWhitespace,
+        group: &mut GroupType,
+    ) {
         let mut vg: Vec<(i32, i32)> = Vec::new();
         let mut has_vn = false;
         while let Some(v) = line_iter.next() {
@@ -111,7 +114,7 @@ impl ObjFile {
                 let tri = Triangle::smooth_triangle(p1, p2, p3, n1, n2, n3);
                 match group {
                     GroupType::Parent => parser.default_group.add_object(Box::new(tri)),
-                    GroupType::Child(g) => g.add_object(Box::new(tri))
+                    GroupType::Child(g) => g.add_object(Box::new(tri)),
                 }
             } else {
                 let p1 = parser.vertices[vg[0].0 as usize];
@@ -121,7 +124,7 @@ impl ObjFile {
                 let tri = Triangle::new(p1, p2, p3);
                 match group {
                     GroupType::Parent => parser.default_group.add_object(Box::new(tri)),
-                    GroupType::Child(g) => g.add_object(Box::new(tri))
+                    GroupType::Child(g) => g.add_object(Box::new(tri)),
                 }
             }
         }

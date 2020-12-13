@@ -274,7 +274,7 @@ mod tests {
     fn computing_the_normal_on_a_translated_sphere() {
         let mut s = Sphere::new();
         s.transform = Transformation::new().translate(0.0, 1.0, 0.0).build();
-        let n = s.normal_at(Point::new(0.0, 1.70711, -0.70711), None, None,);
+        let n = s.normal_at(Point::new(0.0, 1.70711, -0.70711), None, None);
 
         assert_eq!(Vector::new(0.0, 0.70711, -0.70711), n);
     }

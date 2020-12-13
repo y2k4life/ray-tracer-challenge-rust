@@ -41,9 +41,7 @@ fn main() {
     right.material.diffuse = 0.7;
     right.material.specular = 0.3;
     let mut pattern = Gradient::new(Colors::RED, Colors::BLACK);
-    pattern.transform = Transformation::new()
-        .rotate_z(-PI / 2.0)
-        .build();
+    pattern.transform = Transformation::new().rotate_z(-PI / 2.0).build();
     right.material.pattern = Some(Box::new(pattern));
     world.add_object(Box::new(right));
 

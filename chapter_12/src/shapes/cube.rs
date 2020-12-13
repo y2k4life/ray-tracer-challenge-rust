@@ -4,7 +4,7 @@ use crate::Transformation;
 use crate::{float_cmp, Intersection, Material, Matrix, Point, Ray, Vector, IDENTITY};
 use uuid::Uuid;
 
-/// A three-dimensional solid object bounded by six square sides, with three 
+/// A three-dimensional solid object bounded by six square sides, with three
 /// meeting at each vertex. A default cube is 1 unit size in all directions.
 #[derive(Debug)]
 pub struct Cube {

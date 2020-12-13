@@ -57,7 +57,7 @@ impl World {
         let shadowed = self.is_shadow(comps.over_point);
 
         let material = self.get_object_material(comps.object);
-        
+
         let surface = material.lighting(
             comps.object,
             self.light.expect("World has no light source"),

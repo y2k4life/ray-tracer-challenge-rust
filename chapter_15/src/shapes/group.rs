@@ -117,7 +117,7 @@ impl Shape for Group {
     fn local_normal_at(&self, _point: Point, _hit: Option<&Intersection>) -> Vector {
         panic!("Should not be called!")
     }
-    
+
     fn inherit_material(&self) -> bool {
         self.inherit_material
     }

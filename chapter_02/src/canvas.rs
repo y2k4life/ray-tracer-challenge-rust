@@ -1,18 +1,14 @@
-use std::ops::{Index, IndexMut};
-
 use crate::Color;
 
 const MAXIMUM_PPM_LINE_LENGTH: usize = 70;
 
 /// A grid of pixels. The size of the canvas is determined by its width and height.
 ///
-/// The pixels are store in a linear 1D array (`x + y * width`).
+/// The pixels are stored in a linear 1D array indexing a pixel is done with
+/// this formula `index = x + y * width`.
 pub struct Canvas {
-    /// Width of the canvas.
     width: usize,
-    /// Height of the canvas.
     height: usize,
-    
     pixels: Vec<Color>,
 }
 
@@ -47,7 +43,7 @@ impl Canvas {
     ///
     /// ```
     /// use rustic_ray::{Canvas, Color};
-    /// 
+    ///
     /// let mut c = Canvas::new(5, 3);
     /// let c1 = Color::new(1.5, 0.0, 0.0);
     /// let c2 = Color::new(0.0, 0.5, 0.0);
@@ -57,7 +53,7 @@ impl Canvas {
     /// c.write_pixel(4, 2, c3);
     /// let actual = c.canvas_to_ppm();
     /// let split = actual.split("\n").collect::<Vec<_>>();
-    /// 
+    ///
     /// assert_eq!("P3", split[0]);
     /// assert_eq!("5 3", split[1]);
     /// assert_eq!("255", split[2]);
@@ -113,11 +109,11 @@ impl Canvas {
 
     /// Write a pixel to the canvas at the specified `x` and `y` coordinates
     /// having the specified [`Color`].
-        ///
+    ///
     /// Example
     /// ```
     /// use rustic_ray::{Canvas, Color};
-    /// 
+    ///
     /// let mut c = Canvas::new(10, 20);
     /// c.write_pixel(2, 3, Color::new(1.0, 0.0, 0.0));
     /// let color = c.pixel_at(2,3);

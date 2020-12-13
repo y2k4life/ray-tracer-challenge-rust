@@ -8,9 +8,7 @@ fn main() -> std::io::Result<()> {
     let w = &mut World::new();
 
     let mut pattern = Checkers::new(Colors::WHITE, Colors::BLACK);
-    pattern.transform = Transformation::new()
-        .rotate_y(0.174)
-        .build();
+    pattern.transform = Transformation::new().rotate_y(0.174).build();
 
     let mut floor = Plane::new();
     floor.material.pattern = Some(Box::new(pattern));
@@ -28,7 +26,7 @@ fn main() -> std::io::Result<()> {
         .rotate_y(PI / 8.0)
         .translate(-0.5, 0.0, 0.0)
         .build();
-    
+
     tea_pot.material.color = Color::from_u8(192, 192, 192);
     tea_pot.material.reflective = 0.7;
     w.add_object(Box::new(tea_pot));

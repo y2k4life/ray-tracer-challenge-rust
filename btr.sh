@@ -16,6 +16,9 @@ do
 
     cd chapter_$i
   
+    cargo clean
+    cargo fmt
+    cargo clippy
     cargo build --all
     [ $? -eq 0 ]  || exit 1
     

@@ -14,7 +14,7 @@ pub struct Intersection<'a> {
 
 impl<'a> Intersection<'a> {
     /// Constructs a new `Intersection` with the give distance from the origin
-    /// of a [`Ray`] to the intersection, the `t` value and the object 
+    /// of a [`Ray`] to the intersection, the `t` value and the object
     /// intersected.
     ///
     /// # Example

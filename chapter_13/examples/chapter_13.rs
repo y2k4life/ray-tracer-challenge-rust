@@ -1,4 +1,7 @@
-use rustic_ray::{Camera, Color, Colors, shapes::Cone, Point, PointLight, Transformation, Vector, World, patterns::*, shapes::Cylinder, shapes::Plane};
+use rustic_ray::{
+    patterns::*, shapes::Cone, shapes::Cylinder, shapes::Plane, Camera, Color, Colors, Point,
+    PointLight, Transformation, Vector, World,
+};
 use std::{f64::consts::PI, fs::File, io::Write, path::Path};
 
 fn main() {
@@ -65,7 +68,6 @@ fn main() {
     middle_back.material.color = Colors::BLACK;
     world.add_object(Box::new(middle_back));
 
-
     world.add_object(Box::new(get_ring(1.5, 0.5)));
     world.add_object(Box::new(get_ring(1.25, 1.0)));
     world.add_object(Box::new(get_ring(1.0, 1.5)));
@@ -74,7 +76,6 @@ fn main() {
     middle_ring.closed = true;
     world.add_object(Box::new(middle_ring));
 
-    
     let mut left = Cylinder::new();
     left.maximum = 1.0;
     left.minimum = -1.0;

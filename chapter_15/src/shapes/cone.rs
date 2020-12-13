@@ -1,9 +1,9 @@
 use super::Shape;
+#[allow(unused_imports)]
+use crate::Transformation;
 use crate::{float_eq, Intersection, Material, Matrix, Point, Ray, Vector, EPSILON, IDENTITY};
 use std::f64::{INFINITY, NEG_INFINITY};
 use uuid::Uuid;
-#[allow(unused_imports)]
-use crate::Transformation;
 
 /// Not a cone in the natural sense but a double-napped code. Two cones
 /// "nose to nose", with one cone balanced perfectly on the other.

@@ -84,7 +84,7 @@ impl World {
         }
     }
 
-    /// Cast a ray, called a *shadow ray*, from the point of an intersection 
+    /// Cast a ray, called a *shadow ray*, from the point of an intersection
     /// towards the light source. If an object intersects that *shadow ray* between
     /// the intersection point and the light source, then the point of intersection
     /// is considered to be in shadow, returning `true` otherwise
@@ -102,7 +102,7 @@ impl World {
                 }
             }
         }
-        
+
         false
     }
 
@@ -315,7 +315,10 @@ mod tests {
     #[test]
     fn shade_hit_is_given_an_intersection_in_shadow() {
         let mut w = World::new();
-        w.light = Some(PointLight::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0)));
+        w.light = Some(PointLight::new(
+            Point::new(0.0, 0.0, -10.0),
+            Color::new(1.0, 1.0, 1.0),
+        ));
 
         let s1 = Sphere::new();
         w.add_object(s1);

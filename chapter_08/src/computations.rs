@@ -17,5 +17,4 @@ pub struct Computations<'a> {
     pub normalv: Vector,
     /// Intersection occurred inside the shape.
     pub inside: bool,
-
 }

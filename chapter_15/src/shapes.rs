@@ -6,10 +6,10 @@ mod cylinder;
 mod group;
 mod plane;
 mod shape;
+mod smooth_triangles;
 mod sphere;
 mod test_shape;
 mod triangle;
-mod smooth_triangles;
 
 pub use cone::Cone;
 pub use cube::Cube;

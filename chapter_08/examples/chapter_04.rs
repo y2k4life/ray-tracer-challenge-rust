@@ -10,7 +10,7 @@ fn main() {
     loop {
         let xy = clock_hour(hour);
 
-        canvas.write_pixel(xy.0, xy.1,  Color::new(1.0, 0.0, 0.0));
+        canvas.write_pixel(xy.0, xy.1, Color::new(1.0, 0.0, 0.0));
         hour += 1.0;
 
         if hour > 12.0 {

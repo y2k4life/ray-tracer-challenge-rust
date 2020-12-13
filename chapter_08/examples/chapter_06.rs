@@ -66,7 +66,10 @@ fn draw_shape(shape: &Sphere, file_name: &str) {
                     let normal = hit.object.normal_at(point);
                     let eye = -r.direction;
 
-                    let color = hit.object.material.lighting(light, point, eye, normal, false);
+                    let color = hit
+                        .object
+                        .material
+                        .lighting(light, point, eye, normal, false);
 
                     canvas.write_pixel(x, y, color);
                 }

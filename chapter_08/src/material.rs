@@ -73,7 +73,7 @@ impl Material {
         point: Point,
         eyev: Vector,
         normalv: Vector,
-        in_shadow: bool
+        in_shadow: bool,
     ) -> Color {
         // combine the surface color with the light's color/intensity
         let effective_color = self.color * light.intensity;
@@ -90,7 +90,7 @@ impl Material {
         let diffuse: Color;
         let specular: Color;
         let light_dot_normal = lightv.dot(normalv);
-        if light_dot_normal < 0.0  || in_shadow {
+        if light_dot_normal < 0.0 || in_shadow {
             diffuse = Color::new(0.0, 0.0, 0.0);
             specular = Color::new(0.0, 0.0, 0.0);
         } else {
@@ -164,7 +164,7 @@ mod tests {
         let eyev = Vector::new(0.0, 2_f64.sqrt() / 2.0, 2_f64.sqrt() / 2.0);
         let normalv = Vector::new(0.0, 0.0, -1.0);
         let light = PointLight::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
-        let results = m.lighting(light, position, eyev, normalv,false);
+        let results = m.lighting(light, position, eyev, normalv, false);
 
         assert_eq!(results, Color::new(1.0, 1.0, 1.0));
     }
@@ -222,7 +222,7 @@ mod tests {
         let light = PointLight::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
         let in_shadow = true;
         let result = m.lighting(light, position, eyev, normalv, in_shadow);
-        
+
         assert_eq!(result, Color::new(0.1, 0.1, 0.1));
     }
 }

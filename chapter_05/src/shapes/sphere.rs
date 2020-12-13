@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::{IDENTITY, Intersection, Matrix, Point, Ray};
+use crate::{Intersection, Matrix, Point, Ray, IDENTITY};
 
 /// A sphere is a three-dimensional solid figure which is perfectly round in
 /// shape and every point on its surface is equidistant from the point  
@@ -75,7 +75,7 @@ impl Default for Sphere {
 
 #[cfg(test)]
 mod tests {
-    use crate::{IDENTITY, Transformation, Vector};
+    use crate::{Transformation, Vector, IDENTITY};
 
     use super::*;
 

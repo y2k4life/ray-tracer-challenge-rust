@@ -34,14 +34,16 @@ pub const IDENTITY: Matrix = Matrix {
 impl Matrix {
     /// Creates a Matrix with the provide 4x4 array of [`f64`] numbers. Even
     /// though the storage of an array is 4x4 the matrix is used for 3x3 and
-    /// 2x2 matrices.
+    /// 2x2 matrices. The rational was for optimization and simplification.
+    /// Just because the storage is 4x4 does not mean the matrix or the array
+    /// is 4x4, a 2x2 or 3x3 can work as well.
     ///
-    /// Calculate the a matrix A-1 which is called the inverse of A such that:
-    /// A * A-1 = A-1 * A = I, where I is the identity matrix. Multiply matrix
-    /// A by matrix B, production C, then C can be multiplied by the inverse of
-    /// B to get A. Similar to scalar numbers multiply A * B = C, to get A by
-    /// inverting B and multiplying by C. For example 5 * 4 = 20 the inverse of
-    /// B is 1/4 and 1/4 * 20 is 5.
+    /// The inverse matrix, A-1 is calculated such that: `A * A-1 = A-1 * A = I`,
+    /// where `I` is the identity matrix. Multiply matrix `A` by matrix `B`,
+    /// produces `C`, then `C` can be multiplied by the inverse of `B` to get `A`.
+    /// Similar to scalar numbers, multiply `A * B = C`, to get `A` by inverting
+    /// `B` and multiplying by `C`.
+    /// For example `5 * 4 = 20` the inverse of `B` is `1/4` and `1/4 * 20 = 5`.
     ///
     /// # Example
     ///
@@ -63,6 +65,7 @@ impl Matrix {
     /// assert_eq!(m[3][0], 13.5);
     /// assert_eq!(m[3][2], 15.5);
     /// ```
+    #[allow(clippy::needless_range_loop)]
     pub fn new(data: [[f64; 4]; 4]) -> Self {
         let mut inverse = [[0.0; 4]; 4];
         let d = Matrix::determinant(data, 4);
@@ -75,7 +78,47 @@ impl Matrix {
         Self { data, inverse }
     }
 
-    // Create a new matrix from the inverse data from `self`.
+    /// Returns a new `Matrix` where it's `data` is created from the `inverse`
+    /// array of `self`. Calculating an inverse of a matrix is expensive. The
+    /// `inverse` function is called multiple times for a single ray. The
+    /// optimization is to retain the inverse matrix once calculated. If the
+    /// calculation and retention of the inverse matrix is done in the `inverse`
+    /// function then `self` would have to mutable to store the data of the
+    /// inverse matrix. Doing this would cause undesirable side effects by requiring
+    /// calling routines to pass a mutable `Matrix`. Therefore The inverse matrix
+    /// is calculated when creating a `Matrix` with the `new` function and stored
+    /// in an array called `self.inverse`. This function creates a new `Matrix`
+    /// using that array data of `self.inverse`. Because the inverse of an inverse
+    /// matrix is the data of the matrix being inverted this function swaps the
+    /// `data` array of `self` with the `inverse` array of `self`.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{float_eq, Matrix};
+    ///
+    /// let m = [
+    ///     [-5.0,  2.0,  6.0, -8.0],
+    ///     [ 1.0, -5.0,  1.0,  8.0],
+    ///     [ 7.0,  7.0, -6.0, -7.0],
+    ///     [ 1.0, -3.0,  7.0,  4.0],
+    /// ];
+    /// let a = Matrix::new(m);
+    /// let b = a.inverse();
+    /// let expected = Matrix::new([
+    ///     [ 0.21805,  0.45113,  0.24060, -0.04511],
+    ///     [-0.80827, -1.45677, -0.44361,  0.52068],
+    ///     [-0.07895, -0.22368, -0.05263,  0.19737],
+    ///     [-0.52256, -0.81391, -0.30075,  0.30639],
+    /// ]);
+    ///
+    /// for row in 0..4 {
+    ///     for col in 0..4 {
+    ///
+    ///         assert!(float_eq(b[row][col], expected[row][col]));
+    ///     }
+    /// }
+    /// ```
     pub fn inverse(&self) -> Matrix {
         Matrix {
             data: self.inverse,
@@ -215,15 +258,15 @@ impl Matrix {
 impl Mul for Matrix {
     type Output = Self;
 
-    fn mul(self, other: Matrix) -> Self {
+    fn mul(self, rhs: Matrix) -> Self {
         let mut results = [[0.0; 4]; 4];
 
         for row in 0..4 {
             for col in 0..4 {
-                results[row][col] = self[row][0] * other[0][col]
-                    + self[row][1] * other[1][col]
-                    + self[row][2] * other[2][col]
-                    + self[row][3] * other[3][col];
+                results[row][col] = self[row][0] * rhs[0][col]
+                    + self[row][1] * rhs[1][col]
+                    + self[row][2] * rhs[2][col]
+                    + self[row][3] * rhs[3][col];
             }
         }
 
@@ -234,42 +277,30 @@ impl Mul for Matrix {
 impl Mul<Point> for Matrix {
     type Output = Point;
 
-    fn mul(self, other: Point) -> Point {
-        let c1 = (self[0][0] * other.x)
-            + (self[0][1] * other.y)
-            + (self[0][2] * other.z)
-            + (self[0][3] * 1.0);
-        let c2 = (self[1][0] * other.x)
-            + (self[1][1] * other.y)
-            + (self[1][2] * other.z)
-            + (self[1][3] * 1.0);
-        let c3 = (self[2][0] * other.x)
-            + (self[2][1] * other.y)
-            + (self[2][2] * other.z)
-            + (self[2][3] * 1.0);
+    fn mul(self, rhs: Point) -> Point {
+        let x =
+            (self[0][0] * rhs.x) + (self[0][1] * rhs.y) + (self[0][2] * rhs.z) + (self[0][3] * 1.0);
+        let y =
+            (self[1][0] * rhs.x) + (self[1][1] * rhs.y) + (self[1][2] * rhs.z) + (self[1][3] * 1.0);
+        let z =
+            (self[2][0] * rhs.x) + (self[2][1] * rhs.y) + (self[2][2] * rhs.z) + (self[2][3] * 1.0);
 
-        Point::new(c1, c2, c3)
+        Point::new(x, y, z)
     }
 }
 
 impl Mul<Vector> for Matrix {
     type Output = Vector;
 
-    fn mul(self, other: Vector) -> Vector {
-        let c1 = (self[0][0] * other.x)
-            + (self[0][1] * other.y)
-            + (self[0][2] * other.z)
-            + (self[0][3] * 0.0);
-        let c2 = (self[1][0] * other.x)
-            + (self[1][1] * other.y)
-            + (self[1][2] * other.z)
-            + (self[1][3] * 0.0);
-        let c3 = (self[2][0] * other.x)
-            + (self[2][1] * other.y)
-            + (self[2][2] * other.z)
-            + (self[2][3] * 0.0);
+    fn mul(self, rhs: Vector) -> Vector {
+        let x =
+            (self[0][0] * rhs.x) + (self[0][1] * rhs.y) + (self[0][2] * rhs.z) + (self[0][3] * 0.0);
+        let y =
+            (self[1][0] * rhs.x) + (self[1][1] * rhs.y) + (self[1][2] * rhs.z) + (self[1][3] * 0.0);
+        let z =
+            (self[2][0] * rhs.x) + (self[2][1] * rhs.y) + (self[2][2] * rhs.z) + (self[2][3] * 0.0);
 
-        Vector::new(c1, c2, c3)
+        Vector::new(x, y, z)
     }
 }
 
@@ -291,7 +322,7 @@ impl PartialEq for Matrix {
     fn eq(&self, other: &Matrix) -> bool {
         for r in 0..4 {
             for c in 0..4 {
-                if !float_eq(self[r][c], other[r][c]) {
+                if !float_eq(self.data[r][c], other.data[r][c]) {
                     return false;
                 }
             }
@@ -544,7 +575,7 @@ mod tests {
             [ 0.0, 0.0,  0.0, 0.0],
         ];
         let actual = Matrix::new(Matrix::sub_matrix(m, 0, 2));
-        
+
         let expected = Matrix::new([
             [-3.0, 2.0, 0.0, 0.0],
             [ 0.0, 6.0, 0.0, 0.0],
@@ -588,7 +619,7 @@ mod tests {
             [0.0,  0.0,  0.0, 0.0],
         ];
         let b = Matrix::sub_matrix(a, 1, 0);
-        
+
         assert_eq!(Matrix::determinant(b, 2), 25.0);
         assert_eq!(Matrix::minor(a, 1, 0, 2), 25.0);
     }
@@ -702,10 +733,11 @@ mod tests {
             [-0.07895, -0.22368, -0.05263,  0.19737],
             [-0.52256, -0.81391, -0.30075,  0.30639],
         ]);
+
         for row in 0..4 {
             for col in 0..4 {
-                let are_equal = float_eq(b.data[row][col], expected.data[row][col]);
-                assert_eq!(true, are_equal);
+
+                assert!(float_eq(b.data[row][col], expected.data[row][col]));
             }
         }
     }

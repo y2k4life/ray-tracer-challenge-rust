@@ -18,7 +18,8 @@ fn main() {
     let mut wrist = Sphere::new();
     wrist.transform = Transformation::new()
         .scale(0.5, 0.5, 0.5)
-        .translate(-1.25, 1.5, -2.0).build();
+        .translate(-1.25, 1.5, -2.0)
+        .build();
     wrist.material.color = Color::new(0.1, 1.0, 0.5);
     wrist.material.diffuse = 0.7;
     wrist.material.specular = 0.3;
@@ -27,7 +28,8 @@ fn main() {
     let mut palm = Sphere::new();
     palm.transform = Transformation::new()
         .scale(0.75, 0.75, 0.75)
-        .translate(-0.5, 2.0, -1.75).build();
+        .translate(-0.5, 2.0, -1.75)
+        .build();
     palm.material.color = Color::new(0.1, 1.0, 0.5);
     palm.material.diffuse = 0.7;
     palm.material.specular = 0.3;

@@ -32,7 +32,12 @@ impl<'a> Intersection<'a> {
     /// assert!(s.shape_eq(i.object));
     /// ```
     pub fn new(t: f64, object: &dyn Shape) -> Intersection {
-        Intersection { t, object, u: None, v: None }
+        Intersection {
+            t,
+            object,
+            u: None,
+            v: None,
+        }
     }
 
     /// Constructs a new `Intersection` with the give distance from the origin
@@ -51,7 +56,12 @@ impl<'a> Intersection<'a> {
     /// assert!(s.shape_eq(i.object));
     /// ```
     pub fn intersection_with_uv(t: f64, object: &dyn Shape, u: f64, v: f64) -> Intersection {
-        Intersection { t, object, u: Some(u), v: Some(v) }
+        Intersection {
+            t,
+            object,
+            u: Some(u),
+            v: Some(v),
+        }
     }
 
     /// Compute information related to an `Intersection` returning the
@@ -85,7 +95,7 @@ impl<'a> Intersection<'a> {
                 } else if let Some(object) = container.last() {
                     n1 = match w {
                         Some(w) => w.get_object_material(*object).refractive_index,
-                        None => object.material().refractive_index
+                        None => object.material().refractive_index,
                     }
                 }
             }
@@ -102,7 +112,7 @@ impl<'a> Intersection<'a> {
                 } else if let Some(object) = container.last() {
                     n2 = match w {
                         Some(w) => w.get_object_material(*object).refractive_index,
-                        None => object.material().refractive_index
+                        None => object.material().refractive_index,
                     }
                 }
 
@@ -177,7 +187,10 @@ impl Ord for Intersection<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{EPSILON, Point, Ray, Transformation, shapes::Triangle, Vector, float_eq, shapes::Plane, shapes::Sphere};
+    use crate::{
+        float_eq, shapes::Plane, shapes::Sphere, shapes::Triangle, Point, Ray, Transformation,
+        Vector, EPSILON,
+    };
 
     // Chapter 5 Ray-Sphere Intersections
     // Page 63
@@ -463,8 +476,9 @@ mod tests {
         let s = Triangle::new(
             Point::new(0.0, 1.0, 0.0),
             Point::new(-1.0, 0.0, 0.0),
-            Point::new(1.0, 1.0, 0.0));
-        
+            Point::new(1.0, 1.0, 0.0),
+        );
+
         let i = Intersection::intersection_with_uv(3.5, &s, 0.2, 0.4);
 
         assert_eq!(i.u.unwrap(), 0.2);

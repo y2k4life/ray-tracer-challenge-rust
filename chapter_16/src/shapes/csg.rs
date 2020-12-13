@@ -112,7 +112,7 @@ impl Shape for CSG {
     }
 
     fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
-        let mut xs:Vec<Intersection> = Vec::new();
+        let mut xs: Vec<Intersection> = Vec::new();
 
         if let Some(left_xs) = self.left.intersect(ray) {
             for i in left_xs {
@@ -128,20 +128,20 @@ impl Shape for CSG {
 
         if xs.len() > 0 {
             xs.sort_by(|a, b| a.partial_cmp(b).unwrap());
-  
+
             let mut inl = false;
             let mut inr = false;
-    
+
             let mut results: Vec<Intersection> = Vec::new();
-    
+
             for i in xs {
-                let lhit =
-                    self.left.id() == i.object.id() || self.left.contains_object_by_id(i.object.id());
-    
+                let lhit = self.left.id() == i.object.id()
+                    || self.left.contains_object_by_id(i.object.id());
+
                 if CSG::intersection_allowed(self.operation, lhit, inl, inr) {
                     results.push(Intersection::new(i.t, i.object));
                 }
-    
+
                 if lhit {
                     inl = !inl;
                 } else {
@@ -150,8 +150,7 @@ impl Shape for CSG {
             }
 
             Some(results)
-        }
-        else {
+        } else {
             None
         }
     }
@@ -164,7 +163,10 @@ impl Shape for CSG {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{Intersection, Transformation, shapes::{Cube, Sphere}};
+    use crate::{
+        shapes::{Cube, Sphere},
+        Intersection, Transformation,
+    };
 
     // Chapter 16 Constructive Solid Geometry (CSG)
     // Page 230
