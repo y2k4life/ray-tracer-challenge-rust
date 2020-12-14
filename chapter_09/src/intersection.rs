@@ -1,8 +1,8 @@
 use crate::{float_cmp, shapes::Shape, Computations, Ray, EPSILON};
 use std::cmp::Ordering;
 
-/// Aggregate of the distance from a [`Ray`]'s origin and the object that was
-/// intersected by a [`Ray`] at that distance.
+/// Aggregate of the distance, `t`, from a [`Ray`]'s origin and the object that was
+/// intersected by a [`Ray`] at the distance `t`.
 #[derive(Debug)]
 pub struct Intersection<'a> {
     /// Distance from the origin of a [`Ray`] to the intersection.
@@ -12,9 +12,8 @@ pub struct Intersection<'a> {
 }
 
 impl<'a> Intersection<'a> {
-    /// Constructs a new `Intersection` with the give distance from the origin
-    /// of a [`Ray`] to the intersection, the `t` value and the object
-    /// intersected.
+    /// Constructs a new `Intersection` with the give distance, `t`, from the origin
+    /// of a [`Ray`] to the `object` intersected.
     ///
     /// # Example
     ///

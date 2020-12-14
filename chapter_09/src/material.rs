@@ -66,7 +66,7 @@ impl Material {
     }
 
     /// Add together the material's ambient, diffuse, and specular components,
-    /// weighted by the angels between the different vectors.
+    /// weighted by the angels between different vectors.
     pub fn lighting(
         &self,
         light: PointLight,

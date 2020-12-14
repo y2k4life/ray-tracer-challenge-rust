@@ -1,6 +1,8 @@
+#[allow(unused_imports)]
+use crate::Intersection;
 use crate::{shapes::Sphere, Point, Vector};
 
-/// Encapsulating precomputed information relating to an [`crate::Intersection`].
+/// Encapsulating precomputed information relating to an [`Intersection`].
 pub struct Computations<'a> {
     /// Distance from the origin of a ray to the intersection.
     pub t: f64,
