@@ -205,7 +205,7 @@ impl World {
     ///
     /// let mut w = World::new();
     /// let s = Sphere::new();
-    /// 
+    ///
     /// w.add_object(Box::new(s));
     /// let s = w.get_object_mut(0).unwrap();
     /// s.material_mut().diffuse = 2.0;

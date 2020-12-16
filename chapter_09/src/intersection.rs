@@ -58,7 +58,7 @@ impl<'a> Intersection<'a> {
 
     /// Compute information related to an `Intersection` returning the
     /// information as [`Computations].
-    pub fn prepare_computations<'h>(&'h self, r: Ray) -> Computations<'h> {
+    pub fn prepare_computations(&self, r: Ray) -> Computations {
         let point = r.position(self.t);
         let mut normalv = self.object.normal_at(point);
         let mut inside = false;

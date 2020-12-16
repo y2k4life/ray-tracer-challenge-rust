@@ -11,6 +11,16 @@ pub trait Shape: Any + fmt::Debug {
     }
 
     /// Get the unique identifier for an object.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{shapes::Shape, shapes::Sphere};
+    ///
+    /// let mut s = Sphere::new();
+    ///
+    /// assert_eq!(s.id().get_version_num(), 4);
+    /// ```
     fn id(&self) -> Uuid;
 
     /// Get parent id of an `object`
@@ -29,16 +39,64 @@ pub trait Shape: Any + fmt::Debug {
         None
     }
 
-    /// Gets the transformation [`Matrix`] for an object
+    /// Gets the [`Transformation`] [`Matrix`] for an object
+    ///
+    /// Example
+    /// ```
+    /// use rustic_ray::{Transformation, shapes::Shape, shapes::Sphere};
+    ///
+    /// let mut s = Sphere::new();
+    /// s.set_transform(Transformation::new().translate(2.0, 3.0, 4.0).build());
+    ///
+    /// assert_eq!(
+    ///     s.transform(),
+    ///     Transformation::new().translate(2.0, 3.0, 4.0).build()
+    /// );
+    /// ```
     fn transform(&self) -> Matrix;
 
-    /// Sets the transformation [`Matrix`] for an object
+    /// Sets the [`Transformation`] [`Matrix`] for an object
+    ///
+    /// Example
+    /// ```
+    /// use rustic_ray::{Transformation, shapes::Shape, shapes::Sphere};
+    ///
+    /// let mut s = Sphere::new();
+    /// s.set_transform(Transformation::new().translate(2.0, 3.0, 4.0).build());
+    ///
+    /// assert_eq!(
+    ///     s.transform(),
+    ///     Transformation::new().translate(2.0, 3.0, 4.0).build()
+    /// );
+    /// ```
     fn set_transform(&mut self, transform: Matrix);
 
     /// Gets the [`Material`] for an object
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{shapes::Shape, shapes::Sphere};
+    ///
+    /// let mut s = Sphere::new();
+    /// let m = s.material();
+    ///
+    /// assert_eq!(m.ambient, 0.1);
+    /// ```
     fn material(&self) -> &Material;
 
     /// Gets the [`Material`] as mutable for an object
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{shapes::Shape, shapes::Sphere};
+    ///
+    /// let mut s = Sphere::new();
+    /// s.material_mut().ambient = 1.0;
+    ///
+    /// assert_eq!(s.material().ambient, 1.0);
+    /// ```
     fn material_mut(&mut self) -> &mut Material;
 
     fn inherit_material(&self) -> bool {
@@ -46,21 +104,68 @@ pub trait Shape: Any + fmt::Debug {
     }
 
     /// Sets the [`Material`] as mutable for an object
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{Material, shapes::Shape, shapes::Sphere};
+    ///
+    /// let mut s = Sphere::new();
+    /// let mut m = Material::new();
+    /// m.ambient = 1.0;
+    /// s.set_material(m);
+    ///
+    /// assert_eq!(s.material().ambient, 1.0);
+    /// ```
     fn set_material(&mut self, material: Material);
 
-    /// Test if the given [`Ray`] intersects with `self`. Returns a list of
-    /// [`Intersection`]s between the [`Ray`] and `self`, the object. Each
-    /// intersection has the distances from the origin of the [`Ray`] and the
-    /// object intersected. If there are no intersections
-    /// then [`None`] is returned.
+    /// Specific implementation of how a shape test if the given [`Ray`] intersects
+    /// with `self`. Returns a list of [`Intersection`]s between the [`Ray`]
+    /// and `self`, the object. Each intersection has the distances, `t`, from the
+    /// origin of the [`Ray`] and the shape intersected, `self`. If there are
+    /// no intersections then [`None`] is returned. The implementation is called
+    /// from the `intersect` function.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{Intersection, Point, shapes::Shape, shapes::Sphere, Ray, Vector};
+    ///
+    /// let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
+    /// let s = Sphere::new();
+    /// let xs = s.local_intersect(r).expect("Expected hit, found none!");
+    ///
+    /// assert_eq!(2, xs.len());
+    /// assert_eq!(xs[0].t, 4.0);
+    /// assert_eq!(xs[1].t, 6.0,);
+    /// ```
     fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>>;
 
-    /// Calculate a vector that points perpendicular to a surface at a give point
+    /// Specific implementation of a shape to Calculate how the vector that points
+    /// perpendicular to a surface at a give point
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{Point, shapes::Shape, shapes::Sphere, Vector};
+    ///
+    /// let s = Sphere::new();
+    /// let n = s.local_normal_at(Point::new(1.0, 0.0, 0.0), None);
+    ///
+    /// assert_eq!(n, Vector::new(1.0, 0.0, 0.0));
+    /// ```
     fn local_normal_at(&self, point: Point, hit: Option<&Intersection>) -> Vector;
 
-    /// Coverts the `ray` form world space into local space then calls
-    /// the `local_intersect` implementation of an object, `self` to determine
-    /// if the `ray` intersects with the object.
+    /// Test if the given [`Ray`] intersects with `self`. Returns
+    /// [`Some`]`(`[`Vec`]`<`[`Intersection`]`>)` which is a list of
+    /// intersection(s) between the [`Ray`] and `self`. Each intersection
+    /// has the position of the [`Ray`] the intersection occurs at, `t` and
+    /// `self` as the object intersected. If there are no intersections
+    /// then [`None`] is returned. The implementation to determine if the ray
+    /// intersects an object is computed in the `local_intersect`. The default
+    /// behavior in `intersect` is to transform the ray from *world space* to
+    /// *object space* then call `local_intersect` which determines if and the
+    /// ray intersects with the shape.
     ///
     /// # Example
     ///
@@ -69,7 +174,7 @@ pub trait Shape: Any + fmt::Debug {
     ///
     /// let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
     /// let s = Sphere::new();
-    /// let xs = s.intersect(r).expect("Expected hit, found none!");
+    /// let xs = s.intersect(r).unwrap();
     ///
     /// assert_eq!(2, xs.len());
     /// assert_eq!(xs[0].t, 4.0);

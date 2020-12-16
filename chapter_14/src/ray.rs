@@ -1,20 +1,22 @@
-use crate::{Matrix, Point, Vector};
+#[allow(unused_imports)]
+use crate::Transformation;
+use crate::{Matrix, Point, Vector}; // Used for documentation
 
 /// A line which starts at a point and goes off in a particular
 /// direction to infinity.
 ///
-/// A ray will have a starting ([`Point`]) called the origin and a ([`Vector`])
+/// A ray will have a starting [`Point`] called the origin and a [`Vector`]
 /// describing the direction of the ray.
 #[derive(Debug, Copy, Clone)]
 pub struct Ray {
-    // The origin of the ray
+    /// The origin of the ray
     pub origin: Point,
-    // The direction of the ray
+    /// The direction of the ray
     pub direction: Vector,
 }
 
 impl Ray {
-    /// Create a Ray for the given origin and direction.
+    /// Create a `Ray` for the given `origin` and `direction`.
     ///
     /// # Example
     ///
@@ -32,7 +34,7 @@ impl Ray {
         Ray { origin, direction }
     }
 
-    /// Find the position that lie any distance `t` along te ray.
+    /// Find the position that lies at distance `t` along the ray.
     ///
     /// # Example
     ///
@@ -50,6 +52,20 @@ impl Ray {
         self.origin + self.direction * t
     }
 
+    /// Applies the given [`Transformation`] [`Matrix`] to `self`.
+    ///
+    /// Example
+    ///
+    /// ```
+    /// use rustic_ray::{Matrix, Point, Ray, Transformation, Vector};
+    ///
+    /// let r = Ray::new(Point::new(1.0, 2.0, 3.0), Vector::new(0.0, 1.0, 0.0));
+    /// let m = Transformation::new().translate(3.0, 4.0, 5.0).build();
+    /// let r2 = r.transform(m);
+    ///
+    /// assert_eq!(r2.origin, Point::new(4.0, 6.0, 8.0));
+    /// assert_eq!(r2.direction, Vector::new(0.0, 1.0, 0.0));
+    /// ```
     pub fn transform(&self, transformation: Matrix) -> Ray {
         Ray::new(
             transformation * self.origin,

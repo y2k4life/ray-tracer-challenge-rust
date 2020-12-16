@@ -83,12 +83,9 @@ impl Shape for Group {
                 shape = Some(s.as_ref());
                 break;
             }
-            match s.get_object_by_id(id) {
-                Some(c) => {
-                    shape = Some(c);
-                    break;
-                }
-                None => (),
+            if let Some(c) = s.get_object_by_id(id) {
+                shape = Some(c);
+                break;
             }
         }
 
@@ -124,6 +121,12 @@ impl Shape for Group {
 
     fn as_any(&self) -> Option<&dyn Any> {
         Some(self)
+    }
+}
+
+impl Default for Group {
+    fn default() -> Self {
+        Group::new()
     }
 }
 

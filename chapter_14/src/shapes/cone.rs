@@ -146,13 +146,10 @@ impl Shape for Cone {
             xs.push(Intersection::new(t.1, self))
         }
 
-        match self.intersect_caps(ray) {
-            Some(cxs) => {
-                for i in cxs {
-                    xs.push(i)
-                }
+        if let Some(cxs) = self.intersect_caps(ray) {
+            for i in cxs {
+                xs.push(i)
             }
-            _ => (),
         }
 
         if xs.is_empty() {
@@ -182,6 +179,12 @@ impl Shape for Cone {
 impl PartialEq for Cone {
     fn eq(&self, other: &Self) -> bool {
         self.transform == other.transform && self.material == other.material
+    }
+}
+
+impl Default for Cone {
+    fn default() -> Self {
+        Cone::new()
     }
 }
 

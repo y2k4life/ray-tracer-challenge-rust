@@ -79,12 +79,9 @@ impl Shape for Group {
                 shape = Some(s.as_ref());
                 break;
             }
-            match s.get_object_by_id(id) {
-                Some(c) => {
-                    shape = Some(c);
-                    break;
-                }
-                None => (),
+            if let Some(c) = s.get_object_by_id(id) {
+                shape = Some(c);
+                break;
             }
         }
 
@@ -112,6 +109,12 @@ impl Shape for Group {
 
     fn local_normal_at(&self, _point: Point) -> Vector {
         panic!("Should not be called!")
+    }
+}
+
+impl Default for Group {
+    fn default() -> Self {
+        Group::new()
     }
 }
 

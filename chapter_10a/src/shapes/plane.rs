@@ -1,4 +1,6 @@
 use super::Shape;
+#[allow(unused_imports)]
+use crate::Transformation;
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector, EPSILON, IDENTITY};
 use uuid::Uuid;
 
@@ -9,7 +11,7 @@ use uuid::Uuid;
 #[derive(Debug)]
 pub struct Plane {
     id: Uuid,
-    /// [`crate::Transformation`] matrix used to manipulate the `Plane`
+    /// [`Transformation`] matrix used to manipulate the `Plane`
     pub transform: Matrix,
     /// [`Material`] describing the look of the `Plane`
     pub material: Material,
@@ -62,6 +64,12 @@ impl Shape for Plane {
 
     fn local_normal_at(&self, _point: Point) -> Vector {
         Vector::new(0.0, 1.0, 0.0)
+    }
+}
+
+impl Default for Plane {
+    fn default() -> Self {
+        Plane::new()
     }
 }
 

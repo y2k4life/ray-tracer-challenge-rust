@@ -18,6 +18,9 @@ use crate::{multiple_array, Matrix, Point, Vector};
 /// For example, to build a transformation that `scales` and `rotates` along the
 /// `y` axis build the transformation with these chain of commands
 /// `Transformation::new().Scale(2.0, 2.0, 2.0).rotate_y(PI).build()`.
+///
+/// There is one `transformation` for the camera. To build this call the
+/// 'view_transform' function.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Transformation {
     data: [[f64; 4]; 4],

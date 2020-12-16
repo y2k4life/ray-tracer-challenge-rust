@@ -67,6 +67,12 @@ impl Shape for Plane {
     }
 }
 
+impl Default for Plane {
+    fn default() -> Self {
+        Plane::new()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

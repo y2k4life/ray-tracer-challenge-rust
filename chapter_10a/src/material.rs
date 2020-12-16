@@ -26,8 +26,7 @@ pub struct Material {
     /// Light reflected form a matte surface.
     pub diffuse: f64,
     /// Reflection of the light source itself and results in what is called
-    /// a *specular highlight* - the bright spot on a curved surface. Default
-    /// value is 200.0.
+    /// a *specular highlight* - the bright spot on a curved surface.
     pub specular: f64,
     /// Controlled *specular highlight*. The higher the shininess, the smaller
     /// and tighter the specular highlight.

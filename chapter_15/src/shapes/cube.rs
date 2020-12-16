@@ -1,7 +1,9 @@
 use super::Shape;
 #[allow(unused_imports)]
-use crate::Transformation;
-use crate::{float_cmp, Intersection, Material, Matrix, Point, Ray, Vector, IDENTITY};
+use crate::{
+    float_cmp, Intersection, Material, Matrix, Point, Ray, Transformation, Vector, EPSILON,
+    IDENTITY,
+};
 use uuid::Uuid;
 
 /// A three-dimensional solid object bounded by six square sides, with three
@@ -104,9 +106,9 @@ impl Shape for Cube {
 
         let maxc = *maxc.unwrap();
 
-        if maxc == point.x.abs() {
+        if (maxc - point.x.abs()).abs() < EPSILON {
             Vector::new(point.x, 0.0, 0.0)
-        } else if maxc == point.y.abs() {
+        } else if (maxc - point.y.abs()).abs() < EPSILON {
             Vector::new(0.0, point.y, 0.0)
         } else {
             Vector::new(0.0, 0.0, point.z)
@@ -117,6 +119,12 @@ impl Shape for Cube {
 impl PartialEq for Cube {
     fn eq(&self, other: &Self) -> bool {
         self.transform == other.transform && self.material == other.material
+    }
+}
+
+impl Default for Cube {
+    fn default() -> Self {
+        Cube::new()
     }
 }
 

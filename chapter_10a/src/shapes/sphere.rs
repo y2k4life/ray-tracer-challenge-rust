@@ -182,7 +182,7 @@ mod tests {
     #[test]
     fn the_normal_on_a_sphere_at_a_point_on_the_x_axis() {
         let s = Sphere::new();
-        let n = s.normal_at(Point::new(1.0, 0.0, 0.0));
+        let n = s.local_normal_at(Point::new(1.0, 0.0, 0.0));
 
         assert_eq!(n, Vector::new(1.0, 0.0, 0.0));
     }
@@ -192,7 +192,7 @@ mod tests {
     #[test]
     fn the_normal_on_a_sphere_at_a_point_on_the_y_axis() {
         let s = Sphere::new();
-        let n = s.normal_at(Point::new(0.0, 1.0, 0.0));
+        let n = s.local_normal_at(Point::new(0.0, 1.0, 0.0));
 
         assert_eq!(n, Vector::new(0.0, 1.0, 0.0));
     }
@@ -202,7 +202,7 @@ mod tests {
     #[test]
     fn the_normal_on_a_sphere_at_a_point_on_the_z_axis() {
         let s = Sphere::new();
-        let n = s.normal_at(Point::new(0.0, 0.0, 1.0));
+        let n = s.local_normal_at(Point::new(0.0, 0.0, 1.0));
 
         assert_eq!(n, Vector::new(0.0, 0.0, 1.0));
     }

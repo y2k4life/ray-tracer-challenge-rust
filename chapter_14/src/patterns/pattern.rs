@@ -4,7 +4,7 @@ use crate::{shapes::Shape, Color, Matrix, Point};
 use std::fmt;
 use uuid::Uuid;
 
-pub trait Pattern: Send + fmt::Debug {
+pub trait Pattern: fmt::Debug {
     /// Get the unique identifier for a pattern.
     fn id(&self) -> Uuid;
 
