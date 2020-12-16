@@ -13,11 +13,6 @@ struct ObjParser {
 /// Build objects by parsing a Wavefront OBJ file
 pub struct ObjFile {}
 
-enum GroupType {
-    Parent,
-    Child(Group),
-}
-
 impl ObjFile {
     /// Parse a Wavefront OBJ string returning a [`Group`] object with all of the
     /// triangles and polygons in the `buffer`.
@@ -34,8 +29,7 @@ impl ObjFile {
             default_group: Group::new(),
         };
 
-        let mut group = GroupType::Parent;
-
+        let mut child_group: Option<Group> = None;
         for line in buffer.lines() {
             let mut line_iter = line.split_whitespace();
             if let Some(token) = line_iter.next() {
@@ -53,19 +47,19 @@ impl ObjFile {
                         parser.normals.push(Vector::new(x, y, z));
                     }
                     "f" => {
-                        ObjFile::parse_faces(&mut parser, &mut line_iter, &mut group);
+                        ObjFile::parse_faces(&mut parser, &mut line_iter, &mut child_group);
                     }
-                    "g" => match group {
-                        GroupType::Parent => {
-                            let mut child_group = Group::new();
-                            child_group.inherit_material = true;
-                            group = GroupType::Child(child_group);
+                    "g" => match child_group {
+                        None => {
+                            let mut group = Group::new();
+                            group.inherit_material = true;
+                            child_group = Some(group)
                         }
-                        GroupType::Child(g) => {
-                            parser.default_group.add_object(Box::new(g));
-                            let mut child_group = Group::new();
-                            child_group.inherit_material = true;
-                            group = GroupType::Child(child_group);
+                        Some(group) => {
+                            parser.default_group.add_object(Box::new(group));
+                            let mut group = Group::new();
+                            group.inherit_material = true;
+                            child_group = Some(group);
                         }
                     },
                     _ => {
@@ -75,8 +69,8 @@ impl ObjFile {
             }
         }
 
-        if let GroupType::Child(g) = group {
-            parser.default_group.add_object(Box::new(g));
+        if let Some(group) = child_group {
+            parser.default_group.add_object(Box::new(group));
         }
 
         parser
@@ -85,11 +79,11 @@ impl ObjFile {
     fn parse_faces(
         parser: &mut ObjParser,
         line_iter: &mut std::str::SplitWhitespace,
-        group: &mut GroupType,
+        group: &mut Option<Group>,
     ) {
         let mut vg: Vec<(i32, i32)> = Vec::new();
         let mut has_vn = false;
-        while let Some(v) = line_iter.next() {
+        for v in line_iter {
             if v.contains('/') {
                 has_vn = true;
                 let v_vt_vn: Vec<&str> = v.split('/').collect();
@@ -113,8 +107,8 @@ impl ObjFile {
 
                 let tri = Triangle::smooth_triangle(p1, p2, p3, n1, n2, n3);
                 match group {
-                    GroupType::Parent => parser.default_group.add_object(Box::new(tri)),
-                    GroupType::Child(g) => g.add_object(Box::new(tri)),
+                    None => parser.default_group.add_object(Box::new(tri)),
+                    Some(group) => group.add_object(Box::new(tri)),
                 }
             } else {
                 let p1 = parser.vertices[vg[0].0 as usize];
@@ -123,8 +117,8 @@ impl ObjFile {
 
                 let tri = Triangle::new(p1, p2, p3);
                 match group {
-                    GroupType::Parent => parser.default_group.add_object(Box::new(tri)),
-                    GroupType::Child(g) => g.add_object(Box::new(tri)),
+                    None => parser.default_group.add_object(Box::new(tri)),
+                    Some(group) => group.add_object(Box::new(tri)),
                 }
             }
         }
