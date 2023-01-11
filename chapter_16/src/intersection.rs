@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 
 /// Aggregate of the distance from a [`Ray`]'s origin and the object that was
 /// intersected by a [`Ray`] at that distance.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Intersection<'a> {
     /// Distance from the origin of a [`Ray`] to the intersection.
     pub t: f64,
@@ -101,7 +101,7 @@ impl<'a> Intersection<'a> {
             }
 
             if container.contains(&i.object) {
-                container = container.into_iter().filter(|o| *o != i.object).collect();
+                container.retain(|o| *o != i.object);
             } else {
                 container.push(i.object);
             }

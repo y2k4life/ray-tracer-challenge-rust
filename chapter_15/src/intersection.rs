@@ -100,7 +100,7 @@ impl<'a> Intersection<'a> {
             }
 
             if container.contains(&i.object) {
-                container = container.into_iter().filter(|o| *o != i.object).collect();
+                container.retain(|o| *o != i.object);
             } else {
                 container.push(i.object);
             }
