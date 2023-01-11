@@ -153,7 +153,7 @@ impl World {
         match self.intersect_world(r) {
             Some(xs) => match Intersection::hit(&xs) {
                 Some(i) => {
-                    let comps = Intersection::prepare_computations(&i, r, &xs);
+                    let comps = Intersection::prepare_computations(i, r, &xs);
                     self.shade_hit(&comps, remaining)
                 }
                 None => Colors::BLACK,
