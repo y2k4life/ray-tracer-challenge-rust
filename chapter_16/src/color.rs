@@ -71,20 +71,10 @@ impl Color {
     /// ```
     pub fn rgb_string_array(&self) -> [String; 3] {
         [
-            format!("{}", (Self::clip_color(self.red) * 256.0) as u8),
-            format!("{}", (Self::clip_color(self.green) * 256.0) as u8),
-            format!("{}", (Self::clip_color(self.blue) * 256.0) as u8),
+            format!("{}", (self.red.clamp(0.0, 1.0) * 256.0) as u8),
+            format!("{}", (self.green.clamp(0.0, 1.0) * 256.0) as u8),
+            format!("{}", (self.blue.clamp(0.0, 1.0) * 256.0) as u8),
         ]
-    }
-
-    fn clip_color(color: f64) -> f64 {
-        if color < 0.0 {
-            0.0
-        } else if color > 1.0 {
-            1.0
-        } else {
-            color
-        }
     }
 }
 
