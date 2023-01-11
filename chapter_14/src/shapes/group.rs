@@ -88,7 +88,7 @@ impl Shape for Group {
         shape
     }
 
-    fn local_intersect<'a>(&'a self, ray: Ray) -> Option<Vec<Intersection<'a>>> {
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
         let mut xs: Vec<Intersection> = Vec::new();
 
         for o in &self.objects {

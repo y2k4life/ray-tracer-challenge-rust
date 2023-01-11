@@ -39,6 +39,12 @@ impl Group {
     }
 }
 
+impl Default for Group {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Shape for Group {
     fn id(&self) -> Uuid {
         self.id
@@ -83,12 +89,9 @@ impl Shape for Group {
                 shape = Some(s.as_ref());
                 break;
             }
-            match s.get_object_by_id(id) {
-                Some(c) => {
-                    shape = Some(c);
-                    break;
-                }
-                None => (),
+            if let Some(c) = s.get_object_by_id(id) {
+                shape = Some(c);
+                break;
             }
         }
 
@@ -111,7 +114,7 @@ impl Shape for Group {
         contains
     }
 
-    fn local_intersect<'a>(&'a self, ray: Ray) -> Option<Vec<Intersection<'a>>> {
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
         let mut xs: Vec<Intersection> = Vec::new();
 
         for o in &self.objects {
