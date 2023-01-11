@@ -30,6 +30,12 @@ impl Plane {
     }
 }
 
+impl Default for Plane {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Shape for Plane {
     fn id(&self) -> Uuid {
         self.id

@@ -51,7 +51,7 @@ impl CSG {
                 self.left.id() == i.object.id() || self.left.contains_object_by_id(i.object.id());
 
             if CSG::intersection_allowed(self.operation, lhit, inl, inr) {
-                let c = i.clone();
+                let c = &(*i).clone();
                 results.push(Intersection::new(c.t, c.object));
             }
 
@@ -126,7 +126,7 @@ impl Shape for CSG {
             }
         }
 
-        if xs.len() > 0 {
+        if !xs.is_empty() {
             xs.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
             let mut inl = false;

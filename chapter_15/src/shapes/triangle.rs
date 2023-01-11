@@ -113,7 +113,7 @@ impl Shape for Triangle {
         let f = 1.0 / det;
         let p1_to_origin = ray.origin - self.p1;
         let u = f * p1_to_origin.dot(dir_cross_e2);
-        if u < 0.0 || u > 1.0 {
+        if !(0.0..=1.0).contains(&u) {
             return None;
         }
 

@@ -42,6 +42,12 @@ impl Cube {
     }
 }
 
+impl Default for Cube {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Shape for Cube {
     fn id(&self) -> Uuid {
         self.id

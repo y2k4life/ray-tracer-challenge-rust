@@ -15,7 +15,7 @@ pub struct ObjFile {}
 
 enum GroupType {
     Parent,
-    Child(Group),
+    Child(Box<Group>),
 }
 
 impl ObjFile {
@@ -59,13 +59,13 @@ impl ObjFile {
                         GroupType::Parent => {
                             let mut child_group = Group::new();
                             child_group.inherit_material = true;
-                            group = GroupType::Child(child_group);
+                            group = GroupType::Child(Box::new(child_group));
                         }
                         GroupType::Child(g) => {
-                            parser.default_group.add_object(Box::new(g));
+                            parser.default_group.add_object(g);
                             let mut child_group = Group::new();
                             child_group.inherit_material = true;
-                            group = GroupType::Child(child_group);
+                            group = GroupType::Child(Box::new(child_group));
                         }
                     },
                     _ => {
@@ -76,7 +76,7 @@ impl ObjFile {
         }
 
         if let GroupType::Child(g) = group {
-            parser.default_group.add_object(Box::new(g));
+            parser.default_group.add_object(g);
         }
 
         parser
@@ -89,7 +89,7 @@ impl ObjFile {
     ) {
         let mut vg: Vec<(i32, i32)> = Vec::new();
         let mut has_vn = false;
-        while let Some(v) = line_iter.next() {
+        for v in line_iter.by_ref() {
             if v.contains('/') {
                 has_vn = true;
                 let v_vt_vn: Vec<&str> = v.split('/').collect();

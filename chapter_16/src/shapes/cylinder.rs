@@ -27,6 +27,12 @@ pub struct Cylinder {
     pub closed: bool,
 }
 
+impl Default for Cylinder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Cylinder {
     /// Create a new `Cylinder`.
     pub fn new() -> Cylinder {
@@ -147,13 +153,10 @@ impl Shape for Cylinder {
             xs.push(Intersection::new(t.1, self))
         }
 
-        match self.intersect_caps(ray) {
-            Some(cxs) => {
-                for i in cxs {
-                    xs.push(i)
-                }
+        if let Some(cxs) = self.intersect_caps(ray) {
+            for i in cxs {
+                xs.push(i)
             }
-            _ => (),
         }
 
         if xs.is_empty() {
