@@ -1,7 +1,84 @@
-#!/bin/bash
-# BTS script will Build, Test, and Run all examples
-# by changing to a chapter folder and running various
-# cargo commands to build, test, and the examples.
+function usage {
+        echo "Usage: $(basename $0) [-aucfpbtrd]" 2>&1
+        echo 'Build, Test, and Run Example from Ray Tracer Challenge.'
+        echo ''
+        echo '   -a          All (Update, Clean, Format, Clippy, Build, Test, Run)'
+        echo '   -u          Cargo Update.'
+        echo '   -c          Cargo clean.'
+        echo '   -f          Cargo format.'
+        echo '   -p          Cargo clippy.'
+        echo '   -b          Cargo build.'
+        echo '   -t          Cargo test.'
+        echo '   -r          Run examples.'
+        echo ''
+        echo '   -o          Optomized build (--release).'
+        echo ''
+        echo '   -d          Delete PPM files.'
+        
+        exit 1
+}
+
+
+UPDATE='false'
+CLEAN='false'
+FORMAT='false'
+CLIPPY='false'
+BUILD='false'
+TEST='false'
+RUN='false'
+
+DELETE='false'
+RELEASE='false'
+
+optstring=":aucfpbtrod"
+while getopts ${optstring} arg; do
+  case ${arg} in
+    a)
+      UPDATE='true'
+      CLEAN='true'
+      FORMAT='true'
+      CLIPPY='true'
+      BUILD='true'
+      TEST='true'
+      RUN='true'
+      ;;
+    u)
+      UPDATE='true'
+      ;;
+    c)
+      CLEAN='true'
+      ;;
+    f)
+      FORMAT='true'
+      ;;
+    p)
+      CLIPPY='true'
+      ;;
+    b)
+      BUILD='true'
+      ;;
+    t)
+      TEST='true'
+      ;;
+    r)
+      RUN='true'
+      ;;  
+    d)
+      DELETE='true'
+      ;;
+    o)
+      RELEASE='true'
+      ;;      
+    :)
+      echo "$0: Must supply an argument to -$OPTARG." >&2
+      exit 1
+      ;;
+    ?)
+      usage
+      exit 1
+      ;;
+  esac
+done
 
 chapter=("01" "02" "03" "04" "05" "06" "07" "08" "09" "10a" "10b" "11" "12" "13" "14" "15" "16")
 
@@ -16,36 +93,49 @@ do
 
     cd chapter_$i
   
-    cargo clean
-    cargo fmt
-    cargo clippy
-    cargo build --all
-    [ $? -eq 0 ]  || exit 1
-    
-    cargo t --all
-    [ $? -eq 0 ]  || exit 1
+    if [[ "${UPDATE}" == true ]];then
+      cargo update
+    fi
+    if [[ "${CLEAN}" == true ]];then
+      cargo clean
+    fi
+    if [[ "${FORMAT}" == true ]];then
+      cargo fmt
+    fi
+    if [[ "${CLIPPY}" == true ]];then
+      cargo clippy
+    fi
 
-    counter=0
-    while [ $counter -le $folder_counter ]
-    do
-        cargo run --example chapter_"${chapter[counter]}" --release
-        ((counter++))
-    done
+    if [[ "${BUILD}" == true ]];then
+      cargo build --all
+      [ $? -eq 0 ]  || exit 1
+    fi
+
+    if [[ "${RELEASE}" == true ]];then
+      cargo build --all --release
+      [ $? -eq 0 ]  || exit 1
+    fi
+
+    if [[ "${TEST}" == true ]];then
+      cargo t --all
+      [ $? -eq 0 ]  || exit 1
+    fi
+    
+    if [[ "${RUN}" == true ]];then
+      # run all prior example upto the current chapter index
+      counter=0
+      while [ $counter -le $folder_counter ]
+      do
+          cargo run --example chapter_"${chapter[counter]}" --release
+          ((counter++))
+      done
+    fi
+
+    if [[ "${DELETE}" == true ]];then
+      rm *.ppm
+    fi
 
     cd ..
 
     ((folder_counter++))
 done
-
-while [[ $# -gt 0 ]]
-do
-key="$1"
-
-case $key in
-    -d|--delete)
-    shift
-    find . -type d \( -name target -o -path name \) -prune -false -o -name '*.ppm' -print | xargs rm
-    ;;
-esac
-done
-
