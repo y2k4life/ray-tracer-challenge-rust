@@ -1,3 +1,6 @@
+#!/bin/bash
+# I'm not shell script expert take with a grain of salt
+
 function usage {
         echo "Usage: $(basename $0) [-aucfpbtrd]" 2>&1
         echo 'Build, Test, and Run Example from Ray Tracer Challenge.'
@@ -29,6 +32,8 @@ RUN='false'
 
 DELETE='false'
 RELEASE='false'
+
+NOARGS='true'
 
 optstring=":aucfpbtrod"
 while getopts ${optstring} arg; do
@@ -78,7 +83,13 @@ while getopts ${optstring} arg; do
       exit 1
       ;;
   esac
+  NOARGS='false'
 done
+
+if [[ "${NOARGS}" == true ]];then 
+  usage
+  exit 1
+fi
 
 chapter=("01" "02" "03" "04" "05" "06" "07" "08" "09" "10a" "10b" "11" "12" "13" "14" "15" "16")
 
@@ -129,6 +140,10 @@ do
           cargo run --example chapter_"${chapter[counter]}" --release
           ((counter++))
       done
+    fi
+
+    if [[ "${CLEAN}" == true ]];then
+      cargo clean
     fi
 
     if [[ "${DELETE}" == true ]];then
