@@ -103,7 +103,7 @@ impl Shape for Triangle {
         self.material = material;
     }
 
-    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let dir_cross_e2 = ray.direction.cross(self.e2);
         let det = self.e1.dot(dir_cross_e2);
         if det.abs() < EPSILON {

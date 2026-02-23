@@ -48,7 +48,7 @@ impl Cone {
         x.powi(2) + z.powi(2) <= y.abs()
     }
 
-    fn intersect_caps(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn intersect_caps(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
 
         if !self.closed || float_eq(ray.direction.y, 0.0) {
@@ -112,7 +112,7 @@ impl Shape for Cone {
         self.material = material;
     }
 
-    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
 
         let a = ray.direction.x.powi(2) - ray.direction.y.powi(2) + ray.direction.z.powi(2);

@@ -31,7 +31,7 @@ impl<'a> Intersection<'a> {
     /// assert_eq!(i.t, 3.5);
     /// assert!(s.shape_eq(i.object));
     /// ```
-    pub fn new(t: f64, object: &dyn Shape) -> Intersection {
+    pub fn new(t: f64, object: &dyn Shape) -> Intersection<'_> {
         Intersection {
             t,
             object,
@@ -55,7 +55,7 @@ impl<'a> Intersection<'a> {
     /// assert_eq!(i.t, 3.5);
     /// assert!(s.shape_eq(i.object));
     /// ```
-    pub fn intersection_with_uv(t: f64, object: &dyn Shape, u: f64, v: f64) -> Intersection {
+    pub fn intersection_with_uv(t: f64, object: &dyn Shape, u: f64, v: f64) -> Intersection<'_> {
         Intersection {
             t,
             object,

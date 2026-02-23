@@ -54,7 +54,7 @@ impl Cylinder {
         x.powi(2) + z.powi(2) <= 1.0
     }
 
-    fn intersect_caps(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn intersect_caps(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
 
         if !self.closed || float_eq(ray.direction.y, 0.0) {
@@ -116,7 +116,7 @@ impl Shape for Cylinder {
         self.material = material;
     }
 
-    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let a = ray.direction.x.powi(2) + ray.direction.z.powi(2);
 
         if float_eq(a, 0.0) {

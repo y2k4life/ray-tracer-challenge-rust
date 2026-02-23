@@ -43,7 +43,7 @@ impl Sphere {
     /// assert_eq!(xs[0].t, 4.0);
     /// assert_eq!(xs[1].t, 6.0,);
     /// ```
-    pub fn intersect(&self, r: Ray) -> Option<Vec<Intersection>> {
+    pub fn intersect(&self, r: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
 
         let r = r.transform(self.transform.inverse());

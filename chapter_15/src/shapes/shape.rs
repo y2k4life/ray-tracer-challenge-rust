@@ -139,7 +139,7 @@ pub trait Shape: Any + fmt::Debug {
     /// assert_eq!(xs[0].t, 4.0);
     /// assert_eq!(xs[1].t, 6.0,);
     /// ```
-    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>>;
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>>;
 
     /// Specific implementation of a shape to Calculate how the vector that points
     /// perpendicular to a surface at a give point
@@ -180,7 +180,7 @@ pub trait Shape: Any + fmt::Debug {
     /// assert_eq!(xs[0].t, 4.0);
     /// assert_eq!(xs[1].t, 6.0,);
     /// ```
-    fn intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let local_ray = ray.transform(self.transform().inverse());
         self.local_intersect(local_ray)
     }

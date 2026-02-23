@@ -40,7 +40,7 @@ impl CSG {
         }
     }
 
-    pub fn filter_intersections<'a>(&'a self, xs: &'a [Intersection]) -> Vec<Intersection> {
+    pub fn filter_intersections<'a>(&'a self, xs: &'a [Intersection]) -> Vec<Intersection<'a>> {
         let mut inl = false;
         let mut inr = false;
 
@@ -111,7 +111,7 @@ impl Shape for CSG {
         self.left.id() == id || self.right.id() == id
     }
 
-    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
 
         if let Some(left_xs) = self.left.intersect(ray) {

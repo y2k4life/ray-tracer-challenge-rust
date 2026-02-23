@@ -84,7 +84,7 @@ impl Shape for Sphere {
         self.material = material;
     }
 
-    fn local_intersect(&self, r: Ray) -> Option<Vec<Intersection>> {
+    fn local_intersect(&self, r: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
 
         let sphere_to_ray = r.origin - Point::new(0.0, 0.0, 0.0);

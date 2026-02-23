@@ -57,7 +57,7 @@ pub trait Shape: Any + fmt::Debug {
     /// intersection has the distances from the origin of the [`Ray`] and the
     /// object intersected. If there are no intersections
     /// then [`None`] is returned.
-    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>>;
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>>;
 
     /// Calculate a vector that points perpendicular to a surface at a give point
     fn local_normal_at(&self, point: Point, hit: Option<&Intersection>) -> Vector;
@@ -79,7 +79,7 @@ pub trait Shape: Any + fmt::Debug {
     /// assert_eq!(xs[0].t, 4.0);
     /// assert_eq!(xs[1].t, 6.0,);
     /// ```
-    fn intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let local_ray = ray.transform(self.transform().inverse());
         self.local_intersect(local_ray)
     }

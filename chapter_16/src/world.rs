@@ -33,7 +33,7 @@ impl World {
     /// Iterate over all of the objects added to the world. Intersecting each
     /// object with a ray and aggregating the intersections into a single
     /// collection. The collection is sorted.
-    pub fn intersect_world(&self, r: Ray) -> Option<Vec<Intersection>> {
+    pub fn intersect_world(&self, r: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
         for o in &self.objects {
             if let Some(o_xs) = o.intersect(r) {

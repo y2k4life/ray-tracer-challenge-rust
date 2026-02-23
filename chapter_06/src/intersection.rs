@@ -28,7 +28,7 @@ impl<'a> Intersection<'a> {
     /// assert_eq!(i.t, 3.5);
     /// assert_eq!(*i.object, s);
     /// ```
-    pub fn new(t: f64, object: &Sphere) -> Intersection {
+    pub fn new(t: f64, object: &Sphere) -> Intersection<'_> {
         Intersection { t, object }
     }
 

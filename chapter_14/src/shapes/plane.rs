@@ -63,7 +63,7 @@ impl Shape for Plane {
         self.material = material;
     }
 
-    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         if ray.direction.y.abs() < EPSILON {
             return None;
         }

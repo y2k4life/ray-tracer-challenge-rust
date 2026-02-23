@@ -70,7 +70,7 @@ impl World {
     /// assert_eq!(xs[1].t, 4.5);
     /// assert_eq!(xs[2].t, 5.5);
     /// assert_eq!(xs[3].t, 6.0);
-    pub fn intersect_world(&self, r: Ray) -> Option<Vec<Intersection>> {
+    pub fn intersect_world(&self, r: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
         for o in &self.objects {
             if let Some(o_xs) = o.intersect(r) {
