@@ -1,4 +1,4 @@
-use crate::{multiple_array, Matrix};
+use crate::{multiply_array, Matrix};
 
 /// Transformations are used to move and deform objects. The transformations
 /// included are scale, translate, rotate, and shear.
@@ -88,7 +88,7 @@ impl Transformation {
         ];
 
         Transformation {
-            data: multiple_array(m, self.data),
+            data: multiply_array(m, self.data),
         }
     }
 
@@ -118,7 +118,7 @@ impl Transformation {
         ];
 
         Transformation {
-            data: multiple_array(m, self.data),
+            data: multiply_array(m, self.data),
         }
     }
 
@@ -153,7 +153,7 @@ impl Transformation {
         ];
 
         Transformation {
-            data: multiple_array(m, self.data),
+            data: multiply_array(m, self.data),
         }
     }
 
@@ -188,7 +188,7 @@ impl Transformation {
         ];
 
         Transformation {
-            data: multiple_array(m, self.data),
+            data: multiply_array(m, self.data),
         }
     }
 
@@ -213,7 +213,7 @@ impl Transformation {
     ///     Point::new(-2_f64.sqrt() / 2.0, 2_f64.sqrt() / 2.0, 0.0)
     /// );
     /// assert_eq!(full_quarter * p, Point::new(-1.0, 0.0, 0.0));
-    pub fn rotate_z(&self, r: f64) -> Transformation {
+    pub fn rotate_z(self, r: f64) -> Transformation {
         let m = [
             [r.cos(), -(r.sin()), 0.0, 0.0],
             [r.sin(), r.cos(), 0.0, 0.0],
@@ -222,7 +222,7 @@ impl Transformation {
         ];
 
         Transformation {
-            data: multiple_array(m, self.data),
+            data: multiply_array(m, self.data),
         }
     }
 
@@ -254,7 +254,7 @@ impl Transformation {
         ];
 
         Transformation {
-            data: multiple_array(m, self.data),
+            data: multiply_array(m, self.data),
         }
     }
 }
