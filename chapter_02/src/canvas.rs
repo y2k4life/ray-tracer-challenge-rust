@@ -62,7 +62,7 @@ impl Canvas {
     /// assert_eq!("0 0 0 0 0 0 0 0 0 0 0 0 0 0 255", split[5]);
     /// ```
     pub fn canvas_to_ppm(&self) -> String {
-        let mut buffer = String::with_capacity(self.width * self.height * 12 + self.height);
+        let mut buffer = String::with_capacity(self.width * self.height * 12 + self.height + 100);
         buffer.push_str(&["P3", &format!("{} {}", self.width, self.height), "255"].join("\n"));
         buffer.push('\n');
 
