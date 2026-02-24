@@ -1,0 +1,12 @@
+{
+  "customContext": {
+    "other": [],
+    "rules": [
+      {
+        "scope": [],
+        "rule": "Rust edition 2024 is valid and should not be flagged as an error."
+      }
+    ],
+    "files": []
+  }
+}
