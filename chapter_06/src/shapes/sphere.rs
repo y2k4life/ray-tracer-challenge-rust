@@ -1,12 +1,11 @@
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector, IDENTITY};
-use uuid::Uuid;
 
 /// A sphere is a three-dimensional solid figure which is perfectly round in
 /// shape and every point on its surface is equidistant from the point of the origin.
 #[derive(Debug, PartialEq)]
 pub struct Sphere {
     /// Unique identifier.
-    pub id: Uuid,
+    pub id: u64,
     /// Transformation matrix.
     pub transform: Matrix,
     /// Material of the Sphere.
@@ -17,7 +16,7 @@ impl Sphere {
     /// Create a new `Sphere`.
     pub fn new() -> Self {
         Self {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             transform: IDENTITY,
             material: Material::new(),
         }
@@ -43,7 +42,7 @@ impl Sphere {
     /// assert_eq!(xs[0].t, 4.0);
     /// assert_eq!(xs[1].t, 6.0,);
     /// ```
-    pub fn intersect(&self, r: Ray) -> Option<Vec<Intersection>> {
+    pub fn intersect(&self, r: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
 
         let r = r.transform(self.transform.inverse());
