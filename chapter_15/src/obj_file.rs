@@ -35,15 +35,25 @@ impl ObjFile {
             if let Some(token) = line_iter.next() {
                 match token {
                     "v" => {
-                        let x: f64 = line_iter.next().unwrap().parse().unwrap();
-                        let y: f64 = line_iter.next().unwrap().parse().unwrap();
-                        let z: f64 = line_iter.next().unwrap().parse().unwrap();
+                        let (x, y, z) = match (
+                            line_iter.next().and_then(|s| s.parse().ok()),
+                            line_iter.next().and_then(|s| s.parse().ok()),
+                            line_iter.next().and_then(|s| s.parse().ok()),
+                        ) {
+                            (Some(x), Some(y), Some(z)) => (x, y, z),
+                            _ => { parser.ignored_lines += 1; continue; }
+                        };
                         parser.vertices.push(Point::new(x, y, z));
                     }
                     "vn" => {
-                        let x: f64 = line_iter.next().unwrap().parse().unwrap();
-                        let y: f64 = line_iter.next().unwrap().parse().unwrap();
-                        let z: f64 = line_iter.next().unwrap().parse().unwrap();
+                        let (x, y, z) = match (
+                            line_iter.next().and_then(|s| s.parse().ok()),
+                            line_iter.next().and_then(|s| s.parse().ok()),
+                            line_iter.next().and_then(|s| s.parse().ok()),
+                        ) {
+                            (Some(x), Some(y), Some(z)) => (x, y, z),
+                            _ => { parser.ignored_lines += 1; continue; }
+                        };
                         parser.normals.push(Vector::new(x, y, z));
                     }
                     "f" => {

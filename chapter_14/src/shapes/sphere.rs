@@ -2,15 +2,14 @@ use super::Shape;
 #[allow(unused_imports)]
 use crate::Transformation;
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector, IDENTITY};
-use uuid::Uuid;
 
 /// A sphere is a three-dimensional solid figure which is perfectly round in
 /// shape and every point on its surface is equidistant from the point
 /// of the origin.
 #[derive(Debug, PartialEq)]
 pub struct Sphere {
-    id: Uuid,
-    parent_id: Option<Uuid>,
+    id: u64,
+    parent_id: Option<u64>,
     /// [`Transformation`] matrix used to manipulate the `Sphere`
     pub transform: Matrix,
     /// [`Material`] describing the look of the `Sphere`
@@ -21,7 +20,7 @@ impl Sphere {
     /// Create a new `Sphere`.
     pub fn new() -> Self {
         Self {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             parent_id: None,
             transform: IDENTITY,
             material: Material::new(),
@@ -34,7 +33,7 @@ impl Sphere {
         m.refractive_index = 1.5;
         m.transparency = 1.0;
         Self {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             parent_id: None,
             transform: IDENTITY,
             material: m,
@@ -49,39 +48,9 @@ impl Default for Sphere {
 }
 
 impl Shape for Sphere {
-    fn id(&self) -> Uuid {
-        self.id
-    }
+    impl_shape_common!();
 
-    fn parent_id(&self) -> Option<Uuid> {
-        self.parent_id
-    }
-
-    fn set_parent_id(&mut self, id: Uuid) {
-        self.parent_id = Some(id);
-    }
-
-    fn transform(&self) -> Matrix {
-        self.transform
-    }
-
-    fn set_transform(&mut self, transform: Matrix) {
-        self.transform = transform;
-    }
-
-    fn material(&self) -> &Material {
-        &self.material
-    }
-
-    fn material_mut(&mut self) -> &mut Material {
-        &mut self.material
-    }
-
-    fn set_material(&mut self, material: Material) {
-        self.material = material;
-    }
-
-    fn local_intersect(&self, r: Ray) -> Option<Vec<Intersection>> {
+    fn local_intersect(&self, r: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
 
         let sphere_to_ray = r.origin - Point::new(0.0, 0.0, 0.0);

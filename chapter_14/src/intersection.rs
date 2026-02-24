@@ -1,4 +1,4 @@
-use crate::{float_cmp, shapes::Shape, Computations, Ray, World, EPSILON};
+use crate::{shapes::Shape, Computations, Ray, World, EPSILON};
 use std::cmp::Ordering;
 
 /// Aggregate of the distance, `t`, from a [`Ray`]'s origin and the object that was
@@ -26,7 +26,7 @@ impl<'a> Intersection<'a> {
     /// assert_eq!(i.t, 3.5);
     /// assert!(s.shape_eq(i.object));
     /// ```
-    pub fn new(t: f64, object: &dyn Shape) -> Intersection {
+    pub fn new(t: f64, object: &dyn Shape) -> Intersection<'_> {
         Intersection { t, object }
     }
 
@@ -101,7 +101,7 @@ impl Intersection<'_> {
     /// from the ray's origin looking out in the direction of the ray. The `hit`
     /// is the intersection with the shortest distance from the origin going in
     /// a positive direction, the `t` value. A negative distance is behind the
-    /// origin of the the ray and can't be seen. The shortest or lowest `t` value
+    /// origin of the ray and can't be seen. The shortest or lowest `t` value
     /// in a positive direction is the closest to the origin, the intersection(s)
     /// that are greater are behind the `hit` and can't be seen because the `hit`
     /// is blocking them.
@@ -132,7 +132,7 @@ impl PartialEq for Intersection<'_> {
 
 impl PartialOrd for Intersection<'_> {
     fn partial_cmp(&self, other: &Intersection) -> Option<Ordering> {
-        Some(float_cmp(self.t, other.t))
+        Some(self.cmp(other))
     }
 }
 
@@ -140,7 +140,7 @@ impl Eq for Intersection<'_> {}
 
 impl Ord for Intersection<'_> {
     fn cmp(&self, other: &Self) -> Ordering {
-        float_cmp(self.t, other.t)
+        self.t.partial_cmp(&other.t).unwrap_or(Ordering::Equal)
     }
 }
 

@@ -14,7 +14,7 @@ pub struct Computations<'a> {
     /// `point` above the surface and prevents self-shadowing.
     pub over_point: Point,
     /// Adjusted `point` just slightly under in the direction of the normal. Bumps the
-    /// it above teh surface and prevent self-shadowing.
+    /// it above the surface and prevent self-shadowing.
     pub under_point: Point,
     /// Eye vector pointing back toward the eye or the camera.
     pub eyev: Vector,

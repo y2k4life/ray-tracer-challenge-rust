@@ -96,7 +96,7 @@ impl Material {
             // compute the diffuse contribution
             diffuse = effective_color * self.diffuse * light_dot_normal;
 
-            // reflect_dot_eye represents the cosine of teh the angle between the
+            // reflect_dot_eye represents the cosine of the angle between the
             // reflection vector and the eye vector. A negative number means the
             // light reflects away from the eye.
             let reflectv = (-lightv).reflect(normalv);
@@ -110,7 +110,7 @@ impl Material {
             }
         }
 
-        // Add teh three contributions together to get the final shading
+        // Add the three contributions together to get the final shading
         ambient + diffuse + specular
     }
 }

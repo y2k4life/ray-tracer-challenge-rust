@@ -1,11 +1,10 @@
 use super::Pattern;
 use crate::{Color, Matrix, Point, IDENTITY};
-use uuid::Uuid;
 
 /// As the `x` coordinate changes, the pattern alternates between the colors.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Stripe {
-    id: Uuid,
+    id: u64,
     pub a: Color,
     pub b: Color,
     /// The transformation of the pattern.
@@ -28,7 +27,7 @@ impl Stripe {
     /// ```
     pub fn new(a: Color, b: Color) -> Stripe {
         Stripe {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             a,
             b,
             transform: IDENTITY,
@@ -37,7 +36,7 @@ impl Stripe {
 }
 
 impl Pattern for Stripe {
-    fn id(&self) -> Uuid {
+    fn id(&self) -> u64 {
         self.id
     }
 

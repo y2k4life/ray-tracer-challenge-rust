@@ -77,7 +77,7 @@ impl Camera {
     /// assert_eq!(r.origin, Point::new(0.0, 0.0, 0.0));
     /// assert_eq!(r.direction, Vector::new(0.0, 0.0, -1.0));
     /// ```
-    pub fn ray_for_pixel(&mut self, px: f64, py: f64) -> Ray {
+    pub fn ray_for_pixel(&self, px: f64, py: f64) -> Ray {
         // the offset from the edge of the canvas to the pixel's center
         let x_offset = (px + 0.5) * self.pixel_size;
         let y_offset = (py + 0.5) * self.pixel_size;
@@ -87,7 +87,7 @@ impl Camera {
         let world_x = self.half_width - x_offset;
         let world_y = self.half_height - y_offset;
 
-        // using the camera matrix, transform teh canvas point and the origin,
+        // using the camera matrix, transform the canvas point and the origin,
         // and then compute the ray's direction vector.
         // the canvas is at z: -1.
         let pixel = self.transform.inverse() * Point::new(world_x, world_y, -1.0);
@@ -118,7 +118,7 @@ impl Camera {
     ///
     /// assert_eq!(image.pixel_at(5, 5), Color::new(0.38066, 0.47583, 0.2855));
     /// ```
-    pub fn render(&mut self, world: &World) -> Canvas {
+    pub fn render(&self, world: &World) -> Canvas {
         let mut canvas = Canvas::new(self.hsize, self.vsize);
 
         for y in 0..self.vsize {
@@ -176,7 +176,7 @@ mod tests {
     // Page 103
     #[test]
     fn constructing_a_ray_through_the_center_of_canvas() {
-        let mut c = Camera::new(201, 101, PI / 2.0);
+        let c = Camera::new(201, 101, PI / 2.0);
         let r = c.ray_for_pixel(100.0, 50.0);
 
         assert_eq!(r.origin, Point::new(0.0, 0.0, 0.0));
@@ -187,7 +187,7 @@ mod tests {
     // Page 103
     #[test]
     fn constructing_a_ray_through_a_corner_of_the_canvas() {
-        let mut c = Camera::new(201, 101, PI / 2.0);
+        let c = Camera::new(201, 101, PI / 2.0);
         let r = c.ray_for_pixel(0.0, 0.0);
 
         assert_eq!(r.origin, Point::new(0.0, 0.0, 0.0));
