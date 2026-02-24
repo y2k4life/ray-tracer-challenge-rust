@@ -2,14 +2,13 @@ use super::Shape;
 #[allow(unused_imports)]
 use crate::Transformation;
 use crate::{float_cmp, Intersection, Material, Matrix, Point, Ray, Vector, IDENTITY};
-use uuid::Uuid;
 
 /// A three-dimensional solid object bounded by six square sides, with three
 /// meeting at each vertex. A default cube is 1 unit size in all directions.
 #[derive(Debug)]
 pub struct Cube {
-    id: Uuid,
-    parent_id: Option<Uuid>,
+    id: u64,
+    parent_id: Option<u64>,
     /// [`Transformation`] matrix used to manipulate the `Cube`
     pub transform: Matrix,
     /// [`Material`] describing the look of the `Cube`
@@ -20,7 +19,7 @@ impl Cube {
     /// Create a new cube.
     pub fn new() -> Cube {
         Cube {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             parent_id: None,
             transform: IDENTITY,
             material: Material::new(),
@@ -49,37 +48,7 @@ impl Default for Cube {
 }
 
 impl Shape for Cube {
-    fn id(&self) -> Uuid {
-        self.id
-    }
-
-    fn parent_id(&self) -> Option<Uuid> {
-        self.parent_id
-    }
-
-    fn set_parent_id(&mut self, id: Uuid) {
-        self.parent_id = Some(id);
-    }
-
-    fn transform(&self) -> Matrix {
-        self.transform
-    }
-
-    fn set_transform(&mut self, transform: Matrix) {
-        self.transform = transform;
-    }
-
-    fn material(&self) -> &Material {
-        &self.material
-    }
-
-    fn material_mut(&mut self) -> &mut Material {
-        &mut self.material
-    }
-
-    fn set_material(&mut self, material: Material) {
-        self.material = material;
-    }
+    impl_shape_common!();
 
     fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let (xtmin, xtmax) = self.check_axis(ray.origin.x, ray.direction.x);

@@ -2,7 +2,6 @@
 use crate::Transformation;
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector};
 use std::fmt;
-use uuid::Uuid;
 
 /// Trait with common functionality for types that describe an object or
 /// a graphical primitive. Abstraction of the implementation for a particular
@@ -17,9 +16,9 @@ pub trait Shape: fmt::Debug {
     ///
     /// let mut s = Sphere::new();
     ///
-    /// assert_eq!(s.id().get_version_num(), 4);
+    /// 
     /// ```
-    fn id(&self) -> Uuid;
+    fn id(&self) -> u64;
 
     /// Test if `other` is equal to `self` by comparing their `id`'s.
     fn shape_eq(&self, other: &dyn Shape) -> bool {
@@ -173,7 +172,7 @@ pub trait Shape: fmt::Debug {
     ///
     /// 1. Convert the `point` from a world space to a local space.
     /// 2. Call the implementation of `local_normal_at` for the object to
-    /// calculate the normal.
+    ///    calculate the normal.
     /// 3. Convert the local space normal to a world space normal
     ///
     /// # Example

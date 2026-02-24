@@ -2,11 +2,10 @@
 use crate::Transformation;
 use crate::{shapes::Shape, Color, Matrix, Point};
 use std::fmt;
-use uuid::Uuid;
 
 pub trait Pattern: fmt::Debug {
     /// Get the unique identifier for a pattern.
-    fn id(&self) -> Uuid;
+    fn id(&self) -> u64;
 
     /// Test if `other` is equal to `self` by comparing their `id`'s.
     fn pattern_eq(&self, other: &dyn Pattern) -> bool {
@@ -43,7 +42,7 @@ pub trait Pattern: fmt::Debug {
     /// 1. Convert the point from world space to object space
     /// 2. Convert the object space point to *pattern space*
     /// 3. Get the color of the pattern by calling `stripe_at` with the
-    /// point on the pattern.
+    ///    point on the pattern.
     ///
     /// # Example
     ///

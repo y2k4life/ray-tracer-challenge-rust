@@ -1,10 +1,9 @@
 use crate::{shapes::Shape, Color, Matrix, Point, IDENTITY};
-use uuid::Uuid;
 
 /// As the `x` coordinate changes, the pattern alternates between the colors.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Stripe {
-    id: Uuid,
+    id: u64,
     /// The first color in the alternating pattern.
     pub a: Color,
     /// The second color in the alternating pattern.
@@ -29,7 +28,7 @@ impl Stripe {
     /// ```
     pub fn new(a: Color, b: Color) -> Stripe {
         Stripe {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             a,
             b,
             transform: IDENTITY,
@@ -65,7 +64,7 @@ impl Stripe {
     /// 1. Convert the point from world space to object space
     /// 2. Convert the object space point to *pattern space*
     /// 3. Get the color of the pattern by calling `stripe_at` with the
-    /// point on the pattern.
+    ///    point on the pattern.
     ///
     /// # Example
     ///

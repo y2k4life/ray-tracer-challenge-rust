@@ -2,8 +2,7 @@ use super::Shape;
 #[allow(unused_imports)]
 use crate::Transformation;
 use crate::{float_eq, Intersection, Material, Matrix, Point, Ray, Vector, EPSILON, IDENTITY};
-use std::f64::{INFINITY, NEG_INFINITY};
-use uuid::Uuid;
+
 
 /// A solid geometric figure with straight parallel sides and a circular or oval
 /// cross section.
@@ -13,8 +12,8 @@ use uuid::Uuid;
 /// also be opened at each end or closed. By default they are open.
 #[derive(Debug)]
 pub struct Cylinder {
-    pub id: Uuid,
-    pub parent_id: Option<Uuid>,
+    pub id: u64,
+    pub parent_id: Option<u64>,
     /// [`Transformation`] matrix used to manipulate the `Cylinder`
     pub transform: Matrix,
     /// [`Material`] describing the look of the `Cylinder`
@@ -37,12 +36,12 @@ impl Cylinder {
     /// Create a new `Cylinder`.
     pub fn new() -> Cylinder {
         Cylinder {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             parent_id: None,
             transform: IDENTITY,
             material: Material::new(),
-            minimum: NEG_INFINITY,
-            maximum: INFINITY,
+            minimum: f64::NEG_INFINITY,
+            maximum: f64::INFINITY,
             closed: false,
         }
     }
@@ -80,40 +79,10 @@ impl Cylinder {
 }
 
 impl Shape for Cylinder {
-    fn id(&self) -> Uuid {
-        self.id
-    }
-
-    fn parent_id(&self) -> Option<Uuid> {
-        self.parent_id
-    }
-
-    fn set_parent_id(&mut self, id: Uuid) {
-        self.parent_id = Some(id);
-    }
+    impl_shape_common!();
 
     fn shape_eq(&self, other: &dyn Shape) -> bool {
         self.id == other.id()
-    }
-
-    fn transform(&self) -> Matrix {
-        self.transform
-    }
-
-    fn set_transform(&mut self, transform: Matrix) {
-        self.transform = transform;
-    }
-
-    fn material(&self) -> &Material {
-        &self.material
-    }
-
-    fn material_mut(&mut self) -> &mut Material {
-        &mut self.material
-    }
-
-    fn set_material(&mut self, material: Material) {
-        self.material = material;
     }
 
     fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
@@ -189,7 +158,7 @@ impl PartialEq for Cylinder {
 mod tests {
     use super::*;
     use crate::{shapes::Shape, Point, Ray, Vector};
-    use std::f64::{INFINITY, NEG_INFINITY};
+    
 
     // Chapter 13 Cylinders
     // Page 178 & 179
@@ -271,8 +240,8 @@ mod tests {
     pub fn the_default_minimum_and_maximum_for_a_cylinder() {
         let cyl = Cylinder::new();
 
-        assert_eq!(cyl.minimum, NEG_INFINITY);
-        assert_eq!(cyl.maximum, INFINITY);
+        assert_eq!(cyl.minimum, f64::NEG_INFINITY);
+        assert_eq!(cyl.maximum, f64::INFINITY);
     }
 
     // Chapter 13 Cylinders

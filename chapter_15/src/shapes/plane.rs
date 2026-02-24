@@ -2,7 +2,6 @@ use super::Shape;
 #[allow(unused_imports)]
 use crate::Transformation;
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector, EPSILON, IDENTITY};
-use uuid::Uuid;
 
 /// A perfectly flat surface that extends infinitely in two dimensions.
 ///
@@ -10,8 +9,8 @@ use uuid::Uuid;
 /// through the origin.
 #[derive(Debug)]
 pub struct Plane {
-    id: Uuid,
-    parent_id: Option<Uuid>,
+    id: u64,
+    parent_id: Option<u64>,
     /// [`Transformation`] matrix used to manipulate the `Plane`
     pub transform: Matrix,
     /// [`Material`] describing the look of the `Plane`
@@ -22,7 +21,7 @@ impl Plane {
     /// Create a new plane.
     pub fn new() -> Self {
         Plane {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             parent_id: None,
             transform: IDENTITY,
             material: Material::new(),
@@ -31,37 +30,7 @@ impl Plane {
 }
 
 impl Shape for Plane {
-    fn id(&self) -> Uuid {
-        self.id
-    }
-
-    fn parent_id(&self) -> Option<Uuid> {
-        self.parent_id
-    }
-
-    fn set_parent_id(&mut self, id: Uuid) {
-        self.parent_id = Some(id);
-    }
-
-    fn transform(&self) -> Matrix {
-        self.transform
-    }
-
-    fn set_transform(&mut self, transform: Matrix) {
-        self.transform = transform;
-    }
-
-    fn material(&self) -> &Material {
-        &self.material
-    }
-
-    fn material_mut(&mut self) -> &mut Material {
-        &mut self.material
-    }
-
-    fn set_material(&mut self, material: Material) {
-        self.material = material;
-    }
+    impl_shape_common!();
 
     fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         if ray.direction.y.abs() < EPSILON {

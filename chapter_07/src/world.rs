@@ -120,7 +120,7 @@ impl World {
     /// 2. Find the `hit` from the resulting intersections.
     /// 3. Return black if there are no intersections.
     /// 4. `prepare_computations` on the `hit` to get the [`Computations`] for
-    /// the [`Intersection`].
+    ///    the [`Intersection`].
     /// 5. Call `shade_hit` to get the color at the `hit`.
     ///
     /// Example

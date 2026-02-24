@@ -1,11 +1,10 @@
 use super::Shape;
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector, IDENTITY};
-use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct CSG {
-    id: Uuid,
-    parent_id: Option<Uuid>,
+    id: u64,
+    parent_id: Option<u64>,
     left: Box<dyn Shape>,
     right: Box<dyn Shape>,
     operation: CsgOperation,
@@ -26,7 +25,7 @@ impl CSG {
         mut left: Box<dyn Shape>,
         mut right: Box<dyn Shape>,
     ) -> Self {
-        let id = Uuid::new_v4();
+        let id = crate::next_id();
         left.set_parent_id(id);
         right.set_parent_id(id);
         CSG {
@@ -75,39 +74,9 @@ impl CSG {
 }
 
 impl Shape for CSG {
-    fn id(&self) -> Uuid {
-        self.id
-    }
+    impl_shape_common!();
 
-    fn parent_id(&self) -> Option<Uuid> {
-        self.parent_id
-    }
-
-    fn set_parent_id(&mut self, id: Uuid) {
-        self.parent_id = Some(id);
-    }
-
-    fn transform(&self) -> Matrix {
-        self.transform
-    }
-
-    fn set_transform(&mut self, transform: Matrix) {
-        self.transform = transform;
-    }
-
-    fn material(&self) -> &Material {
-        &self.material
-    }
-
-    fn material_mut(&mut self) -> &mut Material {
-        &mut self.material
-    }
-
-    fn set_material(&mut self, material: Material) {
-        self.material = material;
-    }
-
-    fn contains_object_by_id(&self, id: Uuid) -> bool {
+    fn contains_object_by_id(&self, id: u64) -> bool {
         self.left.id() == id || self.right.id() == id
     }
 

@@ -17,6 +17,16 @@ mod transformation;
 mod vector;
 mod world;
 
+use std::sync::atomic::AtomicU64;
+
+static NEXT_ID: AtomicU64 = AtomicU64::new(1);
+
+/// Generate a unique identifier. Uses an atomic counter — guaranteed unique
+/// within a process, with no external dependencies.
+pub fn next_id() -> u64 {
+    NEXT_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+}
+
 pub use crate::camera::Camera;
 pub use crate::canvas::Canvas;
 pub use crate::color::Color;
@@ -45,7 +55,7 @@ pub fn float_eq(a: f64, b: f64) -> bool {
 }
 
 /// Multiple two 4x4 arrays
-fn multiple_array(a: [[f64; 4]; 4], b: [[f64; 4]; 4]) -> [[f64; 4]; 4] {
+fn multiply_array(a: [[f64; 4]; 4], b: [[f64; 4]; 4]) -> [[f64; 4]; 4] {
     let mut results = [[0.0; 4]; 4];
 
     for row in 0..4 {

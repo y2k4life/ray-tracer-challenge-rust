@@ -1,12 +1,11 @@
 use super::Pattern;
 use crate::{Color, Matrix, Point, IDENTITY};
-use uuid::Uuid;
 
 /// A ring pattern depending on the `x` and `z` dimensions to decide which
 /// [`Color`] to return.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Ring {
-    id: Uuid,
+    id: u64,
     a: Color,
     b: Color,
     /// The transformation of the pattern.
@@ -17,7 +16,7 @@ impl Ring {
     /// Create a new ring pattern using the [`Color`] `a` and `b`.
     pub fn new(a: Color, b: Color) -> Ring {
         Ring {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             a,
             b,
             transform: IDENTITY,
@@ -26,7 +25,7 @@ impl Ring {
 }
 
 impl Pattern for Ring {
-    fn id(&self) -> Uuid {
+    fn id(&self) -> u64 {
         self.id
     }
 

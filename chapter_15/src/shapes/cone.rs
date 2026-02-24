@@ -1,7 +1,6 @@
 use super::Shape;
 use crate::{float_eq, Intersection, Material, Matrix, Point, Ray, Vector, EPSILON, IDENTITY};
-use std::f64::{INFINITY, NEG_INFINITY};
-use uuid::Uuid;
+
 
 /// Not a cone in the natural sense but a double-napped code. Two cones
 /// "nose to nose", with one cone balanced perfectly on the other.
@@ -11,8 +10,8 @@ use uuid::Uuid;
 /// also be opened at each end or closed. By default they are open.
 #[derive(Debug)]
 pub struct Cone {
-    id: Uuid,
-    parent_id: Option<Uuid>,
+    id: u64,
+    parent_id: Option<u64>,
     /// [`Transformation`] matrix used to manipulate the `Cone`
     pub transform: Matrix,
     /// [`Material`] describing the look of the `Cone`
@@ -28,12 +27,12 @@ pub struct Cone {
 impl Cone {
     pub fn new() -> Cone {
         Cone {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             parent_id: None,
             transform: IDENTITY,
             material: Material::new(),
-            minimum: NEG_INFINITY,
-            maximum: INFINITY,
+            minimum: f64::NEG_INFINITY,
+            maximum: f64::INFINITY,
             closed: false,
         }
     }
@@ -72,37 +71,7 @@ impl Cone {
 }
 
 impl Shape for Cone {
-    fn id(&self) -> Uuid {
-        self.id
-    }
-
-    fn parent_id(&self) -> Option<Uuid> {
-        self.parent_id
-    }
-
-    fn set_parent_id(&mut self, id: Uuid) {
-        self.parent_id = Some(id);
-    }
-
-    fn transform(&self) -> Matrix {
-        self.transform
-    }
-
-    fn set_transform(&mut self, transform: Matrix) {
-        self.transform = transform;
-    }
-
-    fn material(&self) -> &Material {
-        &self.material
-    }
-
-    fn material_mut(&mut self) -> &mut Material {
-        &mut self.material
-    }
-
-    fn set_material(&mut self, material: Material) {
-        self.material = material;
-    }
+    impl_shape_common!();
 
     fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
