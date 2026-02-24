@@ -27,7 +27,7 @@ pub fn float_eq(a: f64, b: f64) -> bool {
 }
 
 /// Multiple two 4x4 arrays
-fn multiple_array(a: [[f64; 4]; 4], b: [[f64; 4]; 4]) -> [[f64; 4]; 4] {
+fn multiply_array(a: [[f64; 4]; 4], b: [[f64; 4]; 4]) -> [[f64; 4]; 4] {
     let mut results = [[0.0; 4]; 4];
 
     for row in 0..4 {
