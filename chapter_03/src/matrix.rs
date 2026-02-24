@@ -213,7 +213,7 @@ impl Matrix {
 
     /// Test if matrix `self` can be inverted
     pub fn is_invertible(&self) -> bool {
-        !(Matrix::determinant(self.data, 4) == 0.0)
+        !float_eq(Matrix::determinant(self.data, 4), 0.0)
     }
 
     fn determinant(a: [[f64; 4]; 4], s: usize) -> f64 {
