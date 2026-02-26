@@ -18,7 +18,7 @@ pub struct Vector {
     /// The distance the terminal point of the vector is from the origin
     /// measured along the Y axis.
     pub y: f64,
-    /// The distance the terminal point of teh vector is from the origin
+    /// The distance the terminal point of the vector is from the origin
     /// measured along the Z axis.
     pub z: f64,
 }
