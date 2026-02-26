@@ -3,12 +3,11 @@ use super::Shape;
 #[cfg(test)]
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector, IDENTITY};
 #[cfg(test)]
-use uuid::Uuid;
 
 #[derive(Debug)]
 #[cfg(test)]
 pub struct TestShape {
-    pub id: Uuid,
+    pub id: u64,
     pub transform: Matrix,
     pub material: Material,
 }
@@ -17,7 +16,7 @@ pub struct TestShape {
 impl TestShape {
     pub fn new() -> TestShape {
         TestShape {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             transform: IDENTITY,
             material: Material::new(),
         }
@@ -26,31 +25,9 @@ impl TestShape {
 
 #[cfg(test)]
 impl Shape for TestShape {
-    fn id(&self) -> Uuid {
-        self.id
-    }
+    impl_shape_common!();
 
-    fn transform(&self) -> Matrix {
-        self.transform
-    }
-
-    fn set_transform(&mut self, transform: Matrix) {
-        self.transform = transform;
-    }
-
-    fn material(&self) -> &Material {
-        &self.material
-    }
-
-    fn material_mut(&mut self) -> &mut Material {
-        &mut self.material
-    }
-
-    fn set_material(&mut self, material: Material) {
-        self.material = material;
-    }
-
-    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let t = ray.origin.x
             + ray.origin.y
             + ray.origin.z
