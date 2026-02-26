@@ -11,7 +11,7 @@ pub struct Computations<'a> {
     /// Point in world space the intersection occurred.
     pub point: Point,
     /// Adjusted `point` just slightly in the direction of the normal. Bumps the
-    /// it above teh surface and prevent self-shadowing.
+    /// it above the surface and prevent self-shadowing.
     pub over_point: Point,
     /// Eye vector pointing back toward the eye or the camera.
     pub eyev: Vector,

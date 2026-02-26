@@ -3,7 +3,7 @@ use rustic_ray::{
     shapes::Shape, shapes::Sphere, Camera, Color, Colors, Point, PointLight, Transformation,
     Vector, World,
 };
-use std::{f64::consts::PI, fs::File, io::Write, path::Path};
+use std::{f64::consts::PI, fs::File, io::Write, path::Path, time::Instant};
 
 fn main() {
     let mut world = World::new();
@@ -76,8 +76,11 @@ fn main() {
         Point::new(0.0, 1.0, 0.0),
         Vector::new(0.0, 1.0, 0.0),
     );
-
+    println!("Rendering 1280x1080...");
+    let t0 = Instant::now();
     let canvas = camera.render(&world);
+    let elapsed = t0.elapsed();
+    println!("  {:.1} ms", elapsed.as_secs_f64() * 1000.0);
 
     let path = Path::new("chapter_10b.ppm");
     let display = path.display();
