@@ -70,7 +70,7 @@ impl World {
     /// assert_eq!(xs[1].t, 4.5);
     /// assert_eq!(xs[2].t, 5.5);
     /// assert_eq!(xs[3].t, 6.0);
-    pub fn intersect_world(&self, r: Ray) -> Option<Vec<Intersection>> {
+    pub fn intersect_world(&self, r: Ray) -> Option<Vec<Intersection<'_>>> {
         let mut xs: Vec<Intersection> = Vec::new();
         for o in &self.objects {
             if let Some(o_xs) = o.intersect(r) {
@@ -124,7 +124,7 @@ impl World {
     /// 2. Find the `hit` from the resulting intersections.
     /// 3. Return black if there are no intersections.
     /// 4. `prepare_computations` on the `hit` to get the [`Computations`] for
-    /// the [`Intersection`].
+    ///    the [`Intersection`].
     /// 5. Call `shade_hit` to get the color at the `hit`.
     ///
     /// Example
@@ -162,13 +162,11 @@ impl World {
         let direction = v.normalize();
 
         let r = Ray::new(point, direction);
-        if let Some(intersections) = self.intersect_world(r) {
-            if let Some(hit) = Intersection::hit(&intersections) {
-                if hit.t < distance {
+        if let Some(intersections) = self.intersect_world(r)
+            && let Some(hit) = Intersection::hit(&intersections)
+                && hit.t < distance {
                     return true;
                 }
-            }
-        }
 
         false
     }
@@ -190,10 +188,7 @@ impl World {
     /// assert_eq!(s.id(), s_id);
     /// ```
     pub fn get_object(&self, index: usize) -> Option<&dyn Shape> {
-        match self.objects.get(index) {
-            Some(o) => Some(o.as_ref()),
-            None => None,
-        }
+        self.objects.get(index).map(|o| o.as_ref())
     }
 
     /// Returns a mutable reference to an `object` at the given index or `None`
