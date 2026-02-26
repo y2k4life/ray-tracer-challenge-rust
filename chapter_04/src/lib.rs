@@ -26,7 +26,7 @@ pub fn float_eq(a: f64, b: f64) -> bool {
     (a - b).abs() < EPSILON
 }
 
-/// Multiple two 4x4 arrays
+/// Multiply two 4x4 arrays
 fn multiply_array(a: [[f64; 4]; 4], b: [[f64; 4]; 4]) -> [[f64; 4]; 4] {
     let mut results = [[0.0; 4]; 4];
 

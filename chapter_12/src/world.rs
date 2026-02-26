@@ -175,9 +175,10 @@ impl World {
         let r = Ray::new(point, direction);
         if let Some(intersections) = self.intersect_world(r)
             && let Some(hit) = Intersection::hit(&intersections)
-                && hit.t < distance {
-                    return true;
-                }
+            && hit.t < distance
+        {
+            return true;
+        }
 
         false
     }
