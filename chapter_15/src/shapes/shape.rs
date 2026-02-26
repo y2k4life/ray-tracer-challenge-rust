@@ -1,6 +1,5 @@
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector, World};
 use std::{any::Any, fmt};
-use uuid::Uuid;
 
 /// Trait with common functionality for types that describe an object or
 /// a graphical primitive. Abstraction of the implementation for a particular
@@ -19,15 +18,15 @@ pub trait Shape: Any + fmt::Debug {
     ///
     /// let mut s = Sphere::new();
     ///
-    /// assert_eq!(s.id().get_version_num(), 4);
+    /// 
     /// ```
-    fn id(&self) -> Uuid;
+    fn id(&self) -> u64;
 
     /// Get parent id of an `object`
-    fn parent_id(&self) -> Option<Uuid>;
+    fn parent_id(&self) -> Option<u64>;
 
     /// Set parent id of an `object`
-    fn set_parent_id(&mut self, id: Uuid);
+    fn set_parent_id(&mut self, id: u64);
 
     /// Test if `other` is equal to `self` by comparing their `id`'s.
     fn shape_eq(&self, other: &dyn Shape) -> bool {
@@ -35,7 +34,7 @@ pub trait Shape: Any + fmt::Debug {
     }
 
     /// If the object is a container then get child with `id`.
-    fn get_object_by_id(&self, _id: Uuid) -> Option<&dyn Shape> {
+    fn get_object_by_id(&self, _id: u64) -> Option<&dyn Shape> {
         None
     }
 
@@ -139,7 +138,7 @@ pub trait Shape: Any + fmt::Debug {
     /// assert_eq!(xs[0].t, 4.0);
     /// assert_eq!(xs[1].t, 6.0,);
     /// ```
-    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>>;
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>>;
 
     /// Specific implementation of a shape to Calculate how the vector that points
     /// perpendicular to a surface at a give point
@@ -180,7 +179,7 @@ pub trait Shape: Any + fmt::Debug {
     /// assert_eq!(xs[0].t, 4.0);
     /// assert_eq!(xs[1].t, 6.0,);
     /// ```
-    fn intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let local_ray = ray.transform(self.transform().inverse());
         self.local_intersect(local_ray)
     }
@@ -190,7 +189,7 @@ pub trait Shape: Any + fmt::Debug {
     ///
     /// 1. Convert the `point` from a world space to a local space.
     /// 2. Call the implementation of `local_normal_at` for the object to
-    /// calculate the normal.
+    ///    calculate the normal.
     /// 3. Convert the local space normal to a world space normal
     ///
     /// # Example
