@@ -1,14 +1,13 @@
 use std::any::Any;
 
 use crate::{Intersection, Material, Matrix, Point, Ray, Vector, EPSILON, IDENTITY};
-use uuid::Uuid;
 
 use super::Shape;
 
 #[derive(Debug)]
 pub struct Triangle {
-    id: Uuid,
-    parent_id: Option<Uuid>,
+    id: u64,
+    parent_id: Option<u64>,
     pub transform: Matrix,
     pub material: Material,
     pub p1: Point,
@@ -26,7 +25,7 @@ pub struct Triangle {
 impl Triangle {
     pub fn new(p1: Point, p2: Point, p3: Point) -> Self {
         Triangle {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             parent_id: None,
             transform: IDENTITY,
             material: Material::new(),
@@ -52,7 +51,7 @@ impl Triangle {
         n3: Vector,
     ) -> Self {
         Triangle {
-            id: Uuid::new_v4(),
+            id: crate::next_id(),
             parent_id: None,
             transform: IDENTITY,
             material: Material::new(),
@@ -71,39 +70,9 @@ impl Triangle {
 }
 
 impl Shape for Triangle {
-    fn id(&self) -> Uuid {
-        self.id
-    }
+    impl_shape_common!();
 
-    fn parent_id(&self) -> Option<Uuid> {
-        self.parent_id
-    }
-
-    fn set_parent_id(&mut self, id: Uuid) {
-        self.parent_id = Some(id);
-    }
-
-    fn transform(&self) -> Matrix {
-        self.transform
-    }
-
-    fn set_transform(&mut self, transform: Matrix) {
-        self.transform = transform;
-    }
-
-    fn material(&self) -> &Material {
-        &self.material
-    }
-
-    fn material_mut(&mut self) -> &mut Material {
-        &mut self.material
-    }
-
-    fn set_material(&mut self, material: Material) {
-        self.material = material;
-    }
-
-    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection>> {
+    fn local_intersect(&self, ray: Ray) -> Option<Vec<Intersection<'_>>> {
         let dir_cross_e2 = ray.direction.cross(self.e2);
         let det = self.e1.dot(dir_cross_e2);
         if det.abs() < EPSILON {
